@@ -1,12 +1,14 @@
 import { useCallback, useMemo, useState } from 'react'
 import type { Bank } from '../core/data'
-import { tier } from '../core/elo'
+import { expected, tier } from '../core/elo'
 import { isEmptyFilter, pickNext, select } from '../core/filters'
 import { pomodoro, usePomodoro } from '../core/pomodoro'
 import { useStore } from '../core/store'
 import { formatClock } from '../core/time'
-import { DIFF_LABEL, EMPTY_FILTER, type Filter } from '../core/types'
+import { DIFF_LABEL, EMPTY_FILTER, type Filter, type Row } from '../core/types'
 import { Runner } from './Runner'
+
+const STAGE = { 1: 'Treino', 2: 'Aplicação', 3: 'Desafio' } as const
 
 function FilterSummary({ bank, filter, count, onClear, onOpen }: {
   bank: Bank; filter: Filter; count: number; onClear: () => void; onOpen: () => void
@@ -66,8 +68,10 @@ export function Practice({ bank, onOpenFilters }: { bank: Bank; onOpenFilters: (
     let rows = pool
     if (filter.unseen) rows = rows.filter((r) => !store.seen(r.id))
     if (filter.pending) rows = rows.filter((r) => store.due(r.id))
-    return pickNext(rows, store, recent, filter.diff === 'prog' ? store.s.prog.level : 0)
-  }, [filter, pool, store])
+    const prog = filter.diff === 'prog'
+    const chance = (r: Row) => expected(store.elo(bank.meta.subjects[r.s].id), r.r)
+    return pickNext(rows, store, recent, prog ? store.s.prog.level : 0, Math.random, prog ? chance : undefined)
+  }, [bank, filter, pool, store])
 
   const liveCount = useMemo(
     () => (filter.unseen || filter.pending ? select(bank.rows, filter, store).length : pool.length),
@@ -83,8 +87,8 @@ export function Practice({ bank, onOpenFilters }: { bank: Bank; onOpenFilters: (
         <FilterSummary bank={bank} filter={filter} count={liveCount} onOpen={onOpenFilters}
           onClear={() => store.setFilter(EMPTY_FILTER)} />
         {filter.diff === 'prog' && (
-          <span className="level" title="Modo Progressivo: 3 acertos seguidos sobem o nível">
-            Progressivo · <b>{DIFF_LABEL[store.s.prog.level]}</b>
+          <span className="level" title="Modo Progressivo: as questões são escolhidas para você acertar a maioria; 3 acertos seguidos sobem o desafio">
+            Progressivo · <b>{STAGE[store.s.prog.level]}</b>
             <span className="pips" aria-hidden="true">
               {[0, 1, 2].map((i) => <i key={i} className={store.s.prog.run > i ? 'on' : ''} />)}
             </span>

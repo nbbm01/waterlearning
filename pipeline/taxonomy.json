@@ -332,6 +332,30 @@
        ]
       },
       {
+       "id": "mat-algebra-basica",
+       "name": "Produtos notáveis, fatoração e frações algébricas",
+       "aliases": [
+        "produtos notáveis",
+        "fatoração",
+        "frações algébricas",
+        "expressões algébricas",
+        "simplificação algébrica",
+        "quadrado da soma",
+        "diferença de quadrados"
+       ],
+       "kw": [
+        "produtos notaveis",
+        "fatora",
+        "fracoes algebricas",
+        "fracao algebrica",
+        "expressao algebrica",
+        "quadrado da soma",
+        "diferenca de quadrados",
+        "simplifica",
+        "racionaliz"
+       ]
+      },
+      {
        "id": "mat-equacao-1grau",
        "name": "Equação do 1º grau",
        "aliases": [

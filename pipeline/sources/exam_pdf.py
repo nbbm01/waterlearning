@@ -27,13 +27,13 @@ def margins(pages):
     return out
 
 
-def segment(pdf, start_re, stop_re=None):
+def segment(pdf, start_re, stop_re=None, first=1, last=None):
     """{número: {"segs": [(pág, x0, y0, x1, y1)], "text": str, "page": int}}
 
     start_re casa o rótulo da questão (grupo 1 = número). stop_re marca linhas que encerram a questão
     anterior sem abrir outra (títulos de seção, instruções).
     """
-    pages = page_lines(pdf, 1, page_count(pdf))
+    pages = page_lines(pdf, first, last or page_count(pdf))
     bounds = margins(pages)
     questions, order, current = {}, [], None
     for p, (w, h, L) in pages.items():

@@ -1,6 +1,7 @@
 """Junta pipeline/out/*.json + curadoria e gera public/data (index, chunks, meta, teoria)."""
 import collections
 import hashlib
+import re
 import json
 import shutil
 
@@ -9,7 +10,7 @@ from common import MILITARY, OUT, PIPE, PUBLIC, RATING, TAXONOMY, subtopic
 CHUNK = 60
 F_COMMENTED, F_CLASSIC, F_MILITARY, F_IMAGE = 1, 2, 4, 8
 # deslocamento de Elo por banca: provas mais seletivas valem mais
-EXAM_OFFSET = {"ITA": 250, "IME": 250, "EN": 150, "AFA": 100, "EFOMM": 100, "EsPCEx": 50, "FUVEST": 100, "UNICAMP": 100}
+EXAM_OFFSET = {"ITA": 300, "IME": 300, "EN": 150, "AFA": 100, "EFOMM": 100, "EsPCEx": 100, "FUVEST": 100, "UNICAMP": 100}
 
 
 def load():
@@ -28,13 +29,47 @@ def load():
 def classify(q):
     """subtópico a partir do texto (enunciado, texto extraído do recorte) e da pista da fonte"""
     text = q.get("raw") or (q.get("stem") or "") + " " + " ".join(o.get("t", "") for o in q.get("opts", []))
+    if q.get("u"):  # a fonte já trouxe o subtópico (tópico da API, capítulo do livro, gerador)
+        # ...mas um capítulo de "equação" às vezes traz inequações: o texto decide
+        if q["u"] in ("mat-equacao-1grau", "mat-equacao-2grau") and re.search(r"[<>≤≥⩽⩾≦≧]|\\(le|ge|lt|gt|leq|geq|leqslant|geqslant)\b|inequa", text):
+            q["u"] = "mat-inequacoes"
+        return
+    text = q.get("raw") or (q.get("stem") or "") + " " + " ".join(o.get("t", "") for o in q.get("opts", []))
     q["t"], q["u"] = subtopic(text, q["s"], q["t"], q.get("hint") or "")
+
+
+TOUGH = {"ITA", "IME"}
+MILITARY_MID = {"EsPCEx", "EFOMM", "AFA", "EN", "EPCAr", "CN", "CMRJ", "EEAR"}
+SELECTIVE = {"FUVEST", "UNICAMP"}
+
+
+def calibrate(q):
+    """dificuldade numa escala única, na lógica de um livro didático:
+    1 = treino (conta direta), 2 = aplicação (problema, vestibular regional), 3 = vestibular exigente.
+    A fonte só desempata dentro do nível da banca."""
+    e, d = q["e"], q["d"]
+    if e == "Waterlearning":  # o gerador já sabe se é treino ou problema
+        return d
+    if e in TOUGH:
+        return 3
+    if e in MILITARY_MID or e in SELECTIVE:
+        return 3 if d >= 2 else 2
+    if e == "Concursos":
+        return 2 if d == 3 else 1
+    if e == "ENEM":
+        return d
+    return max(2, d)  # questões de vestibular (inclusive as dos livros) nunca são "treino"
 
 
 def main():
     qs = load()
+    quarantine = PIPE / "quarantine.json"
+    if quarantine.exists():  # fórmulas quebradas apontadas por audit_render.ts
+        blocked = set(json.loads(quarantine.read_text(encoding="utf-8")))
+        qs = [q for q in qs if q["id"] not in blocked]
     for q in qs:
         classify(q)
+        q["d"] = calibrate(q)
     qs.sort(key=lambda q: (q["s"], q["e"], q["y"] or 0, q["id"]))
 
     # "Clássicas": tópicos que concentram mais questões dentro de cada matéria/banca

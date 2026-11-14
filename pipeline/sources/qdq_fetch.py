@@ -117,8 +117,49 @@ def fetch(budget, only=None):
             print(f"{label} {subj}: ok (gasto até agora {spent()}, restante {state['left']})")
 
 
+# assuntos básicos que os vestibulares cobram dentro de problemas e quase nunca rotulam:
+# (topicoId da API, máximo de questões)
+BASICS = [
+    (11940, 160), (11952, 110), (11941, 110), (11954, 90), (11953, 70), (11931, 90), (11932, 60),
+    (11929, 70), (11934, 110), (11916, 70), (11920, 50), (11945, 50), (11926, 50), (11955, 40),
+]
+
+
+def fetch_topics(budget):
+    """múltipla escolha de nível médio/superior nos tópicos BASICS, até gastar `budget` de cota"""
+    start = None
+    for topic_id, limit in BASICS:
+        taken, page_no = 0, 0
+        while taken < limit:
+            params = {"materiaId": 10, "topicoId": topic_id, "certoOuErrado": "false", "anulada": "false",
+                      "nivel": "MEDIO,SUPERIOR", "page": page_no, "size": 50}
+            page = get("/questoes", params)
+            if start is None:
+                start = state["left"]
+            for q in page["content"]:
+                if taken >= limit:
+                    break
+                if q.get("certoOuErrado") or q.get("anulada") or q.get("desatualizada") or len(q.get("options") or []) < 4:
+                    continue
+                out = CACHE / "questions" / f"{q['id']}.json"
+                if not out.exists():
+                    gab = get(f"/questoes/{q['id']}/gabarito")
+                    out.parent.mkdir(parents=True, exist_ok=True)
+                    out.write_text(json.dumps({"q": q, "gab": gab, "label": "Concursos", "subject": "mat"}, ensure_ascii=False))
+                taken += 1
+                if start is not None and state["left"] is not None and start - state["left"] >= budget:
+                    print(f"orçamento de {budget} atingido; cota restante {state['left']}")
+                    return
+            if page.get("last", True):
+                break
+            page_no += 1
+        print(f"tópico {topic_id}: {taken} questões (cota restante {state['left']})")
+
+
 if __name__ == "__main__":
     if sys.argv[1] == "counts":
         counts()
+    elif sys.argv[1] == "topics":
+        fetch_topics(int(sys.argv[2]) if len(sys.argv) > 2 else 2300)
     else:
         fetch(int(sys.argv[2]) if len(sys.argv) > 2 else 4500, sys.argv[3] if len(sys.argv) > 3 else None)

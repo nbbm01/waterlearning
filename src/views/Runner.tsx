@@ -5,10 +5,11 @@ import { sounds } from '../core/sounds'
 import { store, type AnswerResult, type Mode } from '../core/store'
 import type { StreakEvent } from '../core/streak'
 import { toast } from '../core/toast'
-import { DIFF_LABEL, type Question, type Row } from '../core/types'
+import type { Question, Row } from '../core/types'
 import { LETTERS, optionCount, QuestionView } from './QuestionView'
 import { TheoryPanel } from './TheoryPanel'
 
+const STAGE = { 1: 'Treino', 2: 'Aplicação', 3: 'Desafio' } as const
 const PRAISE = ['Isso!', 'Boa!', 'Certinho.', 'Mandou bem.', 'Exato.']
 const COMFORT = ['Ainda não, e tudo bem.', 'Quase lá.', 'Faz parte do treino.', 'Essa é das que ensinam.']
 const COMBO_MARKS = [3, 5, 10, 15, 20, 30, 50]
@@ -104,8 +105,8 @@ export function Runner({ bank, mode, poolKey, next, empty, progress, onShow }: P
       else if (mode === 'review') sounds.drop()
       else sounds.correct(res.combo)
     }
-    if (res.levelChange > 0) toast(`Você subiu para o nível ${DIFF_LABEL[store.s.prog.level]}.`, '📈')
-    if (res.levelChange < 0) toast(`Voltando ao nível ${DIFF_LABEL[store.s.prog.level]} para firmar a base.`, '🌊')
+    if (res.levelChange > 0) toast(`Três seguidas! O desafio sobe um degrau: ${STAGE[store.s.prog.level]}.`, '📈')
+    if (res.levelChange < 0) toast(`Vamos firmar a base com questões de ${STAGE[store.s.prog.level].toLowerCase()} antes de subir de novo.`, '🌊')
     announceStreak(res.streakEvent, store.s.streak.count)
     if (res.theoryTopic) setTheory(res.theoryTopic)
     requestAnimationFrame(() => nextBtn.current?.focus({ preventScroll: true }))

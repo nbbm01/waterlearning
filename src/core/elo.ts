@@ -5,9 +5,13 @@ export function expected(player: number, question: number): number {
   return 1 / (1 + 10 ** ((question - player) / 400))
 }
 
-/** Novo Elo do aluno: acertar questão difícil sobe muito, errar fácil desce mais. */
+/** Fator das perdas: errar faz parte do treino, então desce menos do que sobe. */
+const LOSS = 0.6
+
+/** Novo Elo do aluno: acertar questão difícil sobe muito, errar fácil desce mais (mas com suavidade). */
 export function updateElo(player: number, question: number, correct: boolean): number {
-  const next = player + K * ((correct ? 1 : 0) - expected(player, question))
+  const delta = (correct ? 1 : 0) - expected(player, question)
+  const next = player + K * (delta < 0 ? delta * LOSS : delta)
   return Math.max(100, Math.round(next))
 }
 

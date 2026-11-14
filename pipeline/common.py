@@ -15,7 +15,7 @@ TAXONOMY = json.loads((PIPE / "taxonomy.json").read_text(encoding="utf-8"))
 MILITARY = {"ITA", "IME", "AFA", "EFOMM", "EsPCEx", "EN", "CN", "EEAR", "ESA", "EPCAr", "CMRJ"}
 
 # Elo inicial da questão por nível de dificuldade
-RATING = {1: 1000, 2: 1250, 3: 1500}
+RATING = {1: 800, 2: 1050, 3: 1300}  # quem começa (Elo 1000) acerta ~76% do nível 1
 
 
 def norm(text):

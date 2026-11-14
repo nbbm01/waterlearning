@@ -31,16 +31,30 @@ export function isEmptyFilter(f: Filter): boolean {
     (f.diff === 'prog' || f.diff === 0) && !f.pending && !f.unseen && !f.classic && !f.military && !f.commented
 }
 
+/** chance de acerto desejada em cada degrau do modo Progressivo */
+export const TARGET = { 1: 0.82, 2: 0.74, 3: 0.65 } as const
+
 /**
  * Escolhe a próxima questão do conjunto filtrado: evita as recentes, prefere as inéditas
  * e, no modo progressivo, fica no nível atual (caindo para o mais próximo se faltar questão).
  */
 export function pickNext(
   pool: Row[], p: ProgressView, recent: readonly string[], level: 0 | 1 | 2 | 3, random: () => number = Math.random,
+  chance?: (r: Row) => number,
 ): Row | null {
   if (!pool.length) return null
   let cands = pool.filter((r) => !recent.includes(r.id))
   if (!cands.length) cands = pool
+  if (level && chance) {
+    // zona de desenvolvimento proximal: mira uma chance de acerto alta, que sobe o desafio aos poucos
+    const target = TARGET[level]
+    const fresh = cands.filter((r) => !p.seen(r.id))
+    const base = fresh.length ? fresh : cands
+    const scored = base.map((r) => ({ r, gap: Math.abs(chance(r) - target) }))
+    scored.sort((a, b) => a.gap - b.gap)
+    const best = scored.filter((x) => x.gap <= scored[0].gap + 0.06).slice(0, 40)
+    return best[Math.floor(random() * best.length)].r
+  }
   if (level) {
     for (const d of [level, level - 1, level + 1, level - 2, level + 2]) {
       const sub = cands.filter((r) => r.d === d)

@@ -8,7 +8,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "data": "python3 pipeline/build.py && python3 pipeline/validate.py"
+    "data": "python3 pipeline/build.py && bun pipeline/audit_render.ts && python3 pipeline/build.py && python3 pipeline/validate.py && python3 pipeline/audit_autoral.py"
   },
   "dependencies": {
     "dexie": "^4.4.7",

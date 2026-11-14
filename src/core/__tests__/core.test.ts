@@ -139,3 +139,15 @@ describe('busca de tópico', async () => {
     expect(searchAll(meta, rows, 'ita')[0]).toMatchObject({ kind: 'exam', label: 'ITA' })
   })
 })
+
+describe('progressivo por Elo', () => {
+  it('quem começa não recebe ITA: escolhe a questão com chance de acerto perto do alvo', async () => {
+    const { expected } = await import('../elo')
+    const pool = [row({ id: 'treino', r: 800 }), row({ id: 'aplicacao', r: 1050 }), row({ id: 'ita', r: 1600 })]
+    const chance = (r: Row) => expected(1000, r.r)
+    for (let i = 0; i < 20; i++) expect(pickNext(pool, none, [], 1, Math.random, chance)!.id).toBe('treino')
+  })
+  it('errar desce menos do que acertar sobe', () => {
+    expect(1000 - updateElo(1000, 1000, false)).toBeLessThan(updateElo(1000, 1000, true) - 1000)
+  })
+})
