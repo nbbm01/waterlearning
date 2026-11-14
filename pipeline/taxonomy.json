@@ -484,19 +484,21 @@
       "aceleracao",
       "movimento uniforme",
       "trajetoria",
-      "km/h",
-      "m/s",
       "queda livre",
       "lancamento",
-      "deslocamento",
       "velocidade escalar",
       "movimento circular",
       "frenagem",
       "tempo de reacao",
       "distancia percorrida",
       "radar",
-      "velocidade maxima",
-      "velocidade"
+      "velocidade maxima"
+     ],
+     "weak": [
+      "velocidade",
+      "m/s",
+      "km/h",
+      "deslocamento"
      ]
     },
     {
@@ -529,7 +531,13 @@
       "polia",
       "plano inclinado",
       "cinto de seguranca",
-      "airbag"
+      "airbag",
+      "massa",
+      "mola",
+      "bloco",
+      "corda",
+      "fio ideal",
+      "aceleracao da gravidade"
      ]
     },
     {
@@ -563,7 +571,10 @@
       "conversao de energia",
       "rendimento",
       "eficiencia energetica",
-      "potencia"
+      "potencia",
+      "energia",
+      "momento linear",
+      "choque"
      ]
     },
     {
@@ -592,7 +603,11 @@
       "vazao",
       "bernoulli",
       "coluna de agua",
-      "manometr"
+      "manometr",
+      "pitot",
+      "liquido",
+      "fluido",
+      "viscos"
      ]
     },
     {
@@ -631,7 +646,17 @@
       "vaporizacao",
       "garrafa termica",
       "motor a combustao",
-      "ciclo de carnot"
+      "ciclo de carnot",
+      "entropia",
+      "segunda lei",
+      "primeira lei",
+      "adiabatic",
+      "isoterm",
+      "isobar",
+      "isocor",
+      "ciclo termodinamico",
+      "gas",
+      "calor especifico"
      ]
     },
     {

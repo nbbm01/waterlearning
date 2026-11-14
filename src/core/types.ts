@@ -30,6 +30,7 @@ export interface Question {
   ans: number
   exp?: string
   src?: string
+  book?: { file: string; page: number }
 }
 
 export interface Topic {

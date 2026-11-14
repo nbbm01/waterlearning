@@ -219,7 +219,10 @@ kbd {
 .rich .katex-display { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
 .q-stem { font-size: 1.04rem; line-height: 1.7; }
 .q-scan img { display: block; width: 100%; height: auto; border-radius: 8px; background: #fff; }
-:root[data-theme='dark'] .q-scan img, :root[data-theme='dark'] .rich img { filter: brightness(0.92) contrast(1.02); }
+:root[data-theme='dark'] .rich img { filter: brightness(0.92) contrast(1.02); }
+/* recortes de livro: texto preto no branco vira claro no escuro, sem ofuscar */
+:root[data-theme='dark'] .q-scan img { filter: invert(0.88) hue-rotate(180deg) contrast(0.95); background: #fff; }
+.q-scan { display: grid; gap: 4px; }
 
 .options { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 8px; }
 .options.compact { grid-template-columns: repeat(5, 1fr); }

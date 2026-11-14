@@ -69,7 +69,7 @@ def main():
             rating = RATING[q["d"]] + EXAM_OFFSET.get(q["e"], 0)
             index.append([q["id"], subj_ids.index(q["s"]), exams.index(q["e"]), q["y"] or 0,
                           topic_ids.index(q["t"]), q["d"], flags, cid, rating])
-            payload[q["id"]] = {k: q[k] for k in ("k", "stem", "opts", "ans", "n", "imgs", "exp", "src") if q.get(k) is not None}
+            payload[q["id"]] = {k: q[k] for k in ("k", "stem", "opts", "ans", "n", "imgs", "exp", "src", "book") if q.get(k) is not None}
         (chunks_dir / f"{cid}.json").write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
 
     theory = {}

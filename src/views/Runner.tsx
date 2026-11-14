@@ -206,7 +206,12 @@ export function Runner({ bank, mode, poolKey, next, empty, progress, onShow }: P
                 {marked ? 'Vai voltar na revisão' : <>Rever depois <kbd>R</kbd></>}
               </button>
             )}
-            {question.src && <span className="source">{question.src}</span>}
+            {question.src && (
+              <span className="source">
+                {question.src}
+                {question.book && <> · <a href={bookHref(question.book.file, question.book.page)} target="_blank" rel="noreferrer">abrir no livro ↗</a></>}
+              </span>
+            )}
           </div>
         </section>
       )}
@@ -216,6 +221,10 @@ export function Runner({ bank, mode, poolKey, next, empty, progress, onShow }: P
       )}
     </div>
   )
+}
+
+export function bookHref(file: string, page?: number): string {
+  return `/livros/${encodeURIComponent(file)}${page ? `#page=${page}` : ''}`
 }
 
 /** variação estável de texto por questão */

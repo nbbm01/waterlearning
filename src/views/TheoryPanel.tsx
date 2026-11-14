@@ -1,10 +1,11 @@
 import { Rich } from '../core/rich'
 import type { TheoryCard } from '../core/types'
+import { bookHref } from './Runner'
 
 /** Card lateral de teoria: aparece sem bloquear a questão e some com um clique. */
 export function TheoryPanel({ card, onClose }: { card: TheoryCard; onClose: () => void }) {
   const ref = card.ref
-  const href = ref?.file ? `/livros/${encodeURIComponent(ref.file)}${ref.page ? `#page=${ref.page}` : ''}` : null
+  const href = ref?.file ? bookHref(ref.file, ref.page) : null
   return (
     <aside className="theory" aria-label="Resumo teórico">
       <header>
