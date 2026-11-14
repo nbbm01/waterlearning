@@ -10,6 +10,7 @@ export function matches(row: Row, f: Filter, p: ProgressView): boolean {
   if (f.subjects.length && !f.subjects.includes(row.s)) return false
   if (f.exams.length && !f.exams.includes(row.e)) return false
   if (f.topics.length && !f.topics.includes(row.t)) return false
+  if (f.subs?.length && !f.subs.includes(row.u)) return false
   if (f.yearMin && (!row.y || row.y < f.yearMin)) return false
   if (f.yearMax && (!row.y || row.y > f.yearMax)) return false
   if (typeof f.diff === 'number' && f.diff && row.d !== f.diff) return false
@@ -26,7 +27,7 @@ export function select(rows: Row[], f: Filter, p: ProgressView): Row[] {
 }
 
 export function isEmptyFilter(f: Filter): boolean {
-  return !f.subjects.length && !f.exams.length && !f.topics.length && !f.yearMin && !f.yearMax &&
+  return !f.subjects.length && !f.exams.length && !f.topics.length && !f.subs?.length && !f.yearMin && !f.yearMax &&
     (f.diff === 'prog' || f.diff === 0) && !f.pending && !f.unseen && !f.classic && !f.military && !f.commented
 }
 

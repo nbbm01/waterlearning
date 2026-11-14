@@ -15,6 +15,7 @@ function FilterSummary({ bank, filter, count, onClear, onOpen }: {
     ...filter.subjects.map((i) => bank.meta.subjects[i].name),
     ...filter.exams.map((i) => bank.meta.exams[i]),
     ...filter.topics.map((i) => bank.topics[i].name),
+    ...(filter.subs ?? []).map((i) => bank.subs[i].name),
     filter.yearMin || filter.yearMax ? `${filter.yearMin || '…'}–${filter.yearMax || '…'}` : '',
     typeof filter.diff === 'number' && filter.diff ? DIFF_LABEL[filter.diff] : '',
     filter.pending ? 'Revisões pendentes' : '', filter.unseen ? 'Inéditas' : '', filter.classic ? 'Clássicas' : '',

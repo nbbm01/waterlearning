@@ -131,7 +131,7 @@ def main():
         out.append({
             "id": f"espcex-{q['id']}", "s": subj, "e": item["label"], "y": q.get("ano") or 0, "t": topic,
             "d": DIFF.get(q.get("dificuldade"), 2), "k": "text", "stem": stem, "opts": opts,
-            "ans": letters.index(gab["resposta"].lower()), "tags": [],
+            "ans": letters.index(gab["resposta"].lower()), "tags": [], "hint": hint,
             "src": f"{item['label']} {q.get('ano') or ''} · {q.get('nomeProva') or ''}".strip(" ·"),
         })
     failed = download(images)

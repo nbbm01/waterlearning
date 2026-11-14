@@ -55,6 +55,107 @@
       "dividir",
       "selos",
       "quantos"
+     ],
+     "subs": [
+      {
+       "id": "mat-razao-proporcao",
+       "name": "Razão, proporção e regra de três",
+       "aliases": [
+        "regra de três",
+        "proporção",
+        "razão",
+        "grandezas proporcionais",
+        "divisão proporcional"
+       ],
+       "kw": [
+        "regra de tres",
+        "proporcional",
+        "razao entre",
+        "proporcao",
+        "divisao proporcional",
+        "inversamente",
+        "diretamente"
+       ]
+      },
+      {
+       "id": "mat-divisibilidade",
+       "name": "MMC, MDC e divisibilidade",
+       "aliases": [
+        "mmc",
+        "mdc",
+        "múltiplos",
+        "divisores",
+        "números primos",
+        "divisibilidade"
+       ],
+       "kw": [
+        "mmc",
+        "mdc",
+        "multiplo",
+        "divisor",
+        "divisivel",
+        "primo",
+        "resto da divisao",
+        "minimo multiplo",
+        "maximo divisor"
+       ]
+      },
+      {
+       "id": "mat-fracoes-decimais",
+       "name": "Frações, decimais e operações",
+       "aliases": [
+        "frações",
+        "números decimais",
+        "dízima",
+        "operações básicas"
+       ],
+       "kw": [
+        "fracao",
+        "fracoes",
+        "decimal",
+        "dizima",
+        "numerador",
+        "denominador"
+       ]
+      },
+      {
+       "id": "mat-potencias-notacao",
+       "name": "Potências, raízes e notação científica",
+       "aliases": [
+        "potenciação",
+        "radiciação",
+        "notação científica",
+        "ordem de grandeza"
+       ],
+       "kw": [
+        "notacao cientifica",
+        "potencia de 10",
+        "ordem de grandeza",
+        "10^",
+        "radicia",
+        "potencia"
+       ]
+      },
+      {
+       "id": "mat-problemas-raciocinio",
+       "name": "Problemas e raciocínio lógico",
+       "aliases": [
+        "lógica",
+        "raciocínio lógico",
+        "problemas",
+        "sequência lógica"
+       ],
+       "kw": [
+        "logica",
+        "verdade",
+        "mentem",
+        "afirmacao",
+        "tabuleiro",
+        "padrao",
+        "calendario",
+        "relogio"
+       ]
+      }
      ]
     },
     {
@@ -85,6 +186,54 @@
       "rendimento",
       "aumento de",
       "reajuste"
+     ],
+     "subs": [
+      {
+       "id": "mat-porcentagem-basica",
+       "name": "Porcentagem e variações",
+       "aliases": [
+        "porcentagem",
+        "aumentos e descontos",
+        "variação percentual"
+       ],
+       "kw": [
+        "%",
+        "por cento",
+        "porcentagem",
+        "percentual",
+        "aumento",
+        "desconto",
+        "reajuste"
+       ]
+      },
+      {
+       "id": "mat-juros-simples",
+       "name": "Juros simples",
+       "aliases": [
+        "juros simples"
+       ],
+       "kw": [
+        "juros simples"
+       ]
+      },
+      {
+       "id": "mat-juros-compostos",
+       "name": "Juros compostos e financiamentos",
+       "aliases": [
+        "juros compostos",
+        "montante",
+        "financiamento",
+        "parcelas"
+       ],
+       "kw": [
+        "juros compostos",
+        "montante",
+        "financiamento",
+        "parcela",
+        "prestac",
+        "capitaliza"
+       ]
+      }
      ]
     },
     {
@@ -141,6 +290,226 @@
       "valor minimo",
       "expressao algebrica",
       "lei de formacao"
+     ],
+     "subs": [
+      {
+       "id": "mat-conjuntos",
+       "name": "Conjuntos e diagramas",
+       "aliases": [
+        "conjuntos",
+        "diagrama de venn",
+        "união e interseção",
+        "teoria dos conjuntos"
+       ],
+       "kw": [
+        "conjunto",
+        "diagrama",
+        "intersec",
+        "uniao",
+        "venn",
+        "pertence",
+        "subconjunto"
+       ]
+      },
+      {
+       "id": "mat-conjuntos-numericos",
+       "name": "Conjuntos numéricos e intervalos",
+       "aliases": [
+        "conjuntos numéricos",
+        "intervalos",
+        "números reais",
+        "racionais",
+        "irracionais"
+       ],
+       "kw": [
+        "conjuntos numericos",
+        "numeros reais",
+        "racional",
+        "irracional",
+        "intervalo",
+        "numeros inteiros",
+        "naturais"
+       ]
+      },
+      {
+       "id": "mat-equacao-1grau",
+       "name": "Equação do 1º grau",
+       "aliases": [
+        "equação do 1º grau",
+        "equação do primeiro grau",
+        "equação linear",
+        "problemas do 1º grau",
+        "sistema do 1º grau",
+        "sistemas de equações do 1º grau"
+       ],
+       "kw": [
+        "equacao do 1",
+        "equacao do primeiro grau",
+        "equacao de primeiro grau",
+        "primeiro grau",
+        "1o grau",
+        "1º grau",
+        "sistema de equacoes do primeiro",
+        "incognita"
+       ]
+      },
+      {
+       "id": "mat-equacao-2grau",
+       "name": "Equação do 2º grau",
+       "aliases": [
+        "equação do 2º grau",
+        "equação do segundo grau",
+        "bhaskara",
+        "soma e produto",
+        "delta",
+        "discriminante"
+       ],
+       "kw": [
+        "equacao do 2",
+        "equacao do segundo grau",
+        "segundo grau",
+        "2o grau",
+        "2º grau",
+        "bhaskara",
+        "discriminante",
+        "soma e produto",
+        "delta"
+       ]
+      },
+      {
+       "id": "mat-inequacoes",
+       "name": "Inequações",
+       "aliases": [
+        "inequação",
+        "inequações",
+        "inequação do 1º grau",
+        "inequação do 2º grau",
+        "inequação produto",
+        "inequação quociente",
+        "sinal da função"
+       ],
+       "kw": [
+        "inequac",
+        "estudo do sinal",
+        "sinal da funcao"
+       ]
+      },
+      {
+       "id": "mat-funcoes-intro",
+       "name": "Introdução às funções",
+       "aliases": [
+        "função",
+        "funções",
+        "domínio",
+        "imagem",
+        "gráfico de função",
+        "relações",
+        "função par",
+        "função ímpar",
+        "injetora",
+        "sobrejetora",
+        "bijetora",
+        "crescente e decrescente"
+       ],
+       "kw": [
+        "introducao as funcoes",
+        "dominio",
+        "imagem",
+        "contradominio",
+        "relac",
+        "injetora",
+        "sobrejetora",
+        "bijetora",
+        "funcao par",
+        "funcao impar",
+        "crescente",
+        "decrescente",
+        "lei de formacao",
+        "grafico da funcao"
+       ]
+      },
+      {
+       "id": "mat-funcao-afim",
+       "name": "Função afim (1º grau)",
+       "aliases": [
+        "função do 1º grau",
+        "função do primeiro grau",
+        "função afim",
+        "função linear",
+        "reta",
+        "coeficiente angular"
+       ],
+       "kw": [
+        "funcao afim",
+        "funcao do 1",
+        "funcao do primeiro grau",
+        "funcao linear",
+        "funcao constante",
+        "polinomial de 1",
+        "coeficiente angular",
+        "taxa de variacao"
+       ]
+      },
+      {
+       "id": "mat-funcao-quadratica",
+       "name": "Função quadrática (2º grau)",
+       "aliases": [
+        "função do 2º grau",
+        "função do segundo grau",
+        "função quadrática",
+        "parábola",
+        "vértice",
+        "máximo e mínimo"
+       ],
+       "kw": [
+        "funcao quadratica",
+        "funcoes quadraticas",
+        "funcao do 2",
+        "funcao do segundo grau",
+        "parabola",
+        "vertice",
+        "valor maximo",
+        "valor minimo",
+        "segundo grau"
+       ]
+      },
+      {
+       "id": "mat-funcao-modular",
+       "name": "Função modular e módulo",
+       "aliases": [
+        "módulo",
+        "valor absoluto",
+        "função modular",
+        "equação modular"
+       ],
+       "kw": [
+        "modulo",
+        "modular",
+        "valor absoluto",
+        "|x"
+       ]
+      },
+      {
+       "id": "mat-funcao-composta-inversa",
+       "name": "Função composta e inversa",
+       "aliases": [
+        "função composta",
+        "função inversa",
+        "f(g(x))",
+        "fog",
+        "gof"
+       ],
+       "kw": [
+        "composta",
+        "inversa",
+        "f(g(",
+        "g(f(",
+        "fog",
+        "gof",
+        "f^-1",
+        "f-1"
+       ]
+      }
      ]
     },
     {
@@ -169,6 +538,81 @@
       "decaimento",
       "escala richter",
       "decibel"
+     ],
+     "subs": [
+      {
+       "id": "mat-potencias-raizes",
+       "name": "Potências e raízes",
+       "aliases": [
+        "potências",
+        "raízes",
+        "radicais",
+        "racionalização"
+       ],
+       "kw": [
+        "potencias e raizes",
+        "radical",
+        "racionaliza",
+        "raiz quadrada",
+        "raiz cubica",
+        "expoente"
+       ]
+      },
+      {
+       "id": "mat-exponencial",
+       "name": "Função e equação exponencial",
+       "aliases": [
+        "exponencial",
+        "equação exponencial",
+        "função exponencial",
+        "inequação exponencial",
+        "crescimento exponencial"
+       ],
+       "kw": [
+        "exponencial",
+        "exponenciais",
+        "2^x",
+        "e^x",
+        "crescimento",
+        "decaimento",
+        "meia-vida"
+       ]
+      },
+      {
+       "id": "mat-logaritmos",
+       "name": "Logaritmos e propriedades",
+       "aliases": [
+        "logaritmo",
+        "logaritmos",
+        "propriedades dos logaritmos",
+        "mudança de base",
+        "log"
+       ],
+       "kw": [
+        "logaritmo",
+        "log ",
+        "log(",
+        "log_",
+        "mudanca de base",
+        "cologaritmo",
+        "logaritmos decimais"
+       ]
+      },
+      {
+       "id": "mat-funcao-logaritmica",
+       "name": "Função e equação logarítmica",
+       "aliases": [
+        "função logarítmica",
+        "equação logarítmica",
+        "inequação logarítmica"
+       ],
+       "kw": [
+        "funcao logaritmica",
+        "equacao logaritmica",
+        "equacoes logaritmicas",
+        "inequac"
+       ]
+      }
      ]
     },
     {
@@ -202,6 +646,113 @@
       "angulo de elevacao",
       "sen(",
       "cos("
+     ],
+     "subs": [
+      {
+       "id": "mat-trig-triangulo",
+       "name": "Trigonometria no triângulo retângulo",
+       "aliases": [
+        "triângulo retângulo",
+        "seno cosseno tangente",
+        "razões trigonométricas"
+       ],
+       "kw": [
+        "triangulo retangulo",
+        "cateto",
+        "hipotenusa",
+        "angulo de elevacao",
+        "razoes trigonometricas"
+       ]
+      },
+      {
+       "id": "mat-trig-leis",
+       "name": "Lei dos senos e dos cossenos",
+       "aliases": [
+        "lei dos senos",
+        "lei dos cossenos",
+        "triângulo qualquer"
+       ],
+       "kw": [
+        "lei dos senos",
+        "lei dos cossenos",
+        "triangulos quaisquer",
+        "triangulo qualquer"
+       ]
+      },
+      {
+       "id": "mat-trig-ciclo",
+       "name": "Ciclo trigonométrico e arcos",
+       "aliases": [
+        "ciclo trigonométrico",
+        "arcos",
+        "radianos",
+        "redução ao 1º quadrante",
+        "arcos notáveis"
+       ],
+       "kw": [
+        "ciclo trigonometrico",
+        "circulo trigonometrico",
+        "arco",
+        "radiano",
+        "quadrante",
+        "arcos notaveis",
+        "reducao"
+       ]
+      },
+      {
+       "id": "mat-trig-funcoes",
+       "name": "Funções trigonométricas",
+       "aliases": [
+        "funções trigonométricas",
+        "período",
+        "gráfico do seno",
+        "funções circulares"
+       ],
+       "kw": [
+        "funcoes circulares",
+        "funcao seno",
+        "funcao cosseno",
+        "periodo",
+        "amplitude",
+        "imagem da funcao"
+       ]
+      },
+      {
+       "id": "mat-trig-identidades",
+       "name": "Identidades e transformações",
+       "aliases": [
+        "identidades trigonométricas",
+        "adição de arcos",
+        "arco duplo",
+        "transformações",
+        "relações fundamentais"
+       ],
+       "kw": [
+        "identidade",
+        "transformac",
+        "arco duplo",
+        "soma de arcos",
+        "adicao de arcos",
+        "relacoes fundamentais",
+        "sen^2",
+        "sen2",
+        "cos2"
+       ]
+      },
+      {
+       "id": "mat-trig-equacoes",
+       "name": "Equações e inequações trigonométricas",
+       "aliases": [
+        "equação trigonométrica",
+        "inequação trigonométrica"
+       ],
+       "kw": [
+        "equacao trigonometrica",
+        "equacoes trigonometricas",
+        "inequac",
+        "solucoes no intervalo"
+       ]
+      }
      ]
     },
     {
@@ -228,6 +779,43 @@
       "razao da progressao",
       "padrao numerico",
       "soma dos termos"
+     ],
+     "subs": [
+      {
+       "id": "mat-pa",
+       "name": "Progressão aritmética (PA)",
+       "aliases": [
+        "pa",
+        "progressão aritmética",
+        "soma da pa",
+        "termo geral da pa"
+       ],
+       "kw": [
+        "progressao aritmetica",
+        "p.a.",
+        " pa ",
+        "razao da pa",
+        "progressoes aritmeticas"
+       ]
+      },
+      {
+       "id": "mat-pg",
+       "name": "Progressão geométrica (PG)",
+       "aliases": [
+        "pg",
+        "progressão geométrica",
+        "soma da pg",
+        "pg infinita"
+       ],
+       "kw": [
+        "progressao geometrica",
+        "p.g.",
+        " pg ",
+        "razao da pg",
+        "progressoes geometricas",
+        "soma infinita"
+       ]
+      }
      ]
     },
     {
@@ -249,6 +837,64 @@
       "sistema linear",
       "sistema de equacoes",
       "linha e coluna"
+     ],
+     "subs": [
+      {
+       "id": "mat-matrizes",
+       "name": "Matrizes",
+       "aliases": [
+        "matriz",
+        "matrizes",
+        "multiplicação de matrizes",
+        "matriz inversa",
+        "transposta"
+       ],
+       "kw": [
+        "matriz",
+        "matrizes",
+        "transposta",
+        "inversa",
+        "elemento a_",
+        "aij"
+       ]
+      },
+      {
+       "id": "mat-determinantes",
+       "name": "Determinantes",
+       "aliases": [
+        "determinante",
+        "sarrus",
+        "laplace"
+       ],
+       "kw": [
+        "determinante",
+        "sarrus",
+        "laplace",
+        "det(",
+        "det "
+       ]
+      },
+      {
+       "id": "mat-sistemas-lineares",
+       "name": "Sistemas lineares",
+       "aliases": [
+        "sistema linear",
+        "sistemas lineares",
+        "escalonamento",
+        "regra de cramer",
+        "spd spi si"
+       ],
+       "kw": [
+        "sistema linear",
+        "sistemas lineares",
+        "escalona",
+        "cramer",
+        "possivel e determinado",
+        "indeterminado",
+        "impossivel",
+        "sistema de equacoes"
+       ]
+      }
      ]
     },
     {
@@ -283,6 +929,75 @@
       "formas distintas",
       "maneiras distintas",
       "maneiras diferentes"
+     ],
+     "subs": [
+      {
+       "id": "mat-pfc",
+       "name": "Princípio fundamental da contagem",
+       "aliases": [
+        "contagem",
+        "princípio multiplicativo",
+        "pfc"
+       ],
+       "kw": [
+        "de quantas maneiras",
+        "quantas maneiras",
+        "principio fundamental",
+        "quantos numeros",
+        "senhas",
+        "placas"
+       ]
+      },
+      {
+       "id": "mat-arranjo-permutacao",
+       "name": "Arranjos, permutações e anagramas",
+       "aliases": [
+        "arranjo",
+        "permutação",
+        "anagramas",
+        "fatorial",
+        "permutação circular"
+       ],
+       "kw": [
+        "arranjo",
+        "permutac",
+        "anagrama",
+        "fatorial",
+        "circular",
+        "fila"
+       ]
+      },
+      {
+       "id": "mat-combinacao",
+       "name": "Combinações",
+       "aliases": [
+        "combinação",
+        "comissões",
+        "grupos"
+       ],
+       "kw": [
+        "combinac",
+        "comissao",
+        "comissoes",
+        "grupos de",
+        "escolher"
+       ]
+      },
+      {
+       "id": "mat-binomio",
+       "name": "Binômio de Newton",
+       "aliases": [
+        "binômio de newton",
+        "triângulo de pascal",
+        "termo geral do binômio"
+       ],
+       "kw": [
+        "binomio",
+        "pascal",
+        "termo independente",
+        "coeficiente binomial"
+       ]
+      }
      ]
     },
     {
@@ -306,6 +1021,40 @@
       "dado nao viciado",
       "moeda honesta",
       "espaco amostral"
+     ],
+     "subs": [
+      {
+       "id": "mat-prob-basica",
+       "name": "Probabilidade simples",
+       "aliases": [
+        "probabilidade",
+        "espaço amostral",
+        "evento"
+       ],
+       "kw": [
+        "probabilidade",
+        "sorteio",
+        "ao acaso",
+        "dado",
+        "moeda"
+       ]
+      },
+      {
+       "id": "mat-prob-condicional",
+       "name": "Probabilidade condicional e eventos",
+       "aliases": [
+        "probabilidade condicional",
+        "eventos independentes",
+        "união de eventos"
+       ],
+       "kw": [
+        "condicional",
+        "independentes",
+        "sabendo que",
+        "dado que",
+        "uniao de eventos"
+       ]
+      }
      ]
     },
     {
@@ -346,6 +1095,68 @@
       "pesquisa",
       "entrevistad",
       "indice"
+     ],
+     "subs": [
+      {
+       "id": "mat-medias",
+       "name": "Médias",
+       "aliases": [
+        "média",
+        "média aritmética",
+        "média ponderada"
+       ],
+       "kw": [
+        "media aritmetica",
+        "media ponderada",
+        "media das",
+        "media dos",
+        "a media"
+       ]
+      },
+      {
+       "id": "mat-mediana-moda",
+       "name": "Mediana e moda",
+       "aliases": [
+        "mediana",
+        "moda",
+        "medidas de tendência central"
+       ],
+       "kw": [
+        "mediana",
+        "moda"
+       ]
+      },
+      {
+       "id": "mat-dispersao",
+       "name": "Desvio padrão e variância",
+       "aliases": [
+        "desvio padrão",
+        "variância",
+        "dispersão"
+       ],
+       "kw": [
+        "desvio padrao",
+        "variancia",
+        "dispersao",
+        "desvio medio"
+       ]
+      },
+      {
+       "id": "mat-graficos-tabelas",
+       "name": "Leitura de gráficos e tabelas",
+       "aliases": [
+        "gráficos",
+        "tabelas",
+        "interpretação de gráficos"
+       ],
+       "kw": [
+        "grafico",
+        "tabela",
+        "quadro",
+        "histograma",
+        "infografico"
+       ]
+      }
      ]
     },
     {
@@ -376,6 +1187,65 @@
       "equacao polinomial",
       "divisao de p(x)",
       "p(x)"
+     ],
+     "subs": [
+      {
+       "id": "mat-complexos",
+       "name": "Números complexos",
+       "aliases": [
+        "números complexos",
+        "unidade imaginária",
+        "forma trigonométrica",
+        "argand-gauss",
+        "de moivre"
+       ],
+       "kw": [
+        "complexo",
+        "imaginari",
+        "argand",
+        "moivre",
+        "forma trigonometrica",
+        "conjugado",
+        " i^"
+       ]
+      },
+      {
+       "id": "mat-polinomios",
+       "name": "Polinômios",
+       "aliases": [
+        "polinômio",
+        "divisão de polinômios",
+        "teorema do resto",
+        "briot-ruffini",
+        "identidade de polinômios"
+       ],
+       "kw": [
+        "polinomio",
+        "briot",
+        "ruffini",
+        "teorema do resto",
+        "grau do polinomio",
+        "divisao de p"
+       ]
+      },
+      {
+       "id": "mat-equacoes-polinomiais",
+       "name": "Equações polinomiais e relações de Girard",
+       "aliases": [
+        "equações polinomiais",
+        "equação algébrica",
+        "relações de girard",
+        "raízes múltiplas"
+       ],
+       "kw": [
+        "equacao polinomial",
+        "equacoes polinomiais",
+        "equacao algebrica",
+        "girard",
+        "raizes multiplas",
+        "raiz dupla"
+       ]
+      }
      ]
     },
     {
@@ -433,6 +1303,89 @@
       "tabuleiro",
       "malha quadriculada",
       "figura"
+     ],
+     "subs": [
+      {
+       "id": "mat-triangulos",
+       "name": "Triângulos, semelhança e Pitágoras",
+       "aliases": [
+        "triângulos",
+        "semelhança de triângulos",
+        "teorema de pitágoras",
+        "teorema de tales",
+        "relações métricas"
+       ],
+       "kw": [
+        "triangulo",
+        "semelhan",
+        "pitagoras",
+        "tales",
+        "relacoes metricas",
+        "bissetriz",
+        "mediana do triangulo"
+       ]
+      },
+      {
+       "id": "mat-areas",
+       "name": "Áreas e perímetros",
+       "aliases": [
+        "área",
+        "áreas",
+        "perímetro",
+        "área de figuras planas"
+       ],
+       "kw": [
+        "area",
+        "perimetro",
+        "m²",
+        "m2",
+        "cm²",
+        "metros quadrados"
+       ]
+      },
+      {
+       "id": "mat-circunferencia-plana",
+       "name": "Circunferência e círculo",
+       "aliases": [
+        "circunferência",
+        "círculo",
+        "arco",
+        "setor circular",
+        "comprimento da circunferência"
+       ],
+       "kw": [
+        "circunferencia",
+        "circulo",
+        "setor circular",
+        "coroa circular",
+        "corda",
+        "tangente a circunferencia",
+        "inscrit",
+        "circunscrit"
+       ]
+      },
+      {
+       "id": "mat-poligonos-angulos",
+       "name": "Polígonos e ângulos",
+       "aliases": [
+        "polígonos",
+        "ângulos",
+        "quadriláteros",
+        "polígonos regulares",
+        "soma dos ângulos internos"
+       ],
+       "kw": [
+        "poligono",
+        "quadrilatero",
+        "hexagono",
+        "pentagono",
+        "angulo",
+        "diagonais",
+        "paralelogramo",
+        "trapezio",
+        "losango"
+       ]
+      }
      ]
     },
     {
@@ -476,6 +1429,80 @@
       "planificacao",
       "vista superior",
       "projecao ortogonal"
+     ],
+     "subs": [
+      {
+       "id": "mat-prismas",
+       "name": "Prismas, cubos e paralelepípedos",
+       "aliases": [
+        "prisma",
+        "cubo",
+        "paralelepípedo",
+        "bloco retangular"
+       ],
+       "kw": [
+        "prisma",
+        "cubo",
+        "paralelepipedo",
+        "bloco retangular",
+        "caixa"
+       ]
+      },
+      {
+       "id": "mat-cilindros",
+       "name": "Cilindros",
+       "aliases": [
+        "cilindro"
+       ],
+       "kw": [
+        "cilindr"
+       ]
+      },
+      {
+       "id": "mat-cones-piramides",
+       "name": "Cones e pirâmides",
+       "aliases": [
+        "cone",
+        "pirâmide",
+        "tronco"
+       ],
+       "kw": [
+        "cone",
+        "piramide",
+        "tronco"
+       ]
+      },
+      {
+       "id": "mat-esferas",
+       "name": "Esferas",
+       "aliases": [
+        "esfera",
+        "bola",
+        "calota"
+       ],
+       "kw": [
+        "esfera",
+        "calota",
+        "fuso",
+        "cunha esferica"
+       ]
+      },
+      {
+       "id": "mat-poliedros",
+       "name": "Poliedros e relação de Euler",
+       "aliases": [
+        "poliedros",
+        "relação de euler",
+        "vértices faces arestas"
+       ],
+       "kw": [
+        "poliedro",
+        "euler",
+        "faces",
+        "arestas",
+        "vertices"
+       ]
+      }
      ]
     },
     {
@@ -510,6 +1537,63 @@
       "equacao da circunferencia",
       "ordenada",
       "abscissa"
+     ],
+     "subs": [
+      {
+       "id": "mat-ponto-reta",
+       "name": "Ponto e reta",
+       "aliases": [
+        "ponto",
+        "reta",
+        "distância entre pontos",
+        "equação da reta",
+        "coeficiente angular",
+        "retas paralelas e perpendiculares"
+       ],
+       "kw": [
+        "equacao da reta",
+        "coeficiente angular",
+        "distancia entre",
+        "ponto medio",
+        "alinhados",
+        "paralelas",
+        "perpendiculares",
+        "distancia de ponto a reta",
+        "teoria angular"
+       ]
+      },
+      {
+       "id": "mat-circunferencia-analitica",
+       "name": "Circunferência (analítica)",
+       "aliases": [
+        "equação da circunferência",
+        "posição relativa",
+        "tangência"
+       ],
+       "kw": [
+        "circunferencia",
+        "centro e raio",
+        "tangen"
+       ]
+      },
+      {
+       "id": "mat-conicas",
+       "name": "Cônicas",
+       "aliases": [
+        "cônicas",
+        "elipse",
+        "hipérbole",
+        "parábola (cônica)"
+       ],
+       "kw": [
+        "conica",
+        "elipse",
+        "hiperbole",
+        "foco",
+        "excentricidade",
+        "diretriz"
+       ]
+      }
      ]
     },
     {
@@ -544,6 +1628,41 @@
       "km",
       "quilos",
       "gramas"
+     ],
+     "subs": [
+      {
+       "id": "mat-conversao",
+       "name": "Conversão de unidades",
+       "aliases": [
+        "unidades",
+        "conversão de unidades",
+        "medidas"
+       ],
+       "kw": [
+        "converter",
+        "conversao",
+        "unidade",
+        "litro",
+        "metro",
+        "grama",
+        "hora",
+        "minuto"
+       ]
+      },
+      {
+       "id": "mat-escalas",
+       "name": "Escalas",
+       "aliases": [
+        "escala",
+        "mapas e plantas"
+       ],
+       "kw": [
+        "escala",
+        "planta",
+        "mapa",
+        "maquete"
+       ]
+      }
      ]
     },
     {
@@ -560,6 +1679,52 @@
       "derivada",
       "integral",
       "lim "
+     ],
+     "subs": [
+      {
+       "id": "mat-limites",
+       "name": "Limites e continuidade",
+       "aliases": [
+        "limite",
+        "limites",
+        "continuidade"
+       ],
+       "kw": [
+        "limite",
+        "lim ",
+        "continu",
+        "infinito"
+       ]
+      },
+      {
+       "id": "mat-derivadas",
+       "name": "Derivadas",
+       "aliases": [
+        "derivada",
+        "derivadas",
+        "reta tangente",
+        "máximos e mínimos"
+       ],
+       "kw": [
+        "derivad",
+        "reta tangente",
+        "taxa de variacao instantanea"
+       ]
+      },
+      {
+       "id": "mat-integrais",
+       "name": "Integrais",
+       "aliases": [
+        "integral",
+        "integrais",
+        "área sob a curva"
+       ],
+       "kw": [
+        "integral",
+        "primitiva",
+        "area sob"
+       ]
+      }
      ]
     }
    ]
@@ -609,6 +1774,100 @@
       "m/s",
       "km/h",
       "deslocamento"
+     ],
+     "subs": [
+      {
+       "id": "fis-mru",
+       "name": "Movimento uniforme (MRU)",
+       "aliases": [
+        "mru",
+        "movimento uniforme",
+        "velocidade média",
+        "velocidade constante"
+       ],
+       "kw": [
+        "movimento uniforme",
+        "velocidade constante",
+        "velocidade media",
+        "mru",
+        "encontro"
+       ]
+      },
+      {
+       "id": "fis-muv",
+       "name": "Movimento uniformemente variado (MRUV)",
+       "aliases": [
+        "mruv",
+        "muv",
+        "aceleração",
+        "torricelli",
+        "movimento acelerado"
+       ],
+       "kw": [
+        "aceleracao",
+        "acelera",
+        "freia",
+        "frenagem",
+        "torricelli",
+        "uniformemente variado",
+        "muv",
+        "mruv"
+       ]
+      },
+      {
+       "id": "fis-queda-lancamentos",
+       "name": "Queda livre e lançamentos",
+       "aliases": [
+        "queda livre",
+        "lançamento vertical",
+        "lançamento oblíquo",
+        "lançamento horizontal"
+       ],
+       "kw": [
+        "queda livre",
+        "lancamento",
+        "lancado",
+        "abandonado",
+        "altura maxima",
+        "alcance"
+       ]
+      },
+      {
+       "id": "fis-movimento-circular",
+       "name": "Movimento circular",
+       "aliases": [
+        "mcu",
+        "movimento circular",
+        "frequência e período",
+        "velocidade angular",
+        "polias e engrenagens"
+       ],
+       "kw": [
+        "circular",
+        "angular",
+        "rpm",
+        "engrenage",
+        "polia",
+        "periodo",
+        "frequencia"
+       ]
+      },
+      {
+       "id": "fis-vetores-graficos",
+       "name": "Vetores e gráficos do movimento",
+       "aliases": [
+        "vetores",
+        "gráficos s x t",
+        "gráficos v x t",
+        "composição de movimentos"
+       ],
+       "kw": [
+        "vetor",
+        "grafico",
+        "composicao de movimentos",
+        "relativa"
+       ]
+      }
      ]
     },
     {
@@ -659,6 +1918,94 @@
       "corda",
       "fio ideal",
       "aceleracao da gravidade"
+     ],
+     "subs": [
+      {
+       "id": "fis-leis-newton",
+       "name": "Leis de Newton",
+       "aliases": [
+        "leis de newton",
+        "primeira lei",
+        "segunda lei",
+        "terceira lei",
+        "inércia",
+        "ação e reação"
+       ],
+       "kw": [
+        "newton",
+        "inercia",
+        "acao e reacao",
+        "resultante",
+        "f = m",
+        "bloco",
+        "fio",
+        "tracao"
+       ]
+      },
+      {
+       "id": "fis-atrito-plano",
+       "name": "Atrito e plano inclinado",
+       "aliases": [
+        "atrito",
+        "plano inclinado",
+        "coeficiente de atrito"
+       ],
+       "kw": [
+        "atrito",
+        "plano inclinado",
+        "rampa"
+       ]
+      },
+      {
+       "id": "fis-estatica",
+       "name": "Estática e torque",
+       "aliases": [
+        "estática",
+        "equilíbrio",
+        "torque",
+        "momento de uma força",
+        "alavanca"
+       ],
+       "kw": [
+        "equilibrio",
+        "torque",
+        "momento",
+        "alavanca",
+        "estatica",
+        "apoio",
+        "barra"
+       ]
+      },
+      {
+       "id": "fis-centripeta",
+       "name": "Força centrípeta e curvas",
+       "aliases": [
+        "força centrípeta",
+        "curvas",
+        "looping"
+       ],
+       "kw": [
+        "centripeta",
+        "curva",
+        "looping",
+        "globo da morte"
+       ]
+      },
+      {
+       "id": "fis-molas",
+       "name": "Força elástica e molas",
+       "aliases": [
+        "lei de hooke",
+        "força elástica",
+        "molas"
+       ],
+       "kw": [
+        "mola",
+        "hooke",
+        "elastic",
+        "deformacao"
+       ]
+      }
      ]
     },
     {
@@ -702,6 +2049,79 @@
       "energia",
       "momento linear",
       "choque"
+     ],
+     "subs": [
+      {
+       "id": "fis-trabalho-energia",
+       "name": "Trabalho e energia mecânica",
+       "aliases": [
+        "trabalho",
+        "energia cinética",
+        "energia potencial",
+        "conservação da energia",
+        "energia mecânica"
+       ],
+       "kw": [
+        "trabalho",
+        "energia cinetica",
+        "energia potencial",
+        "energia mecanica",
+        "conservacao"
+       ]
+      },
+      {
+       "id": "fis-potencia-rendimento",
+       "name": "Potência e rendimento",
+       "aliases": [
+        "potência",
+        "rendimento",
+        "eficiência"
+       ],
+       "kw": [
+        "potencia",
+        "rendimento",
+        "eficiencia",
+        "watt"
+       ]
+      },
+      {
+       "id": "fis-impulso-colisoes",
+       "name": "Impulso, quantidade de movimento e colisões",
+       "aliases": [
+        "impulso",
+        "quantidade de movimento",
+        "colisões",
+        "choques",
+        "momento linear"
+       ],
+       "kw": [
+        "impulso",
+        "quantidade de movimento",
+        "colisao",
+        "choque",
+        "momento linear",
+        "recuo"
+       ]
+      },
+      {
+       "id": "fis-fontes-energia",
+       "name": "Fontes e transformações de energia",
+       "aliases": [
+        "usinas",
+        "fontes de energia",
+        "transformação de energia"
+       ],
+       "kw": [
+        "usina",
+        "hidreletrica",
+        "eolica",
+        "solar",
+        "termeletrica",
+        "nuclear",
+        "transformacao de energia",
+        "fonte de energia"
+       ]
+      }
      ]
     },
     {
@@ -740,6 +2160,74 @@
       "liquido",
       "fluido",
       "viscos"
+     ],
+     "subs": [
+      {
+       "id": "fis-pressao-stevin",
+       "name": "Pressão e Stevin",
+       "aliases": [
+        "pressão",
+        "teorema de stevin",
+        "pressão atmosférica",
+        "vasos comunicantes"
+       ],
+       "kw": [
+        "pressao",
+        "stevin",
+        "atmosferica",
+        "vasos comunicantes",
+        "profundidade",
+        "manometr"
+       ]
+      },
+      {
+       "id": "fis-empuxo",
+       "name": "Empuxo e densidade",
+       "aliases": [
+        "empuxo",
+        "arquimedes",
+        "densidade",
+        "flutuação"
+       ],
+       "kw": [
+        "empuxo",
+        "arquimedes",
+        "flutua",
+        "afunda",
+        "densidade",
+        "submers"
+       ]
+      },
+      {
+       "id": "fis-pascal",
+       "name": "Princípio de Pascal e prensa hidráulica",
+       "aliases": [
+        "pascal",
+        "prensa hidráulica",
+        "elevador hidráulico"
+       ],
+       "kw": [
+        "pascal",
+        "prensa",
+        "hidraulic"
+       ]
+      },
+      {
+       "id": "fis-hidrodinamica",
+       "name": "Vazão e hidrodinâmica",
+       "aliases": [
+        "vazão",
+        "bernoulli",
+        "escoamento"
+       ],
+       "kw": [
+        "vazao",
+        "bernoulli",
+        "escoamento",
+        "pitot",
+        "torricelli"
+       ]
+      }
      ]
     },
     {
@@ -799,6 +2287,103 @@
       "ciclo termodinamico",
       "gas",
       "calor especifico"
+     ],
+     "subs": [
+      {
+       "id": "fis-termometria",
+       "name": "Temperatura e escalas",
+       "aliases": [
+        "termometria",
+        "escalas termométricas",
+        "celsius fahrenheit kelvin"
+       ],
+       "kw": [
+        "celsius",
+        "fahrenheit",
+        "kelvin",
+        "escala termometrica",
+        "termometr"
+       ]
+      },
+      {
+       "id": "fis-calorimetria",
+       "name": "Calorimetria e mudanças de estado",
+       "aliases": [
+        "calorimetria",
+        "calor específico",
+        "calor latente",
+        "mudança de estado",
+        "trocas de calor"
+       ],
+       "kw": [
+        "calor especifico",
+        "calor latente",
+        "capacidade termica",
+        "calorimetr",
+        "fusao",
+        "ebulicao",
+        "vaporizacao",
+        "equilibrio termico",
+        "caloria"
+       ]
+      },
+      {
+       "id": "fis-dilatacao",
+       "name": "Dilatação térmica",
+       "aliases": [
+        "dilatação",
+        "dilatação linear",
+        "dilatação volumétrica"
+       ],
+       "kw": [
+        "dilatac",
+        "coeficiente de dilatacao"
+       ]
+      },
+      {
+       "id": "fis-propagacao-calor",
+       "name": "Propagação do calor",
+       "aliases": [
+        "condução",
+        "convecção",
+        "irradiação",
+        "isolantes"
+       ],
+       "kw": [
+        "conducao",
+        "conveccao",
+        "irradiacao",
+        "isolante",
+        "condutor termico",
+        "estufa",
+        "garrafa termica"
+       ]
+      },
+      {
+       "id": "fis-gases-termodinamica",
+       "name": "Gases e termodinâmica",
+       "aliases": [
+        "gases ideais",
+        "transformações gasosas",
+        "leis da termodinâmica",
+        "máquinas térmicas",
+        "ciclo de carnot",
+        "entropia"
+       ],
+       "kw": [
+        "gas",
+        "isoterm",
+        "isobar",
+        "isocor",
+        "adiabat",
+        "termodinamic",
+        "carnot",
+        "maquina termica",
+        "entropia",
+        "motor",
+        "refrigerador"
+       ]
+      }
      ]
     },
     {
@@ -843,6 +2428,83 @@
       "laser",
       "olho humano",
       "luminos"
+     ],
+     "subs": [
+      {
+       "id": "fis-reflexao-espelhos",
+       "name": "Reflexão e espelhos",
+       "aliases": [
+        "reflexão",
+        "espelho plano",
+        "espelhos esféricos"
+       ],
+       "kw": [
+        "espelho",
+        "reflexao",
+        "reflete",
+        "imagem virtual"
+       ]
+      },
+      {
+       "id": "fis-refracao",
+       "name": "Refração e lei de Snell",
+       "aliases": [
+        "refração",
+        "lei de snell",
+        "índice de refração",
+        "reflexão total"
+       ],
+       "kw": [
+        "refracao",
+        "refrata",
+        "snell",
+        "indice de refracao",
+        "reflexao total",
+        "dispersao",
+        "prisma"
+       ]
+      },
+      {
+       "id": "fis-lentes-visao",
+       "name": "Lentes e óptica da visão",
+       "aliases": [
+        "lentes",
+        "óptica da visão",
+        "miopia",
+        "hipermetropia",
+        "instrumentos ópticos"
+       ],
+       "kw": [
+        "lente",
+        "miopia",
+        "hipermetropia",
+        "olho",
+        "oculos",
+        "vergencia",
+        "dioptria",
+        "lupa",
+        "microscopio",
+        "telescopio"
+       ]
+      },
+      {
+       "id": "fis-luz-sombra",
+       "name": "Luz, sombra e cores",
+       "aliases": [
+        "princípios da óptica",
+        "sombra",
+        "câmara escura",
+        "cores"
+       ],
+       "kw": [
+        "sombra",
+        "penumbra",
+        "camara escura",
+        "eclipse",
+        "cor",
+        "luz branca"
+       ]
+      }
      ]
     },
     {
@@ -885,6 +2547,67 @@
       "harmonico",
       "mhz",
       "khz"
+     ],
+     "subs": [
+      {
+       "id": "fis-ondas",
+       "name": "Ondas e fenômenos ondulatórios",
+       "aliases": [
+        "ondas",
+        "frequência",
+        "comprimento de onda",
+        "difração",
+        "interferência",
+        "ressonância"
+       ],
+       "kw": [
+        "onda",
+        "comprimento de onda",
+        "difracao",
+        "interferencia",
+        "ressonancia",
+        "polarizac"
+       ]
+      },
+      {
+       "id": "fis-acustica",
+       "name": "Acústica e som",
+       "aliases": [
+        "som",
+        "acústica",
+        "efeito doppler",
+        "cordas e tubos",
+        "intensidade sonora"
+       ],
+       "kw": [
+        "som",
+        "sonor",
+        "acustic",
+        "doppler",
+        "decibel",
+        "tubo",
+        "corda",
+        "eco",
+        "timbre",
+        "altura do som"
+       ]
+      },
+      {
+       "id": "fis-mhs",
+       "name": "MHS e pêndulos",
+       "aliases": [
+        "mhs",
+        "movimento harmônico simples",
+        "pêndulo",
+        "oscilações"
+       ],
+       "kw": [
+        "mhs",
+        "harmonico simples",
+        "pendulo",
+        "oscila"
+       ]
+      }
      ]
     },
     {
@@ -938,6 +2661,92 @@
       "watt",
       "ddp",
       "eletric"
+     ],
+     "subs": [
+      {
+       "id": "fis-eletrostatica",
+       "name": "Eletrostática (carga, campo e potencial)",
+       "aliases": [
+        "eletrostática",
+        "carga elétrica",
+        "lei de coulomb",
+        "campo elétrico",
+        "potencial elétrico",
+        "eletrização"
+       ],
+       "kw": [
+        "coulomb",
+        "carga eletrica",
+        "campo eletrico",
+        "potencial eletrico",
+        "eletriza",
+        "eletrostatic",
+        "para-raios",
+        "esfera condutora"
+       ]
+      },
+      {
+       "id": "fis-circuitos",
+       "name": "Circuitos e resistores",
+       "aliases": [
+        "circuitos",
+        "resistores",
+        "associação de resistores",
+        "lei de ohm",
+        "amperímetro voltímetro"
+       ],
+       "kw": [
+        "resistor",
+        "circuito",
+        "ohm",
+        "associacao",
+        "amperimetro",
+        "voltimetro",
+        "serie",
+        "paralelo",
+        "kirchhoff"
+       ]
+      },
+      {
+       "id": "fis-potencia-consumo",
+       "name": "Potência elétrica e consumo",
+       "aliases": [
+        "potência elétrica",
+        "consumo de energia",
+        "kwh",
+        "conta de luz"
+       ],
+       "kw": [
+        "potencia",
+        "kwh",
+        "consumo",
+        "chuveiro",
+        "lampada",
+        "conta de luz",
+        "fusivel",
+        "disjuntor"
+       ]
+      },
+      {
+       "id": "fis-capacitores-geradores",
+       "name": "Geradores, receptores e capacitores",
+       "aliases": [
+        "geradores",
+        "receptores",
+        "capacitores",
+        "pilhas",
+        "força eletromotriz"
+       ],
+       "kw": [
+        "gerador",
+        "receptor",
+        "capacitor",
+        "forca eletromotriz",
+        "fem",
+        "pilha",
+        "bateria"
+       ]
+      }
      ]
     },
     {
@@ -969,6 +2778,46 @@
       "espira",
       "dinamo",
       "eletroima"
+     ],
+     "subs": [
+      {
+       "id": "fis-campo-forca-magnetica",
+       "name": "Campo e força magnética",
+       "aliases": [
+        "campo magnético",
+        "força magnética",
+        "ímãs",
+        "regra da mão direita"
+       ],
+       "kw": [
+        "campo magnetico",
+        "forca magnetica",
+        "ima",
+        "bussola",
+        "regra da mao"
+       ]
+      },
+      {
+       "id": "fis-inducao",
+       "name": "Indução eletromagnética",
+       "aliases": [
+        "indução",
+        "lei de faraday",
+        "lei de lenz",
+        "transformadores",
+        "fluxo magnético"
+       ],
+       "kw": [
+        "inducao",
+        "induzida",
+        "faraday",
+        "lenz",
+        "fluxo",
+        "transformador",
+        "gerador",
+        "dinamo"
+       ]
+      }
      ]
     },
     {
@@ -991,6 +2840,25 @@
       "mare",
       "estacao espacial",
       "gravidade"
+     ],
+     "subs": [
+      {
+       "id": "fis-kepler-newton",
+       "name": "Leis de Kepler e gravitação universal",
+       "aliases": [
+        "kepler",
+        "gravitação universal",
+        "satélites",
+        "órbitas"
+       ],
+       "kw": [
+        "kepler",
+        "gravitac",
+        "satelite",
+        "orbita",
+        "planeta"
+       ]
+      }
      ]
     },
     {
@@ -1018,6 +2886,44 @@
       "planck",
       "dualidade",
       "bohr"
+     ],
+     "subs": [
+      {
+       "id": "fis-quantica",
+       "name": "Fótons e efeito fotoelétrico",
+       "aliases": [
+        "efeito fotoelétrico",
+        "fóton",
+        "quântica",
+        "modelo de bohr"
+       ],
+       "kw": [
+        "fotoeletrico",
+        "foton",
+        "quantic",
+        "bohr",
+        "planck"
+       ]
+      },
+      {
+       "id": "fis-relatividade-nuclear",
+       "name": "Relatividade e física nuclear",
+       "aliases": [
+        "relatividade",
+        "radioatividade",
+        "fissão",
+        "fusão nuclear",
+        "meia-vida"
+       ],
+       "kw": [
+        "relatividade",
+        "radioativ",
+        "fissao",
+        "fusao nuclear",
+        "meia-vida",
+        "decaimento"
+       ]
+      }
      ]
     }
    ]
@@ -1063,6 +2969,95 @@
       "palmares",
       "tupinamba",
       "aldeamento"
+     ],
+     "subs": [
+      {
+       "id": "his-colonizacao-acucar",
+       "name": "Colonização e economia açucareira",
+       "aliases": [
+        "colonização",
+        "capitanias hereditárias",
+        "governo-geral",
+        "ciclo do açúcar",
+        "engenhos"
+       ],
+       "kw": [
+        "capitania",
+        "governo-geral",
+        "acucar",
+        "engenho",
+        "pau-brasil",
+        "colonizac",
+        "sesmaria"
+       ]
+      },
+      {
+       "id": "his-mineracao",
+       "name": "Mineração e século XVIII",
+       "aliases": [
+        "mineração",
+        "ciclo do ouro",
+        "minas gerais colonial"
+       ],
+       "kw": [
+        "minera",
+        "ouro",
+        "diamante",
+        "vila rica",
+        "quinto"
+       ]
+      },
+      {
+       "id": "his-escravidao-resistencia",
+       "name": "Escravidão e resistência",
+       "aliases": [
+        "escravidão",
+        "quilombos",
+        "palmares",
+        "tráfico negreiro"
+       ],
+       "kw": [
+        "escrav",
+        "quilombo",
+        "palmares",
+        "trafico",
+        "africanos"
+       ]
+      },
+      {
+       "id": "his-indigenas-jesuitas",
+       "name": "Indígenas e jesuítas",
+       "aliases": [
+        "indígenas",
+        "jesuítas",
+        "catequese",
+        "missões"
+       ],
+       "kw": [
+        "indigena",
+        "indio",
+        "jesuit",
+        "catequese",
+        "aldeamento",
+        "missoes"
+       ]
+      },
+      {
+       "id": "his-revoltas-coloniais",
+       "name": "Revoltas coloniais",
+       "aliases": [
+        "inconfidência mineira",
+        "conjuração baiana",
+        "revoltas nativistas"
+       ],
+       "kw": [
+        "inconfidencia",
+        "conjuracao",
+        "revolta",
+        "motim",
+        "sedicao"
+       ]
+      }
      ]
     },
     {
@@ -1107,6 +3102,83 @@
       "imperial",
       "barao",
       "cafeicult"
+     ],
+     "subs": [
+      {
+       "id": "his-independencia",
+       "name": "Independência e Primeiro Reinado",
+       "aliases": [
+        "independência do brasil",
+        "primeiro reinado",
+        "constituição de 1824",
+        "poder moderador",
+        "corte portuguesa"
+       ],
+       "kw": [
+        "independencia",
+        "primeiro reinado",
+        "1824",
+        "poder moderador",
+        "corte portuguesa",
+        "familia real",
+        "d. joao"
+       ]
+      },
+      {
+       "id": "his-regencias",
+       "name": "Período regencial e revoltas",
+       "aliases": [
+        "regência",
+        "revoltas regenciais",
+        "cabanagem",
+        "farroupilha",
+        "balaiada",
+        "sabinada"
+       ],
+       "kw": [
+        "regencia",
+        "regencial",
+        "cabanagem",
+        "farroupilha",
+        "balaiada",
+        "sabinada",
+        "males"
+       ]
+      },
+      {
+       "id": "his-segundo-reinado",
+       "name": "Segundo Reinado e café",
+       "aliases": [
+        "segundo reinado",
+        "café",
+        "guerra do paraguai",
+        "imigração"
+       ],
+       "kw": [
+        "segundo reinado",
+        "cafe",
+        "paraguai",
+        "imigra",
+        "d. pedro ii"
+       ]
+      },
+      {
+       "id": "his-abolicao",
+       "name": "Abolição da escravidão",
+       "aliases": [
+        "abolição",
+        "lei áurea",
+        "lei do ventre livre",
+        "abolicionismo"
+       ],
+       "kw": [
+        "abolic",
+        "lei aurea",
+        "ventre livre",
+        "sexagenarios",
+        "eusebio"
+       ]
+      }
      ]
     },
     {
@@ -1142,6 +3214,47 @@
       "bota-abaixo",
       "oswaldo cruz",
       "antonio conselheiro"
+     ],
+     "subs": [
+      {
+       "id": "his-oligarquias",
+       "name": "Oligarquias, coronelismo e café com leite",
+       "aliases": [
+        "coronelismo",
+        "política dos governadores",
+        "café com leite",
+        "voto de cabresto"
+       ],
+       "kw": [
+        "coronel",
+        "oligarqu",
+        "cafe com leite",
+        "politica dos governadores",
+        "cabresto"
+       ]
+      },
+      {
+       "id": "his-revoltas-republica",
+       "name": "Revoltas e movimentos sociais",
+       "aliases": [
+        "canudos",
+        "contestado",
+        "revolta da vacina",
+        "revolta da chibata",
+        "tenentismo",
+        "greves operárias"
+       ],
+       "kw": [
+        "canudos",
+        "contestado",
+        "vacina",
+        "chibata",
+        "tenent",
+        "greve",
+        "operari",
+        "cangac"
+       ]
+      }
      ]
     },
     {
@@ -1171,6 +3284,46 @@
       "1934",
       "leis trabalhistas",
       "populis"
+     ],
+     "subs": [
+      {
+       "id": "his-vargas-1930-37",
+       "name": "Revolução de 1930 e governo constitucional",
+       "aliases": [
+        "revolução de 1930",
+        "revolução constitucionalista",
+        "constituição de 1934",
+        "integralismo",
+        "anl"
+       ],
+       "kw": [
+        "1930",
+        "1932",
+        "1934",
+        "constitucionalista",
+        "integralis",
+        "alianca nacional"
+       ]
+      },
+      {
+       "id": "his-estado-novo",
+       "name": "Estado Novo e trabalhismo",
+       "aliases": [
+        "estado novo",
+        "clt",
+        "dip",
+        "trabalhismo",
+        "populismo"
+       ],
+       "kw": [
+        "estado novo",
+        "clt",
+        "dip",
+        "trabalhis",
+        "1937",
+        "propaganda"
+       ]
+      }
      ]
     },
     {
@@ -1214,6 +3367,73 @@
       "constituinte",
       "geisel",
       "medici"
+     ],
+     "subs": [
+      {
+       "id": "his-republica-populista",
+       "name": "República populista (1946–1964)",
+       "aliases": [
+        "jk",
+        "juscelino",
+        "plano de metas",
+        "jango",
+        "reformas de base",
+        "populismo"
+       ],
+       "kw": [
+        "juscelino",
+        "jk",
+        "plano de metas",
+        "brasilia",
+        "goulart",
+        "jango",
+        "reformas de base",
+        "1946",
+        "1954"
+       ]
+      },
+      {
+       "id": "his-ditadura",
+       "name": "Ditadura militar",
+       "aliases": [
+        "ditadura militar",
+        "golpe de 1964",
+        "ai-5",
+        "milagre econômico",
+        "anistia",
+        "diretas já"
+       ],
+       "kw": [
+        "ditadura",
+        "golpe",
+        "ai-5",
+        "ato institucional",
+        "milagre economico",
+        "anistia",
+        "diretas",
+        "censura",
+        "tortura",
+        "regime militar"
+       ]
+      },
+      {
+       "id": "his-nova-republica",
+       "name": "Nova República",
+       "aliases": [
+        "constituição de 1988",
+        "redemocratização",
+        "plano real",
+        "impeachment"
+       ],
+       "kw": [
+        "constituicao de 1988",
+        "redemocratiz",
+        "plano real",
+        "impeachment",
+        "collor",
+        "nova republica"
+       ]
+      }
      ]
     },
     {
@@ -1256,6 +3476,68 @@
       "cesar",
       "gladiador",
       "republica romana"
+     ],
+     "subs": [
+      {
+       "id": "his-grecia",
+       "name": "Grécia Antiga",
+       "aliases": [
+        "grécia",
+        "atenas",
+        "esparta",
+        "democracia ateniense",
+        "pólis"
+       ],
+       "kw": [
+        "grecia",
+        "grego",
+        "atenas",
+        "ateniense",
+        "esparta",
+        "polis",
+        "helenis"
+       ]
+      },
+      {
+       "id": "his-roma",
+       "name": "Roma Antiga",
+       "aliases": [
+        "roma",
+        "república romana",
+        "império romano",
+        "patrícios e plebeus"
+       ],
+       "kw": [
+        "roma",
+        "romano",
+        "patricio",
+        "plebeu",
+        "senado",
+        "cesar"
+       ]
+      },
+      {
+       "id": "his-oriente-antigo",
+       "name": "Egito, Mesopotâmia e pré-história",
+       "aliases": [
+        "egito",
+        "mesopotâmia",
+        "pré-história",
+        "fenícios",
+        "hebreus"
+       ],
+       "kw": [
+        "egito",
+        "egipc",
+        "mesopotam",
+        "pre-histor",
+        "neolitic",
+        "paleolitic",
+        "fenici",
+        "hebreu",
+        "persa"
+       ]
+      }
      ]
     },
     {
@@ -1293,6 +3575,64 @@
       "seculo xii",
       "seculo xiii",
       "seculo xiv"
+     ],
+     "subs": [
+      {
+       "id": "his-feudalismo",
+       "name": "Feudalismo e Igreja",
+       "aliases": [
+        "feudalismo",
+        "servidão",
+        "igreja medieval",
+        "vassalagem"
+       ],
+       "kw": [
+        "feudal",
+        "servo",
+        "suserano",
+        "vassalo",
+        "clero",
+        "mosteiro",
+        "igreja"
+       ]
+      },
+      {
+       "id": "his-isla-bizancio",
+       "name": "Islã e Império Bizantino",
+       "aliases": [
+        "islã",
+        "islamismo",
+        "império bizantino",
+        "árabes"
+       ],
+       "kw": [
+        "isla",
+        "muculman",
+        "arabe",
+        "bizantin",
+        "califado",
+        "maome"
+       ]
+      },
+      {
+       "id": "his-baixa-idade-media",
+       "name": "Cruzadas, cidades e crise do século XIV",
+       "aliases": [
+        "cruzadas",
+        "renascimento comercial",
+        "burguesia",
+        "peste negra"
+       ],
+       "kw": [
+        "cruzada",
+        "burgo",
+        "burgues",
+        "comercio",
+        "peste",
+        "corporac",
+        "feira"
+       ]
+      }
      ]
     },
     {
@@ -1337,6 +3677,68 @@
       "rousseau",
       "locke",
       "direito divino"
+     ],
+     "subs": [
+      {
+       "id": "his-navegacoes",
+       "name": "Grandes navegações e conquista da América",
+       "aliases": [
+        "grandes navegações",
+        "expansão marítima",
+        "conquista da américa",
+        "astecas",
+        "incas"
+       ],
+       "kw": [
+        "navegac",
+        "expansao maritima",
+        "tordesilhas",
+        "conquista",
+        "asteca",
+        "inca",
+        "maia",
+        "colombo"
+       ]
+      },
+      {
+       "id": "his-renascimento-reforma",
+       "name": "Renascimento e reformas religiosas",
+       "aliases": [
+        "renascimento",
+        "humanismo",
+        "reforma protestante",
+        "contrarreforma"
+       ],
+       "kw": [
+        "renasciment",
+        "humanis",
+        "reforma",
+        "lutero",
+        "calvin",
+        "contrarreforma",
+        "inquisic"
+       ]
+      },
+      {
+       "id": "his-absolutismo-iluminismo",
+       "name": "Absolutismo, mercantilismo e Iluminismo",
+       "aliases": [
+        "absolutismo",
+        "mercantilismo",
+        "iluminismo",
+        "antigo regime"
+       ],
+       "kw": [
+        "absolutis",
+        "mercantilis",
+        "iluminis",
+        "antigo regime",
+        "montesquieu",
+        "rousseau",
+        "locke",
+        "voltaire"
+       ]
+      }
      ]
     },
     {
@@ -1384,6 +3786,81 @@
       "seculo xviii",
       "treze colonias",
       "caudilh"
+     ],
+     "subs": [
+      {
+       "id": "his-revolucao-industrial",
+       "name": "Revolução Industrial e movimento operário",
+       "aliases": [
+        "revolução industrial",
+        "ludismo",
+        "cartismo",
+        "socialismo",
+        "anarquismo"
+       ],
+       "kw": [
+        "revolucao industrial",
+        "fabrica",
+        "operari",
+        "ludis",
+        "cartis",
+        "socialis",
+        "anarquis",
+        "sindica",
+        "marx"
+       ]
+      },
+      {
+       "id": "his-revolucao-francesa",
+       "name": "Revolução Francesa e Napoleão",
+       "aliases": [
+        "revolução francesa",
+        "napoleão",
+        "jacobinos",
+        "girondinos"
+       ],
+       "kw": [
+        "revolucao francesa",
+        "napole",
+        "jacobin",
+        "girondin",
+        "bastilha",
+        "terror"
+       ]
+      },
+      {
+       "id": "his-independencias-america",
+       "name": "Independências na América",
+       "aliases": [
+        "independência dos eua",
+        "independências na américa latina",
+        "haiti",
+        "bolívar"
+       ],
+       "kw": [
+        "independencia",
+        "treze colonias",
+        "haiti",
+        "bolivar",
+        "criollo",
+        "san martin"
+       ]
+      },
+      {
+       "id": "his-imperialismo",
+       "name": "Imperialismo e neocolonialismo",
+       "aliases": [
+        "imperialismo",
+        "neocolonialismo",
+        "partilha da áfrica"
+       ],
+       "kw": [
+        "imperialis",
+        "neocolonial",
+        "partilha",
+        "conferencia de berlim"
+       ]
+      }
      ]
     },
     {
@@ -1443,6 +3920,69 @@
       "luther king",
       "direitos civis",
       "perestroika"
+     ],
+     "subs": [
+      {
+       "id": "his-guerras-mundiais",
+       "name": "Primeira e Segunda Guerra Mundial",
+       "aliases": [
+        "primeira guerra",
+        "segunda guerra",
+        "guerras mundiais",
+        "holocausto"
+       ],
+       "kw": [
+        "primeira guerra",
+        "segunda guerra",
+        "guerra mundial",
+        "holocausto",
+        "versalhes",
+        "hiroshima"
+       ]
+      },
+      {
+       "id": "his-totalitarismos",
+       "name": "Revolução Russa, crise de 1929 e totalitarismos",
+       "aliases": [
+        "revolução russa",
+        "crise de 1929",
+        "nazismo",
+        "fascismo",
+        "stalinismo"
+       ],
+       "kw": [
+        "revolucao russa",
+        "bolchev",
+        "1929",
+        "nazis",
+        "fascis",
+        "stalin",
+        "hitler",
+        "mussolini",
+        "totalitar"
+       ]
+      },
+      {
+       "id": "his-guerra-fria",
+       "name": "Guerra Fria e descolonização",
+       "aliases": [
+        "guerra fria",
+        "descolonização",
+        "revolução cubana",
+        "muro de berlim",
+        "vietnã"
+       ],
+       "kw": [
+        "guerra fria",
+        "descoloniz",
+        "cuba",
+        "muro de berlim",
+        "vietna",
+        "sovietic",
+        "corrida armamentista",
+        "apartheid"
+       ]
+      }
      ]
     }
    ]

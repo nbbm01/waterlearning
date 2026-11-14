@@ -7,7 +7,7 @@ import { GRADUATE_AFTER, schedule } from '../srs'
 import { EMPTY_STREAK, studyOn, visibleStreak, type Streak } from '../streak'
 import { EMPTY_FILTER, F_MILITARY, type Row } from '../types'
 
-const row = (p: Partial<Row>): Row => ({ id: 'q', s: 0, e: 0, y: 2020, t: 0, d: 2, f: 0, c: 0, r: 1250, ...p })
+const row = (p: Partial<Row>): Row => ({ id: 'q', s: 0, e: 0, y: 2020, t: 0, d: 2, f: 0, c: 0, r: 1250, u: -1, ...p })
 const none: ProgressView = { seen: () => false, due: () => false }
 
 describe('srs', () => {
@@ -87,6 +87,10 @@ describe('progressivo', () => {
 })
 
 describe('filtros', () => {
+  it('filtra por subtópico', () => {
+    expect(matches(row({ u: 3 }), { ...EMPTY_FILTER, subs: [3] }, none)).toBe(true)
+    expect(matches(row({ u: -1 }), { ...EMPTY_FILTER, subs: [3] }, none)).toBe(false)
+  })
   it('combina matéria, banca, ano, dificuldade e atalhos', () => {
     const r = row({ s: 1, e: 2, y: 2018, d: 3, f: F_MILITARY })
     expect(matches(r, { ...EMPTY_FILTER, subjects: [1], exams: [2], yearMin: 2015, diff: 3, military: true }, none)).toBe(true)
@@ -117,15 +121,15 @@ describe('busca de tópico', async () => {
   const { searchAll } = await import('../search')
   const meta = {
     subjects: [{ id: 'mat', name: 'Matemática', topics: [
-      { id: 'f', name: 'Funções, Equações e Inequações', aliases: ['equação do 1º grau', 'função afim', 'bhaskara'] },
-      { id: 'l', name: 'Logaritmos e Exponenciais', aliases: ['logaritmo'] },
+      { id: 'f', name: 'Funções, Equações e Inequações', aliases: ['função afim', 'bhaskara'], subs: [{ id: 'e1', name: 'Equação do 1º grau', aliases: ['equação do primeiro grau'] }] },
+      { id: 'l', name: 'Logaritmos e Exponenciais', aliases: ['logaritmo'], subs: [] },
     ] }],
     version: 't', exams: ['ENEM', 'ITA'], military: [], total: 2, theory: {}, sims: {},
   }
-  const rows = [row({ id: 'a', t: 0 }), row({ id: 'b', t: 1, e: 1 })]
+  const rows = [row({ id: 'a', t: 0, u: 0 }), row({ id: 'b', t: 1, e: 1 })]
   it('entende "primeiro" como "1º" e ignora "do"', () => {
-    expect(searchAll(meta, rows, 'equação do primeiro grau')[0].label).toBe('Funções, Equações e Inequações')
-    expect(searchAll(meta, rows, 'equacao 1o grau')[0].label).toBe('Funções, Equações e Inequações')
+    expect(searchAll(meta, rows, 'equação do primeiro grau')[0]).toMatchObject({ kind: 'sub', label: 'Equação do 1º grau' })
+    expect(searchAll(meta, rows, 'equacao 1o grau')[0]).toMatchObject({ kind: 'sub', label: 'Equação do 1º grau' })
   })
   it('casa por prefixo e plural', () => {
     expect(searchAll(meta, rows, 'logaritmos')[0].label).toBe('Logaritmos e Exponenciais')

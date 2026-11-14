@@ -57,7 +57,7 @@ def main():
                 "id": f"fuvest-{year}-{num}", "s": subj, "e": "FUVEST", "y": year, "t": topic,
                 "d": difficulty(1 if len(q["text"]) < 700 else 2, 3, "FUVEST"), "k": "image", "opts": [],
                 "n": max(option_count(q["text"].replace("\n", " ")), keys[num] + 1), "ans": keys[num],
-                "imgs": imgs[num], "tags": [], "src": f"FUVEST {year}, 1ª fase, questão {num} (prova V)",
+                "imgs": imgs[num], "tags": [], "raw": q["text"], "src": f"FUVEST {year}, 1ª fase, questão {num} (prova V)",
             })
         print(f"FUVEST {year}: {len(qs)} questões na prova, {len(keys)} no gabarito, {len(chosen)} de Mat/Fís/Hist")
     write_out("fuvest", out)

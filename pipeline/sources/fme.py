@@ -153,7 +153,7 @@ def import_volume(volume):
                 "id": qid, "s": "mat", "e": exam, "y": year, "t": topic, "d": difficulty(pos, len(group), exam),
                 "k": "image", "opts": [], "n": n, "ans": ans, "imgs": [f"data/img/fme/{nm}.webp" for nm in names],
                 "tags": [], "src": f"({q['inst']}) · Fundamentos de Matemática Elementar, vol. {volume}, questão {q['num']}, p. {q['page']}",
-                "book": {"file": pdf.name, "page": q["page"]}, "heading": heading,
+                "book": {"file": pdf.name, "page": q["page"]}, "heading": heading, "hint": heading, "raw": text,
             })
     return out, jobs, pdf, {p for j in jobs for p in [j[1]]}
 

@@ -1,12 +1,13 @@
 import type { Meta, Question, Row } from './types'
 
-type RawRow = [string, number, number, number, number, 1 | 2 | 3, number, number, number]
+type RawRow = [string, number, number, number, number, 1 | 2 | 3, number, number, number, number]
 
 export interface Bank {
   meta: Meta
   rows: Row[]
   byId: Map<string, Row>
   topics: { id: string; name: string; subject: number }[]
+  subs: { id: string; name: string; topic: number }[]
 }
 
 const chunks = new Map<number, Promise<Record<string, Question>>>()
@@ -21,9 +22,10 @@ async function getJson<T>(path: string, fresh = false): Promise<T> {
 export async function loadBank(): Promise<Bank> {
   const [meta, raw] = await Promise.all([getJson<Meta>('/data/meta.json'), getJson<RawRow[]>('/data/index.json')])
   version = meta.version
-  const rows = raw.map(([id, s, e, y, t, d, f, c, r]) => ({ id, s, e, y, t, d, f, c, r }))
+  const rows = raw.map(([id, s, e, y, t, d, f, c, r, u]) => ({ id, s, e, y, t, d, f, c, r, u: u ?? -1 }))
   const topics = meta.subjects.flatMap((s, si) => s.topics.map((t) => ({ id: t.id, name: t.name, subject: si })))
-  return { meta, rows, byId: new Map(rows.map((r) => [r.id, r])), topics }
+  const subs = meta.subjects.flatMap((s) => s.topics).flatMap((t, ti) => (t.subs ?? []).map((sb) => ({ id: sb.id, name: sb.name, topic: ti })))
+  return { meta, rows, byId: new Map(rows.map((r) => [r.id, r])), topics, subs }
 }
 
 function loadChunk(c: number): Promise<Record<string, Question>> {

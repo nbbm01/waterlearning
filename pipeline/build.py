@@ -4,7 +4,7 @@ import hashlib
 import json
 import shutil
 
-from common import MILITARY, OUT, PIPE, PUBLIC, RATING, TAXONOMY
+from common import MILITARY, OUT, PIPE, PUBLIC, RATING, TAXONOMY, subtopic
 
 CHUNK = 60
 F_COMMENTED, F_CLASSIC, F_MILITARY, F_IMAGE = 1, 2, 4, 8
@@ -25,8 +25,16 @@ def load():
     return list(questions.values())
 
 
+def classify(q):
+    """subtópico a partir do texto (enunciado, texto extraído do recorte) e da pista da fonte"""
+    text = q.get("raw") or (q.get("stem") or "") + " " + " ".join(o.get("t", "") for o in q.get("opts", []))
+    q["t"], q["u"] = subtopic(text, q["s"], q["t"], q.get("hint") or "")
+
+
 def main():
     qs = load()
+    for q in qs:
+        classify(q)
     qs.sort(key=lambda q: (q["s"], q["e"], q["y"] or 0, q["id"]))
 
     # "Clássicas": tópicos que concentram mais questões dentro de cada matéria/banca
@@ -41,18 +49,19 @@ def main():
             classic.add((s, e, t))
 
     subjects = [{"id": s["id"], "name": s["name"],
-                 "topics": [{"id": t["id"], "name": t["name"], "aliases": t["aliases"]} for t in s["topics"]]}
+                 "topics": [{"id": t["id"], "name": t["name"], "aliases": t["aliases"],
+                             "subs": [{"id": sb["id"], "name": sb["name"], "aliases": sb["aliases"]} for sb in t.get("subs", [])]}
+                            for t in s["topics"]]}
                 for s in TAXONOMY["subjects"]]
     exams = sorted({q["e"] for q in qs})
     subj_ids = [s["id"] for s in subjects]
     topic_ids = [t["id"] for s in subjects for t in s["topics"]]
+    sub_ids = [sb["id"] for s in subjects for t in s["topics"] for sb in t["subs"]]
 
     # a versão vai na URL dos blocos (?v=); uma aba com índice antigo percebe a troca e recarrega
     version = hashlib.sha1(json.dumps(qs, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:10]
     chunks_dir = PUBLIC / "chunks"
-    if chunks_dir.exists():
-        shutil.rmtree(chunks_dir)
-    chunks_dir.mkdir(parents=True)
+    chunks_dir.mkdir(parents=True, exist_ok=True)
 
     index = []
     for ci in range(0, len(qs), CHUNK):
@@ -71,9 +80,16 @@ def main():
                 flags |= F_IMAGE
             rating = RATING[q["d"]] + EXAM_OFFSET.get(q["e"], 0)
             index.append([q["id"], subj_ids.index(q["s"]), exams.index(q["e"]), q["y"] or 0,
-                          topic_ids.index(q["t"]), q["d"], flags, cid, rating])
+                          topic_ids.index(q["t"]), q["d"], flags, cid, rating, sub_ids.index(q["u"]) if q["u"] else -1])
             payload[q["id"]] = {k: q[k] for k in ("k", "stem", "opts", "ans", "n", "imgs", "exp", "src", "book") if q.get(k) is not None}
         (chunks_dir / f"{cid}.json").write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+
+    # sobrescreve no lugar e só remove blocos que sobraram (apagar a pasta confunde o servidor de dev)
+    for stale in chunks_dir.iterdir():
+        if stale.is_dir():
+            shutil.rmtree(stale)
+        elif not stale.stem.isdigit() or int(stale.stem) * CHUNK >= len(qs):
+            stale.unlink()
 
     theory = {}
     for f in sorted((PIPE / "theory").glob("*.json")):

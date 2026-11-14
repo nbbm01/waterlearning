@@ -1,7 +1,7 @@
 import type { Meta, Row } from './types'
 
 export interface Hit {
-  kind: 'topic' | 'exam' | 'subject'
+  kind: 'topic' | 'sub' | 'exam' | 'subject'
   index: number
   label: string
   hint: string
@@ -56,13 +56,16 @@ export function searchAll(meta: Meta, rows: Row[], raw: string, limit = 8): Hit[
   const byTopic = new Map<number, number>()
   const byExam = new Map<number, number>()
   const bySubject = new Map<number, number>()
+  const bySub = new Map<number, number>()
   for (const r of rows) {
+    if (r.u >= 0) bySub.set(r.u, (bySub.get(r.u) ?? 0) + 1)
     byTopic.set(r.t, (byTopic.get(r.t) ?? 0) + 1)
     byExam.set(r.e, (byExam.get(r.e) ?? 0) + 1)
     bySubject.set(r.s, (bySubject.get(r.s) ?? 0) + 1)
   }
   const hits: (Hit & { sc: number })[] = []
   let ti = 0
+  let ui = 0
   meta.subjects.forEach((s, si) => {
     const sc = bestOf(query, [s.name])
     if (sc) hits.push({ kind: 'subject', index: si, label: s.name, hint: 'Matéria', count: bySubject.get(si) ?? 0, sc: sc + 5 })
@@ -77,6 +80,11 @@ export function searchAll(meta: Meta, rows: Row[], raw: string, limit = 8): Hit[
           kind: 'topic', index: ti, label: t.name, hint: matched ? `${s.name} · “${matched}”` : s.name,
           count: byTopic.get(ti) ?? 0, sc,
         })
+      }
+      for (const sb of t.subs ?? []) {
+        const sc = Math.max(bestOf(query, [sb.name]) + 4, bestOf(query, sb.aliases) + 2)
+        if (sc > 4) hits.push({ kind: 'sub', index: ui, label: sb.name, hint: `${s.name} · ${t.name}`, count: bySub.get(ui) ?? 0, sc })
+        ui++
       }
       ti++
     }

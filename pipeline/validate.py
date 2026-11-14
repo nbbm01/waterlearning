@@ -17,7 +17,7 @@ def main():
     totals = collections.Counter()
     kinds = collections.Counter()
     for row in index:
-        qid, s, e, y, t, d, flags, cid, rating = row
+        qid, s, e, y, t, d, flags, cid, rating, u = row
         if qid in ids:
             errors.append(f"{qid}: id duplicado")
         ids.add(qid)

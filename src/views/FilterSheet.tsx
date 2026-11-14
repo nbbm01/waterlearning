@@ -20,9 +20,15 @@ interface Props {
 }
 
 export function FilterSheet({ bank, initial, onApply, onClose }: Props) {
-  const [f, setF] = useState<Filter>(initial)
+  const [f, setF] = useState<Filter>({ ...initial, subs: initial.subs ?? [] })
   const [topicQuery, setTopicQuery] = useState('')
   const count = useMemo(() => select(bank.rows, f, store).length, [bank, f])
+  // quantas questões cada subtópico tem com os demais filtros aplicados
+  const subCounts = useMemo(() => {
+    const out: Record<number, number> = {}
+    for (const r of select(bank.rows, { ...f, subs: [], topics: [] }, store)) if (r.u >= 0) out[r.u] = (out[r.u] ?? 0) + 1
+    return out
+  }, [bank, f])
   const years = useMemo(() => [...new Set(bank.rows.map((r) => r.y).filter(Boolean))].sort((a, b) => b - a), [bank])
   const patch = (p: Partial<Filter>) => setF((cur) => ({ ...cur, ...p }))
 
@@ -39,14 +45,26 @@ export function FilterSheet({ bank, initial, onApply, onClose }: Props) {
   }, [count, f, onApply, onClose])
 
   const tq = fold(topicQuery)
+  const matchesQuery = (name: string, aliases: string[]) => !tq || fold(name).includes(tq) || aliases.some((x) => fold(x).includes(tq))
   const topicGroups = bank.meta.subjects
     .map((s, si) => ({
       subject: s,
       topics: bank.topics
-        .map((t, ti) => ({ ...t, ti }))
-        .filter((t) => t.subject === si && (!tq || fold(t.name).includes(tq) || s.topics.find((x) => x.id === t.id)!.aliases.some((a) => fold(a).includes(tq)))),
+        .map((t, ti) => {
+          const def = s.topics.find((x) => x.id === t.id)
+          const subs = bank.subs.map((sb, ui) => ({ ...sb, ui })).filter((sb) => sb.topic === ti)
+          const subHits = subs.filter((sb) => tq && matchesQuery(sb.name, def?.subs.find((x) => x.id === sb.id)?.aliases ?? []))
+          return { ...t, ti, subs, show: !tq || (def && matchesQuery(t.name, def.aliases)) || subHits.length > 0, subHits }
+        })
+        .filter((t) => t.subject === si && t.show),
     }))
     .filter((g, si) => (!f.subjects.length || f.subjects.includes(si)) && g.topics.length)
+
+  const toggleTopic = (ti: number) => {
+    const on = f.topics.includes(ti)
+    // desmarcar o tópico também desmarca os subtópicos dele
+    patch({ topics: toggle(f.topics, ti), subs: on ? f.subs.filter((u) => bank.subs[u].topic !== ti) : f.subs })
+  }
 
   const specials: [keyof Filter, string, string][] = [
     ['pending', 'Revisões pendentes', `${store.dueCards().length} para hoje`],
@@ -70,7 +88,7 @@ export function FilterSheet({ bank, initial, onApply, onClose }: Props) {
             <div className="chips">
               {bank.meta.subjects.map((s, i) => (
                 <button key={s.id} className={`chip ${f.subjects.includes(i) ? 'on' : ''}`}
-                  onClick={() => patch({ subjects: toggle(f.subjects, i), topics: [] })}>{s.name}</button>
+                  onClick={() => patch({ subjects: toggle(f.subjects, i), topics: [], subs: [] })}>{s.name}</button>
               ))}
             </div>
           </section>
@@ -97,7 +115,7 @@ export function FilterSheet({ bank, initial, onApply, onClose }: Props) {
           <section>
             <h3>
               Tópico
-              <input className="mini-input" placeholder="filtrar tópicos" value={topicQuery}
+              <input className="mini-input" placeholder="ex.: equação do 1º grau" value={topicQuery}
                 onChange={(e) => setTopicQuery(e.target.value)} aria-label="Filtrar lista de tópicos" />
             </h3>
             {topicGroups.map((g) => (
@@ -106,9 +124,22 @@ export function FilterSheet({ bank, initial, onApply, onClose }: Props) {
                 <div className="chips">
                   {g.topics.map((t) => (
                     <button key={t.id} className={`chip ${f.topics.includes(t.ti) ? 'on' : ''}`}
-                      onClick={() => patch({ topics: toggle(f.topics, t.ti) })}>{t.name}</button>
+                      onClick={() => toggleTopic(t.ti)}>{t.name}</button>
                   ))}
                 </div>
+                {g.topics.filter((t) => (f.topics.includes(t.ti) || t.subHits.length) && t.subs.length).map((t) => (
+                  <div key={t.id} className="sub-row">
+                    <span className="sub-label">{t.name} ›</span>
+                    <div className="chips">
+                      {(t.subHits.length && !f.topics.includes(t.ti) ? t.subHits : t.subs).map((sb) => (
+                        <button key={sb.id} className={`chip small ${f.subs.includes(sb.ui) ? 'on' : ''}`}
+                          onClick={() => patch({ subs: toggle(f.subs, sb.ui) })}>
+                          {sb.name} <span className="chip-count">{subCounts[sb.ui] ?? 0}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             ))}
             {!topicGroups.length && <p className="muted">Nenhum tópico com esse nome.</p>}

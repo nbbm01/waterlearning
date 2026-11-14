@@ -14,6 +14,7 @@ export interface Row {
   f: number // flags
   c: number // bloco de conteúdo
   r: number // Elo da questão
+  u: number // subtópico (índice global, -1 = sem)
 }
 
 export interface Option {
@@ -33,10 +34,17 @@ export interface Question {
   book?: { file: string; page: number }
 }
 
+export interface Sub {
+  id: string
+  name: string
+  aliases: string[]
+}
+
 export interface Topic {
   id: string
   name: string
   aliases: string[]
+  subs: Sub[]
 }
 
 export interface Subject {
@@ -74,6 +82,7 @@ export interface Filter {
   subjects: number[]
   exams: number[]
   topics: number[]
+  subs: number[]
   yearMin: number
   yearMax: number
   diff: Difficulty
@@ -85,7 +94,7 @@ export interface Filter {
 }
 
 export const EMPTY_FILTER: Filter = {
-  subjects: [], exams: [], topics: [], yearMin: 0, yearMax: 0, diff: 'prog',
+  subjects: [], exams: [], topics: [], subs: [], yearMin: 0, yearMax: 0, diff: 'prog',
   pending: false, unseen: false, classic: false, military: false, commented: false,
 }
 

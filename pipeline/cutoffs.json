@@ -1,0 +1,22 @@
+{
+  "ITA": {
+    "name": "Instituto Tecnológico de Aeronáutica",
+    "minutesPerQuestion": 6.25,
+    "format": "1ª fase de 2025: 48 questões objetivas (12 de Matemática, Física, Química e Inglês) em 5 horas. Aqui entram Matemática e Física.",
+    "cutoff": {
+      "percent": 60,
+      "note": "Estimativa de cursinhos para avançar à 2ª fase. O ITA publica a nota de corte numa escala própria (ampla concorrência, 2027: 6,11), não em porcentagem de acertos.",
+      "source": "Projeto Gauss (estimativa); Estratégia Vestibulares, notas de corte da 1ª fase do ITA 2027."
+    }
+  },
+  "EsPCEx": {
+    "name": "Escola Preparatória de Cadetes do Exército",
+    "minutesPerQuestion": 4.8,
+    "format": "Exame intelectual em dois dias de 4h30: 100 questões objetivas (Matemática 20, Física 12, História 12, entre outras) mais redação.",
+    "cutoff": {
+      "percent": 66,
+      "note": "Nota mínima de 2023 para ter a redação corrigida (ampla concorrência: 65,75 masculino, 66,75 feminino), lida como porcentagem. A nota final de classificação não é publicada de forma consolidada.",
+      "source": "Estratégia Militares, lista dos aptos à correção da redação da EsPCEx 2023."
+    }
+  }
+}

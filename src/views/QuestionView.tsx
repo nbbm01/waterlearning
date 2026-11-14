@@ -33,7 +33,7 @@ export function QuestionView({ bank, row, question, selected, reveal, onSelect, 
         {label && <span className="q-label">{label}</span>}
         <span className="q-exam">{bank.meta.exams[row.e]}{row.y ? ` ${row.y}` : ''}</span>
         <span>{subject.name}</span>
-        <span>{bank.topics[row.t].name}</span>
+        <span>{row.u >= 0 ? bank.subs[row.u].name : bank.topics[row.t].name}</span>
         <span className={`q-diff d${row.d}`}>{DIFF_LABEL[row.d]}</span>
       </header>
 

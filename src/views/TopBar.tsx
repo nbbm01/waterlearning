@@ -86,6 +86,7 @@ export function TopBar({ bank, view, go, onOpenFilters }: Props) {
   const pickHit = (h: Hit) => {
     const f = { ...EMPTY_FILTER }
     if (h.kind === 'topic') f.topics = [h.index]
+    else if (h.kind === 'sub') f.subs = [h.index]
     else if (h.kind === 'exam') f.exams = [h.index]
     else f.subjects = [h.index]
     store.setFilter(f)

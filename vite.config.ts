@@ -19,9 +19,28 @@ const serveBooks: Connect.NextHandleFunction = (req, res, next) => {
   res.setHeader('Content-Length', statSync(file).size)
   createReadStream(file).pipe(res)
 }
+// Em dev, /data sai direto do disco: o pipeline reescreve esses arquivos com o servidor no ar
+// e a lista de arquivos públicos que o Vite guarda em memória fica desatualizada.
+const DATA = join(import.meta.dirname, 'public', 'data')
+const serveData: Connect.NextHandleFunction = (req, res, next) => {
+  if (!req.url?.startsWith('/data/')) return next()
+  const file = normalize(join(DATA, decodeURIComponent(req.url.slice('/data/'.length).split(/[?#]/)[0])))
+  if (!file.startsWith(DATA) || !existsSync(file) || !statSync(file).isFile()) {
+    res.statusCode = 404
+    return res.end()
+  }
+  const types: Record<string, string> = { json: 'application/json', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', svg: 'image/svg+xml', gif: 'image/gif' }
+  res.setHeader('Content-Type', types[file.split('.').pop()!.toLowerCase()] ?? 'application/octet-stream')
+  res.setHeader('Cache-Control', 'no-cache')
+  createReadStream(file).pipe(res)
+}
+
 const books = (): Plugin => ({
   name: 'livros-locais',
-  configureServer: (s) => void s.middlewares.use(serveBooks),
+  configureServer: (s) => {
+    s.middlewares.use(serveData)
+    s.middlewares.use(serveBooks)
+  },
   configurePreviewServer: (s) => void s.middlewares.use(serveBooks),
 })
 

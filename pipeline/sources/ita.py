@@ -55,7 +55,7 @@ def build(year, pdf, subject, answers, out):
         out.append({
             "id": f"ita-{year}-{subject}-{num}", "s": subject, "e": "ITA", "y": year, "t": topic(q["text"], subject),
             "d": difficulty(pos, len(nums), "ITA"), "k": "image", "opts": [], "n": max(option_count(q["text"]), answers[num] + 1),
-            "ans": answers[num], "imgs": imgs[num], "tags": [], "src": f"ITA {year}, {'Física' if subject == 'fis' else 'Matemática'}, questão {num}",
+            "ans": answers[num], "imgs": imgs[num], "tags": [], "raw": q["text"], "src": f"ITA {year}, {'Física' if subject == 'fis' else 'Matemática'}, questão {num}",
         })
 
 

@@ -130,6 +130,7 @@ class Store implements ProgressView {
       ])
       if (state) this.s = { ...fresh(), ...(state.value as Saved) }
       this.s.settings = { ...fresh().settings, ...this.s.settings }
+      this.s.filter = { ...EMPTY_FILTER, ...this.s.filter }
       for (const a of attempts) this.seenMap.set(a.qid, (this.seenMap.get(a.qid) ?? 0) + (a.ok ? 1 : 0))
       for (const c of cards) if (bank.byId.has(c.qid)) this.cards.set(c.qid, c)
       this.sims = sims
@@ -282,7 +283,7 @@ class Store implements ProgressView {
 }
 
 function bankSignature(bank: Bank): string {
-  return `${bank.meta.exams.join(',')}|${bank.topics.length}`
+  return `${bank.meta.exams.join(',')}|${bank.topics.length}|${bank.subs.length}`
 }
 
 export const store = new Store()

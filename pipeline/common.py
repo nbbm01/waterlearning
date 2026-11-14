@@ -60,6 +60,24 @@ def best_topic(text, subject, default=None):
     return (tid, 0) if sc > 0 else (default, 0)
 
 
+def subtopic(text, subject, topic, hint=""):
+    """(tópico, subtópico) mais prováveis. A pista (subtítulo do livro, tópico da API) pesa triplo.
+
+    Sem pista, a questão pode mudar de tópico quando um subtópico de outro tópico casa com
+    muito mais força (ex.: "equação do 1º grau" classificada antes como Aritmética)."""
+    ntext = norm(f"{hint} " * 3 + text)
+    subj = next(s for s in TAXONOMY["subjects"] if s["id"] == subject)
+    scores = {(t["id"], sb["id"]): _score(ntext, sb["kw"]) + 2 * _score(norm(hint), [norm(a) for a in sb["aliases"]])
+              for t in subj["topics"] for sb in t.get("subs", [])}
+    own = {k: v for k, v in scores.items() if k[0] == topic}
+    best_own = max(own.items(), key=lambda kv: kv[1], default=(None, 0))
+    if not hint:
+        best_any = max(scores.items(), key=lambda kv: kv[1], default=(None, 0))
+        if best_any[0] and best_any[0][0] != topic and best_any[1] >= 6 and best_any[1] >= 2 * best_own[1]:
+            return best_any[0]
+    return (topic, best_own[0][1]) if best_own[0] and best_own[1] > 0 else (topic, None)
+
+
 def write_out(name, questions):
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / f"{name}.json").write_text(json.dumps(questions, ensure_ascii=False), encoding="utf-8")
