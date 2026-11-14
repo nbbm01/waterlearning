@@ -5,3 +5,4 @@ pipeline/out
 pipeline/tessdata
 __pycache__
 *.tsbuildinfo
+.env

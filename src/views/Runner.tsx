@@ -83,6 +83,7 @@ export function Runner({ bank, mode, poolKey, next, empty, progress, onShow }: P
   useEffect(() => {
     recent.current = []
     upcoming.current = null
+    setTheory(null)
     show(nextRef.current([]))
   }, [poolKey, show])
 

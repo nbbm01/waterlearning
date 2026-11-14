@@ -16,7 +16,18 @@
       "divisibilidade",
       "frações",
       "escala",
-      "números"
+      "números",
+      "equação do 1º grau",
+      "problemas",
+      "regra de três simples",
+      "regra de três composta",
+      "grandezas proporcionais",
+      "múltiplos e divisores",
+      "números primos",
+      "potenciação",
+      "radiciação",
+      "notação científica",
+      "média"
      ],
      "kw": [
       "regra de tres",
@@ -54,7 +65,10 @@
       "juros compostos",
       "desconto",
       "financeira",
-      "percentual"
+      "percentual",
+      "juros simples",
+      "aumentos e descontos sucessivos",
+      "lucro e prejuízo"
      ],
      "kw": [
       "%",
@@ -75,7 +89,7 @@
     },
     {
      "id": "mat-conjuntos-funcoes",
-     "name": "Conjuntos e Funções",
+     "name": "Funções, Equações e Inequações",
      "aliases": [
       "função afim",
       "função quadrática",
@@ -85,7 +99,29 @@
       "função composta",
       "função inversa",
       "módulo",
-      "conjuntos"
+      "conjuntos",
+      "equação do 1º grau",
+      "equação do primeiro grau",
+      "equação do segundo grau",
+      "bhaskara",
+      "função do 1º grau",
+      "função do 2º grau",
+      "função linear",
+      "inequação do 1º grau",
+      "inequação do 2º grau",
+      "sistema de inequações",
+      "domínio",
+      "imagem",
+      "gráfico de função",
+      "função par",
+      "função ímpar",
+      "função injetora",
+      "função sobrejetora",
+      "função bijetora",
+      "conjuntos numéricos",
+      "intervalos",
+      "união e interseção",
+      "diagrama de venn"
      ],
      "kw": [
       "funcao",
@@ -114,7 +150,14 @@
       "logaritmo",
       "log",
       "exponencial",
-      "função exponencial"
+      "função exponencial",
+      "equação exponencial",
+      "inequação exponencial",
+      "equação logarítmica",
+      "propriedades dos logaritmos",
+      "mudança de base",
+      "potências",
+      "raízes"
      ],
      "kw": [
       "logaritm",
@@ -137,7 +180,15 @@
       "tangente",
       "lei dos senos",
       "lei dos cossenos",
-      "ciclo trigonométrico"
+      "ciclo trigonométrico",
+      "trigonometria no triângulo retângulo",
+      "arcos",
+      "relações trigonométricas",
+      "identidades trigonométricas",
+      "equação trigonométrica",
+      "funções trigonométricas",
+      "adição de arcos",
+      "radianos"
      ],
      "kw": [
       "seno",
@@ -161,7 +212,11 @@
       "progressão geométrica",
       "pa",
       "pg",
-      "sequências"
+      "sequências",
+      "soma da pa",
+      "soma da pg",
+      "termo geral",
+      "pg infinita"
      ],
      "kw": [
       "progressao aritmetica",
@@ -182,7 +237,11 @@
       "matriz",
       "determinante",
       "sistema linear",
-      "escalonamento"
+      "escalonamento",
+      "sistemas lineares",
+      "regra de cramer",
+      "matriz inversa",
+      "multiplicação de matrizes"
      ],
      "kw": [
       "matriz",
@@ -201,7 +260,12 @@
       "combinação",
       "contagem",
       "binômio de newton",
-      "princípio fundamental da contagem"
+      "princípio fundamental da contagem",
+      "fatorial",
+      "combinação simples",
+      "arranjo simples",
+      "permutação com repetição",
+      "triângulo de pascal"
      ],
      "kw": [
       "combinac",
@@ -227,7 +291,10 @@
      "aliases": [
       "chance",
       "probabilidade condicional",
-      "espaço amostral"
+      "espaço amostral",
+      "evento",
+      "probabilidade da união",
+      "eventos independentes"
      ],
      "kw": [
       "probabilidade",
@@ -250,7 +317,12 @@
       "moda",
       "desvio padrão",
       "gráficos",
-      "tabelas"
+      "tabelas",
+      "média aritmética",
+      "média ponderada",
+      "variância",
+      "histograma",
+      "interpretação de gráficos"
      ],
      "kw": [
       "media aritmetica",
@@ -285,7 +357,13 @@
       "equações algébricas",
       "raízes",
       "briot-ruffini",
-      "girard"
+      "girard",
+      "forma trigonométrica",
+      "forma algébrica",
+      "plano de argand-gauss",
+      "divisão de polinômios",
+      "relações de girard",
+      "teorema do resto"
      ],
      "kw": [
       "numero complexo",
@@ -311,7 +389,15 @@
       "semelhança",
       "pitágoras",
       "polígonos",
-      "quadriláteros"
+      "quadriláteros",
+      "áreas",
+      "teorema de pitágoras",
+      "semelhança de triângulos",
+      "teorema de tales",
+      "circunferência",
+      "polígonos regulares",
+      "ângulos",
+      "relações métricas"
      ],
      "kw": [
       "triangulo",
@@ -360,7 +446,14 @@
       "esfera",
       "pirâmide",
       "poliedros",
-      "sólidos"
+      "sólidos",
+      "área de superfície",
+      "prismas",
+      "pirâmides",
+      "cilindros",
+      "cones",
+      "esferas",
+      "relação de euler"
      ],
      "kw": [
       "volume",
@@ -395,7 +488,13 @@
       "equação da circunferência",
       "cônicas",
       "elipse",
-      "hipérbole"
+      "hipérbole",
+      "equação da reta",
+      "distância entre dois pontos",
+      "ponto médio",
+      "coeficiente angular",
+      "circunferência",
+      "parábola"
      ],
      "kw": [
       "plano cartesiano",
@@ -419,7 +518,9 @@
      "aliases": [
       "unidades",
       "conversão de unidades",
-      "medidas"
+      "medidas",
+      "escalas",
+      "área e perímetro"
      ],
      "kw": [
       "converter",
@@ -476,7 +577,16 @@
       "queda livre",
       "lançamento",
       "velocidade",
-      "movimento circular"
+      "movimento circular",
+      "mru",
+      "movimento retilíneo uniforme",
+      "movimento uniformemente variado",
+      "velocidade média",
+      "aceleração",
+      "lançamento oblíquo",
+      "lançamento horizontal",
+      "mcu",
+      "vetores"
      ],
      "kw": [
       "velocidade media",
@@ -511,7 +621,18 @@
       "plano inclinado",
       "força centrípeta",
       "estática",
-      "torque"
+      "torque",
+      "primeira lei de newton",
+      "segunda lei de newton",
+      "terceira lei de newton",
+      "força de atrito",
+      "força peso",
+      "força normal",
+      "tração",
+      "equilíbrio",
+      "momento de uma força",
+      "alavancas",
+      "polias"
      ],
      "kw": [
       "forca",
@@ -550,7 +671,13 @@
       "potência",
       "colisão",
       "impulso",
-      "conservação de energia"
+      "conservação de energia",
+      "trabalho de uma força",
+      "energia mecânica",
+      "conservação da energia",
+      "potência mecânica",
+      "quantidade de movimento",
+      "colisões"
      ],
      "kw": [
       "energia cinetica",
@@ -586,7 +713,12 @@
       "densidade",
       "arquimedes",
       "pascal",
-      "stevin"
+      "stevin",
+      "pressão hidrostática",
+      "teorema de stevin",
+      "princípio de pascal",
+      "princípio de arquimedes",
+      "vazão"
      ],
      "kw": [
       "densidade",
@@ -620,7 +752,17 @@
       "dilatação",
       "gases",
       "máquinas térmicas",
-      "termodinâmica"
+      "termodinâmica",
+      "escalas termométricas",
+      "dilatação térmica",
+      "calor sensível",
+      "calor latente",
+      "mudança de estado",
+      "trocas de calor",
+      "leis da termodinâmica",
+      "gases ideais",
+      "transformações gasosas",
+      "ciclo de carnot"
      ],
      "kw": [
       "temperatura",
@@ -668,7 +810,15 @@
       "refração",
       "reflexão",
       "visão",
-      "luz"
+      "luz",
+      "reflexão da luz",
+      "refração da luz",
+      "espelhos planos",
+      "espelhos esféricos",
+      "lentes esféricas",
+      "óptica da visão",
+      "índice de refração",
+      "lei de snell"
      ],
      "kw": [
       "lente",
@@ -704,7 +854,13 @@
       "frequência",
       "efeito doppler",
       "ressonância",
-      "interferência"
+      "interferência",
+      "mhs",
+      "movimento harmônico simples",
+      "pêndulo",
+      "acústica",
+      "cordas vibrantes",
+      "tubos sonoros"
      ],
      "kw": [
       "onda",
@@ -742,7 +898,15 @@
       "potência elétrica",
       "eletrostática",
       "campo elétrico",
-      "capacitores"
+      "capacitores",
+      "carga elétrica",
+      "lei de coulomb",
+      "potencial elétrico",
+      "associação de resistores",
+      "leis de ohm",
+      "geradores",
+      "receptores",
+      "circuitos elétricos"
      ],
      "kw": [
       "corrente eletrica",
@@ -784,7 +948,12 @@
       "indução",
       "ímã",
       "transformador",
-      "força magnética"
+      "força magnética",
+      "magnetismo",
+      "indução eletromagnética",
+      "lei de faraday",
+      "lei de lenz",
+      "transformadores"
      ],
      "kw": [
       "campo magnetico",
@@ -809,7 +978,9 @@
       "kepler",
       "órbita",
       "satélite",
-      "gravitação universal"
+      "gravitação universal",
+      "leis de kepler",
+      "satélites"
      ],
      "kw": [
       "gravitacional",
@@ -830,7 +1001,9 @@
       "relatividade",
       "quântica",
       "radioatividade",
-      "física nuclear"
+      "física nuclear",
+      "relatividade restrita",
+      "modelos atômicos"
      ],
      "kw": [
       "fotoeletrico",
@@ -1322,7 +1495,49 @@
    "sodio",
    "cloro",
    "calcio",
-   "aquoso"
+   "aquoso",
+   "massa molar",
+   "massas molares",
+   "molar",
+   "g/mol",
+   "hidrocarboneto",
+   "combustao",
+   "metano",
+   "etano",
+   "propano",
+   "butano",
+   "helio",
+   "ch4",
+   "h2o",
+   "co2",
+   "c2h",
+   "reagente",
+   "produto da reacao",
+   "entalpia",
+   "exotermic",
+   "endotermic",
+   "equilibrio quimico",
+   "constante de equilibrio",
+   "titulacao",
+   "mols",
+   "quantidade de materia",
+   "eletronegativ",
+   "valencia",
+   "isomer",
+   "alcool",
+   "ester",
+   "acido carboxilico",
+   "hidrolise",
+   "oxirreducao",
+   "nox",
+   "precipitad",
+   "gas carbonico",
+   "amonia",
+   "nitrato",
+   "sulfato",
+   "carbonato",
+   "cloreto",
+   "hidroxido"
   ],
   "biologia": [
    "celula",
@@ -1496,6 +1711,52 @@
    "atualmente",
    "hoje",
    "seculo xxi"
+  ],
+  "linguagens": [
+   "poema",
+   "poeta",
+   "verso",
+   "estrofe",
+   "narrador",
+   "personagem",
+   "romance",
+   "conto",
+   "crônica",
+   "cronica",
+   "oracao",
+   "sintat",
+   "sujeito",
+   "predicado",
+   "pronome",
+   "verbo",
+   "substantivo",
+   "adjetivo",
+   "advérbio",
+   "adverbio",
+   "conjuncao",
+   "figura de linguagem",
+   "metafora",
+   "ironia",
+   "texto",
+   "autor",
+   "leitor",
+   "obra",
+   "literatura",
+   "literari",
+   "machado de assis",
+   "modernis",
+   "romantis",
+   "realis",
+   "barroco",
+   "arcadismo",
+   "the ",
+   "of the",
+   "and ",
+   "is ",
+   "to the",
+   "which",
+   "what",
+   "would"
   ]
  }
 }

@@ -1,5 +1,6 @@
 """Junta pipeline/out/*.json + curadoria e gera public/data (index, chunks, meta, teoria)."""
 import collections
+import hashlib
 import json
 import shutil
 
@@ -46,6 +47,8 @@ def main():
     subj_ids = [s["id"] for s in subjects]
     topic_ids = [t["id"] for s in subjects for t in s["topics"]]
 
+    # a versão vai na URL dos blocos (?v=); uma aba com índice antigo percebe a troca e recarrega
+    version = hashlib.sha1(json.dumps(qs, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:10]
     chunks_dir = PUBLIC / "chunks"
     if chunks_dir.exists():
         shutil.rmtree(chunks_dir)
@@ -78,12 +81,12 @@ def main():
     cut = PIPE / "cutoffs.json"
     meta = {
         "subjects": subjects, "exams": exams, "military": sorted(MILITARY & set(exams)),
-        "total": len(qs), "theory": theory,
+        "total": len(qs), "theory": theory, "version": version,
         "sims": json.loads(cut.read_text(encoding="utf-8")) if cut.exists() else {},
     }
     (PUBLIC / "meta.json").write_text(json.dumps(meta, ensure_ascii=False), encoding="utf-8")
     (PUBLIC / "index.json").write_text(json.dumps(index, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    print(f"build: {len(qs)} questões, {len(index) // CHUNK + 1} blocos, {len(theory)} cards de teoria")
+    print(f"build {version}: {len(qs)} questões, {len(index) // CHUNK + 1} blocos, {len(theory)} cards de teoria")
 
 
 if __name__ == "__main__":

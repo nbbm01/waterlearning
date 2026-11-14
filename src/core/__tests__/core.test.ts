@@ -112,3 +112,26 @@ describe('texto rico', () => {
     expect(renderRich('<script>x</script>')).not.toContain('<script>')
   })
 })
+
+describe('busca de tópico', async () => {
+  const { searchAll } = await import('../search')
+  const meta = {
+    subjects: [{ id: 'mat', name: 'Matemática', topics: [
+      { id: 'f', name: 'Funções, Equações e Inequações', aliases: ['equação do 1º grau', 'função afim', 'bhaskara'] },
+      { id: 'l', name: 'Logaritmos e Exponenciais', aliases: ['logaritmo'] },
+    ] }],
+    version: 't', exams: ['ENEM', 'ITA'], military: [], total: 2, theory: {}, sims: {},
+  }
+  const rows = [row({ id: 'a', t: 0 }), row({ id: 'b', t: 1, e: 1 })]
+  it('entende "primeiro" como "1º" e ignora "do"', () => {
+    expect(searchAll(meta, rows, 'equação do primeiro grau')[0].label).toBe('Funções, Equações e Inequações')
+    expect(searchAll(meta, rows, 'equacao 1o grau')[0].label).toBe('Funções, Equações e Inequações')
+  })
+  it('casa por prefixo e plural', () => {
+    expect(searchAll(meta, rows, 'logaritmos')[0].label).toBe('Logaritmos e Exponenciais')
+    expect(searchAll(meta, rows, 'log')[0].label).toBe('Logaritmos e Exponenciais')
+  })
+  it('acha banca pelo nome', () => {
+    expect(searchAll(meta, rows, 'ita')[0]).toMatchObject({ kind: 'exam', label: 'ITA' })
+  })
+})

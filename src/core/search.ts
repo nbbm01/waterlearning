@@ -8,26 +8,51 @@ export interface Hit {
   count: number
 }
 
-export function fold(text: string): string {
-  return text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim()
+const STOP = new Set(['de', 'do', 'da', 'dos', 'das', 'e', 'o', 'a', 'os', 'as', 'em', 'no', 'na', 'com', 'para', 'por', 'um', 'uma'])
+const ORDINALS: Record<string, string> = {
+  primeiro: '1', primeira: '1', '1o': '1', '1a': '1', segundo: '2', segunda: '2', '2o': '2', '2a': '2',
+  terceiro: '3', '3o': '3', mu: 'mru', mruv: 'muv',
 }
 
-function score(query: string, words: string[]): number {
-  let best = 0
-  for (const w of words) {
-    const f = fold(w)
-    if (f === query) best = Math.max(best, 100)
-    else if (f.startsWith(query)) best = Math.max(best, 80)
-    else if (f.split(/[\s,]+/).some((p) => p.startsWith(query))) best = Math.max(best, 60)
-    else if (query.length >= 3 && f.includes(query)) best = Math.max(best, 40)
+export function fold(text: string): string {
+  return text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/º|ª/g, 'o').trim()
+}
+
+/** palavras significativas, com "primeiro"/"1º" e afins unificados */
+function words(text: string): string[] {
+  return fold(text)
+    .split(/[^a-z0-9]+/)
+    .filter((w) => w && !STOP.has(w))
+    .map((w) => ORDINALS[w] ?? w)
+}
+
+/** quanto a consulta casa com um rótulo: todas as palavras precisam aparecer (por prefixo) */
+function score(query: string[], label: string): number {
+  if (!query.length) return 0
+  const target = words(label)
+  let total = 0
+  for (const q of query) {
+    let best = 0
+    for (const t of target) {
+      if (t === q) best = Math.max(best, 3)
+      else if (t.startsWith(q) && q.length >= 2) best = Math.max(best, 2)
+      else if (q.length >= 4 && t.startsWith(q.slice(0, -1))) best = Math.max(best, 1) // plural/singular
+    }
+    if (!best) return 0
+    total += best
   }
-  return best
+  // casar o rótulo inteiro vale mais que casar parte dele
+  return (total / query.length) * 30 + (target.length === query.length ? 10 : 0)
+}
+
+function bestOf(query: string[], labels: string[]): number {
+  return Math.max(0, ...labels.map((l) => score(query, l)))
 }
 
 /** Busca por tópico, banca ou matéria: o aluno digita e já sai praticando. */
 export function searchAll(meta: Meta, rows: Row[], raw: string, limit = 8): Hit[] {
-  const query = fold(raw)
-  if (!query) return []
+  const query = words(raw)
+  if (!query.length) return []
   const byTopic = new Map<number, number>()
   const byExam = new Map<number, number>()
   const bySubject = new Map<number, number>()
@@ -39,18 +64,25 @@ export function searchAll(meta: Meta, rows: Row[], raw: string, limit = 8): Hit[
   const hits: (Hit & { sc: number })[] = []
   let ti = 0
   meta.subjects.forEach((s, si) => {
-    const sc = score(query, [s.name])
+    const sc = bestOf(query, [s.name])
     if (sc) hits.push({ kind: 'subject', index: si, label: s.name, hint: 'Matéria', count: bySubject.get(si) ?? 0, sc: sc + 5 })
     for (const t of s.topics) {
-      const named = score(query, [t.name])
-      const alias = score(query, t.aliases)
-      const tsc = Math.max(named + 3, alias)
-      if (tsc > 3) hits.push({ kind: 'topic', index: ti, label: t.name, hint: s.name, count: byTopic.get(ti) ?? 0, sc: tsc })
+      const named = bestOf(query, [t.name])
+      const alias = bestOf(query, t.aliases)
+      const sc = Math.max(named + 3, alias)
+      if (sc > 3) {
+        // mostra qual apelido casou, para o aluno entender por que o tópico apareceu
+        const matched = !named ? t.aliases.find((a) => score(query, a) === alias) : undefined
+        hits.push({
+          kind: 'topic', index: ti, label: t.name, hint: matched ? `${s.name} · “${matched}”` : s.name,
+          count: byTopic.get(ti) ?? 0, sc,
+        })
+      }
       ti++
     }
   })
   meta.exams.forEach((e, ei) => {
-    const sc = score(query, [e])
+    const sc = bestOf(query, [e])
     if (sc) hits.push({ kind: 'exam', index: ei, label: e, hint: 'Vestibular', count: byExam.get(ei) ?? 0, sc: sc + 4 })
   })
   return hits.filter((h) => h.count > 0).sort((a, b) => b.sc - a.sc || b.count - a.count).slice(0, limit)

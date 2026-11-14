@@ -59,6 +59,7 @@ export interface SimSpec {
 }
 
 export interface Meta {
+  version: string
   subjects: Subject[]
   exams: string[]
   military: string[]
