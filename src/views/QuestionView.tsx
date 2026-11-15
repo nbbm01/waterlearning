@@ -42,7 +42,7 @@ export function QuestionView({ bank, row, question, selected, reveal, onSelect, 
       ) : (
         <div className="q-scan">
           {(question.imgs ?? []).map((src) => (
-            <img key={src} src={`/${src}`} alt="Enunciado da questão, reproduzido da fonte original" />
+            <img key={src} src={`${import.meta.env.BASE_URL}${src}`} alt="Enunciado da questão, reproduzido da fonte original" />
           ))}
         </div>
       )}
@@ -61,7 +61,7 @@ export function QuestionView({ bank, row, question, selected, reveal, onSelect, 
               >
                 <kbd>{LETTERS[i]}</kbd>
                 {opt?.img ? (
-                  <img src={`/${opt.img}`} alt={`Alternativa ${LETTERS[i]}`} loading="lazy" />
+                  <img src={`${import.meta.env.BASE_URL}${opt.img}`} alt={`Alternativa ${LETTERS[i]}`} loading="lazy" />
                 ) : opt?.t ? (
                   <Rich text={opt.t} />
                 ) : (

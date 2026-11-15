@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { dailyGoal, feedbackLine, needsBreak, suggest, weakSpots } from '../coach'
 import { updateElo } from '../elo'
 import { matches, pickNext, type ProgressView } from '../filters'
 import { START_PROG, stepProg } from '../progressive'
@@ -77,12 +78,23 @@ describe('streak', () => {
 })
 
 describe('progressivo', () => {
-  it('sobe após 3 acertos e desce após 2 erros', () => {
+  it('só sobe com domínio: 3 acertos seguidos não bastam, 7 de 8 sim', () => {
     let p = START_PROG
     for (let i = 0; i < 3; i++) p = stepProg(p, true).prog
-    expect(p.level).toBe(2)
-    p = stepProg(stepProg(p, false).prog, false).prog
     expect(p.level).toBe(1)
+    // um erro no meio não zera o progresso
+    for (const ok of [false, true, true, true]) p = stepProg(p, ok).prog
+    expect(p.level).toBe(1)
+    expect(stepProg(p, true).changed).toBe(1)
+  })
+  it('um erro isolado não derruba; 3 erros em 4 voltam um degrau', () => {
+    let p = { level: 2 as const, hist: [] as boolean[] }
+    for (const ok of [false, true, false]) p = stepProg(p, ok).prog as typeof p
+    expect(p.level).toBe(2)
+    expect(stepProg(p, false).prog.level).toBe(1)
+  })
+  it('aceita o estado salvo pela versão antiga (sem hist)', () => {
+    expect(stepProg({ level: 1, run: 2 } as never, true).prog.hist).toEqual([true])
   })
 })
 
@@ -103,6 +115,12 @@ describe('filtros', () => {
     const seen: ProgressView = { seen: (id) => id === 'b', due: () => false }
     expect(pickNext(pool, seen, [], 2)!.id).toBe('c')
     expect(pickNext(pool, none, ['b', 'c'], 2)!.id).toBe('a')
+  })
+  it('variedade de molde não tira o aluno do degrau', () => {
+    // todos os moldes médios foram vistos há pouco: repete um molde, mas não pula para a difícil
+    const pool = [row({ id: 'autoral-area-1', d: 2 }), row({ id: 'autoral-raizes-1', d: 2 }), row({ id: 'espcex-1', d: 3 })]
+    expect(pickNext(pool, none, ['autoral-area-0', 'autoral-raizes-0'], 2)!.d).toBe(2)
+    expect(pickNext(pool, none, ['autoral-area-0'], 2)!.id).toBe('autoral-raizes-1')
   })
 })
 
@@ -149,5 +167,39 @@ describe('progressivo por Elo', () => {
   })
   it('errar desce menos do que acertar sobe', () => {
     expect(1000 - updateElo(1000, 1000, false)).toBeLessThan(updateElo(1000, 1000, true) - 1000)
+  })
+})
+
+describe('treinador', () => {
+  const stats = new Map([
+    ['mat-porcentagem', { n: 10, ok: 4 }], ['mat-pa', { n: 8, ok: 5 }], ['mat-pg', { n: 3, ok: 0 }], ['fis-ondas', { n: 12, ok: 11 }],
+  ])
+  it('ponto fraco precisa de respostas suficientes e vem do pior para o melhor', () => {
+    expect(weakSpots(stats).map((w) => w.id)).toEqual(['mat-porcentagem', 'mat-pa'])
+  })
+  it('revisão vencendo vem antes do ponto fraco, e a meta só aparece perto do fim', () => {
+    const weak = weakSpots(stats)
+    expect(suggest({ due: 5, weak, today: 0, goal: 20 })).toMatchObject({ kind: 'review', count: 5 })
+    expect(suggest({ due: 1, weak, today: 0, goal: 20 })).toMatchObject({ kind: 'weak' })
+    expect(suggest({ due: 0, weak: [], today: 4, goal: 20 })).toBeNull()
+    expect(suggest({ due: 0, weak: [], today: 17, goal: 20 })).toEqual({ kind: 'goal', left: 3 })
+    expect(suggest({ due: 0, weak: [], today: 20, goal: 20 })).toBeNull()
+  })
+  it('meta do dia é a semanal em cinco dias', () => {
+    expect(dailyGoal(100)).toBe(20)
+    expect(dailyGoal(10)).toBe(5)
+  })
+  it('acerto depois de erro ganha o elogio da recuperação; erro nunca culpa', () => {
+    const base = { ok: true, recovered: false, slow: false, combo: 1, level: 1, wrongRun: 0 }
+    expect(feedbackLine({ ...base, recovered: true }, 0)).toMatch(/antes/i)
+    expect(feedbackLine({ ...base, ok: false, wrongRun: 1 }, 0)).toBe('Ainda não, e tudo bem.')
+    for (let seed = 0; seed < 8; seed++) expect(feedbackLine({ ...base, ok: false, wrongRun: 4 }, seed)).not.toMatch(/errado|fraco|ruim/i)
+  })
+  it('pausa só é sugerida com queda no fim e respostas apressadas', () => {
+    const good = Array.from({ length: 12 }, () => ({ ok: true, ms: 60_000 }))
+    const rushed = Array.from({ length: 6 }, (_, i) => ({ ok: i === 0, ms: 15_000 }))
+    expect(needsBreak([...good, ...rushed])).toBe(true)
+    expect(needsBreak([...good, ...rushed.map((r) => ({ ...r, ms: 90_000 }))])).toBe(false)
+    expect(needsBreak(rushed)).toBe(false)
   })
 })

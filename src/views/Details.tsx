@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
-import type { Bank } from '../core/data'
+import { strongSpots, weakSpots } from '../core/coach'
+import { skillTarget, type Bank } from '../core/data'
 import { START_ELO, tier } from '../core/elo'
 import { pomodoro } from '../core/pomodoro'
 import { useStore } from '../core/store'
 import { MAX_SHIELDS, SHIELD_EVERY, visibleStreak } from '../core/streak'
 import { dayNumber, dayToDate, formatClock, formatHours, weekStart } from '../core/time'
 import { toast } from '../core/toast'
+import { EMPTY_FILTER } from '../core/types'
+import type { View } from './TopBar'
 
 const WEEKS = 18
 const MIN_ATTEMPTS = 3
@@ -18,7 +21,7 @@ function masteryLevel(pct: number): number {
   return pct < 40 ? 1 : pct < 60 ? 2 : pct < 80 ? 3 : 4
 }
 
-export function Details({ bank }: { bank: Bank }) {
+export function Details({ bank, go }: { bank: Bank; go: (v: View) => void }) {
   const store = useStore()
   const today = dayNumber()
   const streak = visibleStreak(store.s.streak, today)
@@ -36,6 +39,17 @@ export function Details({ bank }: { bank: Bank }) {
   const totalN = Object.values(days).reduce((s, d) => s + d.n, 0)
   const totalOk = Object.values(days).reduce((s, d) => s + d.ok, 0)
   const toNextShield = SHIELD_EVERY - (store.s.streak.count % SHIELD_EVERY)
+
+  const named = (list: ReturnType<typeof weakSpots>) =>
+    list.flatMap((w) => { const t = skillTarget(bank, w.id); return t ? [{ ...w, ...t }] : [] })
+  const weak = named(weakSpots(store.skills, 4))
+  const strong = named(strongSpots(store.skills, 4))
+  const train = (t: { subs: number[]; topics: number[] }) => {
+    store.setFilter({ ...EMPTY_FILTER, subs: t.subs, topics: t.topics })
+    go('practice')
+  }
+  const todayN = store.todayCount(today)
+  const dayGoal = store.dailyGoal()
 
   const exportBackup = async () => {
     const blob = new Blob([await store.exportAll()], { type: 'application/json' })
@@ -64,6 +78,37 @@ export function Details({ bank }: { bank: Bank }) {
         <div className="stat"><span>Questões respondidas</span><b className="tabular">{totalN.toLocaleString('pt-BR')}</b></div>
         <div className="stat"><span>Aproveitamento</span><b className="tabular">{totalN ? `${Math.round((totalOk / totalN) * 100)}%` : '–'}</b></div>
         <div className="stat"><span>Dias estudados</span><b className="tabular">{studiedDays}</b></div>
+      </section>
+
+      <section>
+        <h3>O que você já construiu</h3>
+        <ul className="wins">
+          <li><b className="tabular">{store.recovered}</b><span>{store.recovered === 1 ? 'questão que você errou e depois acertou' : 'questões que você errou e depois acertou'}</span></li>
+          <li><b className="tabular">{totalOk.toLocaleString('pt-BR')}</b><span>acertos somados até aqui</span></li>
+          <li><b className="tabular">{todayN}/{dayGoal}</b><span>{todayN >= dayGoal ? 'meta de hoje cumprida' : 'na meta de hoje'}</span></li>
+        </ul>
+        {strong.length > 0 && (
+          <p className="muted">Onde você já vai bem: {strong.map((w) => `${w.name} (${w.pct}%)`).join(', ')}.</p>
+        )}
+        <p className="muted">Errar e voltar a acertar é a prova mais direta de que você aprendeu, e vale mais do que acertar de primeira.</p>
+      </section>
+
+      <section>
+        <h3>Onde focar agora</h3>
+        {weak.length ? (
+          <ul className="focus-list">
+            {weak.map((w) => (
+              <li key={w.id}>
+                <span className="focus-name">{w.name}</span>
+                <span className="meter"><i style={{ width: `${w.pct}%` }} /></span>
+                <span className="muted tabular">{w.pct}% em {w.n}</span>
+                <button className="btn ghost small" onClick={() => train(w)}>Treinar</button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="muted">Nenhum ponto fraco à vista. Um assunto entra aqui quando fica abaixo de 65% em pelo menos 6 questões.</p>
+        )}
       </section>
 
       <section>

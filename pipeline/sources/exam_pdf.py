@@ -79,13 +79,13 @@ def segment(pdf, start_re, stop_re=None, first=1, last=None):
     return questions
 
 
-def crop_questions(pdf, questions, tag, folder):
+def crop_questions(pdf, questions, tag, folder, rotations=None):
     """recorta as questões escolhidas; devolve {número: [caminhos]}"""
     jobs, names = [], {}
     for num, q in questions.items():
         names[num] = [f"{tag}-{num}-{k}" for k in range(len(q["segs"]))]
         jobs += [(n, *s) for n, s in zip(names[num], q["segs"])]
-    png = render_pages(pdf, sorted({j[1] for j in jobs}), tag)
+    png = render_pages(pdf, sorted({j[1] for j in jobs}), tag, rotations)
     paths = iter(crop_all(jobs, png, folder))
     return {num: [next(paths) for _ in names[num]] for num in names}
 
@@ -95,13 +95,13 @@ def option_count(text):
     return max(4, "ABCDE".index(max(letters)) + 1) if letters else 5
 
 
-def segment_columns(pdf, start_re, window=4):
+def segment_columns(pdf, start_re, window=4, pages=None, stop_re=None, tight=False):
     """como segment(), para provas em duas colunas com questões que às vezes ocupam a largura toda.
 
     Lê a página em faixas: colunas esquerda e direita até uma questão de largura total, a faixa dela,
     e de novo as colunas. Uma questão que chega ao pé da coluna continua no topo da seguinte.
     """
-    pages = page_lines(pdf, 1, page_count(pdf))
+    pages = pages or page_lines(pdf, 1, page_count(pdf))
     bounds = margins(pages)
     questions, current, last = {}, None, 0
     for p, (w, h, L) in pages.items():
@@ -112,6 +112,8 @@ def segment_columns(pdf, start_re, window=4):
         mid = w / 2
         lx = min(l[0] for l in content)
         rx = min((l[0] for l in content if l[0] > mid - 15), default=mid)
+        # a divisa real entre colunas: onde terminam as linhas da esquerda (nem sempre é o meio da página)
+        left_end = max((l[2] for l in content if l[0] < mid - 15 and l[2] < rx), default=mid - 2)
         starts = []
         for l in content:
             m = start_re.match(l[4])
@@ -123,7 +125,10 @@ def segment_columns(pdf, start_re, window=4):
             if s[2] not in questions and abs(s[2] - last) <= window and s[2] > 0:
                 kept.append(s)
                 last = max(last, s[2])
-        starts = sorted(kept)
+        # linhas que encerram a questão anterior sem abrir outra (ex.: quadro de gabarito)
+        if stop_re:
+            kept += [(l[1], "L" if l[0] < mid - 15 else "R", None) for l in content if stop_re.search(l[4])]
+        starts = sorted(kept, key=lambda s: s[0])
 
         def crosses(y0, y1):
             return any(l[0] < mid - 15 and l[2] > mid + 25 and y0 <= l[1] < y1 for l in content)
@@ -131,7 +136,7 @@ def segment_columns(pdf, start_re, window=4):
         # faixas de largura total: questão da coluna esquerda cujo texto atravessa o meio
         bands = []
         for k, (y, col, num) in enumerate(starts):
-            if col != "L":
+            if col != "L" or num is None:
                 continue
             nxt = min([s[0] for s in starts if s[0] > y + 1], default=foot)
             if crosses(y, nxt):
@@ -145,16 +150,17 @@ def segment_columns(pdf, start_re, window=4):
         for col, y0, y1 in slots:
             if y1 - y0 < 6:
                 continue
-            x0, x1 = {"L": (lx - 6, mid - 2), "R": (rx - 6, w - lx + 6), "F": (lx - 6, w - lx + 6)}[col]
+            x0, x1 = {"L": (lx - 6, min(rx - 2, left_end + 6)), "R": (rx - 4, w - lx + 6), "F": (lx - 6, w - lx + 6)}[col]
             inside = [l for l in content if y0 - 1 <= l[1] < y1 and (col == "F" or (l[0] < mid - 15) == (col == "L"))]
-            cuts = sorted((s[0], s[2]) for s in starts if y0 - 1 <= s[0] < y1 and (col == "F" or s[1] == col))
+            cuts = sorted(((s[0], s[2]) for s in starts if y0 - 1 <= s[0] < y1 and (col == "F" or s[1] == col)), key=lambda c: c[0])
             y = y0
             for cy, num in cuts:
                 above = [l[3] for l in inside if y <= l[1] < cy - 1]
-                cut = (max(above) + cy) / 2 if above else cy - 3
+                # em scan, figuras e frações não viram linha de texto: corta colado no rótulo
+                cut = cy - 3 if tight or not above else (max(above) + cy) / 2
                 if current is not None and cut - y > 6 and above:
                     current["segs"].append((p, x0, y, x1, cut))
-                current = None if num in questions else questions.setdefault(num, {"segs": [], "text": [], "page": p})
+                current = None if num is None or num in questions else questions.setdefault(num, {"segs": [], "text": [], "page": p})
                 y = cut
             rest = [l for l in inside if l[1] >= y]
             if current is not None and rest:

@@ -1,187 +1,339 @@
 {
-  "mat-aritmetica": {
-    "title": "Proporção e regra de três",
-    "body": "Duas grandezas são **diretamente proporcionais** quando a razão entre elas é constante: \\(\\dfrac{a}{b} = k\\). São **inversamente proporcionais** quando o produto é constante: \\(a \\cdot b = k\\).\n\n**Regra de três:** antes de montar a conta, pergunte se aumentar uma grandeza aumenta ou diminui a outra. Se diminui, inverta a razão dessa grandeza.\n\n**MMC e MDC:** eventos que se repetem juntos pedem MMC; dividir em partes iguais e máximas pede MDC.\n\n**Armadilha comum:** em regra de três composta, cada grandeza é comparada com a incógnita separadamente, não entre si.",
-    "ref": {"label": "Tópicos de Álgebra Elementar, Equação do primeiro grau, p. 126", "file": "Tópicos de Álgebra Elementar (Bruno Pedra, Ivan Monteiro, Alex Ricardo) (z-library.sk, 1lib.sk, z-lib.sk).pdf", "page": 126}
-  },
-  "mat-porcentagem": {
-    "title": "Porcentagem e juros",
-    "body": "\\(p\\%\\) de \\(x\\) é \\(\\dfrac{p}{100}\\cdot x\\). Aumentar \\(p\\%\\) é multiplicar por \\(1 + \\dfrac{p}{100}\\); descontar \\(p\\%\\) é multiplicar por \\(1 - \\dfrac{p}{100}\\).\n\n**Variações sucessivas** se multiplicam, não se somam: subir 10% e depois cair 10% dá \\(1{,}1 \\cdot 0{,}9 = 0{,}99\\), uma perda de 1%.\n\n**Juros simples:** \\(M = C(1 + i\\,t)\\). **Juros compostos:** \\(M = C(1 + i)^t\\).\n\n**Armadilha comum:** taxa e tempo precisam estar na mesma unidade (ao mês com meses, ao ano com anos).",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "mat-conjuntos-funcoes": {
-    "title": "Funções e equações de 1º e 2º grau",
-    "body": "**1º grau:** \\(ax + b = 0 \\Rightarrow x = -\\dfrac{b}{a}\\). O gráfico de \\(f(x) = ax + b\\) é uma reta; \\(a\\) é a inclinação e \\(b\\) é onde corta o eixo \\(y\\).\n\n**2º grau:** \\(ax^2 + bx + c = 0\\), com \\(\\Delta = b^2 - 4ac\\) e \\(x = \\dfrac{-b \\pm \\sqrt{\\Delta}}{2a}\\). Soma das raízes \\(-\\dfrac{b}{a}\\), produto \\(\\dfrac{c}{a}\\).\n\n**Vértice da parábola:** \\(x_v = -\\dfrac{b}{2a}\\), \\(y_v = -\\dfrac{\\Delta}{4a}\\). Com \\(a > 0\\) a parábola tem mínimo; com \\(a < 0\\), máximo.\n\n**Armadilha comum:** ao multiplicar ou dividir uma inequação por número negativo, o sinal da desigualdade inverte.",
-    "ref": {"label": "Fundamentos de Matemática Elementar, vol. 1, cap. VI e VII (funções afim e quadrática), p. 97", "file": "Fundamentos de matemática elementar - Vol. 01.pdf", "page": 105}
-  },
-  "mat-log-exp": {
-    "title": "Logaritmos e exponenciais",
-    "body": "\\(\\log_b a = x \\iff b^x = a\\), com \\(a > 0\\), \\(b > 0\\) e \\(b \\ne 1\\).\n\n**Propriedades:** \\(\\log(xy) = \\log x + \\log y\\), \\(\\log\\dfrac{x}{y} = \\log x - \\log y\\), \\(\\log x^n = n \\log x\\).\n\n**Mudança de base:** \\(\\log_b a = \\dfrac{\\log_c a}{\\log_c b}\\).\n\n**Equação exponencial:** iguale as bases (\\(2^x = 8 = 2^3 \\Rightarrow x = 3\\)); se não der, aplique log dos dois lados.\n\n**Armadilha comum:** em inequações com base entre 0 e 1, o sentido da desigualdade inverte ao comparar expoentes.",
-    "ref": {"label": "Fundamentos de Matemática Elementar, vol. 2, cap. III (Logaritmos), p. 57", "file": "Fundamentos de matemática elementar - Vol. 02.pdf", "page": 65}
-  },
-  "mat-trigonometria": {
-    "title": "Trigonometria essencial",
-    "body": "No triângulo retângulo: \\(\\sin\\theta = \\dfrac{\\text{oposto}}{\\text{hipotenusa}}\\), \\(\\cos\\theta = \\dfrac{\\text{adjacente}}{\\text{hipotenusa}}\\), \\(\\tan\\theta = \\dfrac{\\sin\\theta}{\\cos\\theta}\\).\n\n**Relação fundamental:** \\(\\sin^2 x + \\cos^2 x = 1\\).\n\n**Arcos notáveis:** \\(\\sin 30° = \\tfrac12\\), \\(\\sin 45° = \\tfrac{\\sqrt2}{2}\\), \\(\\sin 60° = \\tfrac{\\sqrt3}{2}\\) (o cosseno faz o caminho inverso).\n\n**Triângulo qualquer:** lei dos senos \\(\\dfrac{a}{\\sin A} = 2R\\); lei dos cossenos \\(a^2 = b^2 + c^2 - 2bc\\cos A\\).\n\n**Armadilha comum:** confira se o ângulo está em graus ou radianos (\\(\\pi \\text{ rad} = 180°\\)).",
-    "ref": {"label": "Fundamentos de Matemática Elementar, vol. 3, cap. II (Razões trigonométricas no triângulo retângulo), p. 10", "file": "Fundamentos de matemática elementar - Vol. 03.pdf", "page": 20}
-  },
-  "mat-sequencias": {
-    "title": "Progressões aritmética e geométrica",
-    "body": "**PA** (soma uma razão \\(r\\)): \\(a_n = a_1 + (n-1)r\\) e \\(S_n = \\dfrac{(a_1 + a_n)\\,n}{2}\\).\n\n**PG** (multiplica por \\(q\\)): \\(a_n = a_1 q^{n-1}\\) e \\(S_n = a_1\\dfrac{q^n - 1}{q - 1}\\). Se \\(|q| < 1\\), a soma infinita é \\(S = \\dfrac{a_1}{1 - q}\\).\n\n**Truque:** três termos em PA podem ser escritos \\(x - r,\\ x,\\ x + r\\); em PG, \\(\\tfrac{x}{q},\\ x,\\ xq\\).\n\n**Armadilha comum:** o termo geral usa \\(n - 1\\), não \\(n\\).",
-    "ref": {"label": "Fundamentos de Matemática Elementar, vol. 4, cap. II e III (PA e PG), p. 6", "file": "Fundamentos de matemática elementar - Vol. 04.pdf", "page": 14}
-  },
-  "mat-matrizes-sistemas": {
-    "title": "Matrizes, determinantes e sistemas",
-    "body": "**Produto de matrizes:** \\(A_{m\\times n} \\cdot B_{n\\times p}\\) só existe se as colunas de \\(A\\) forem iguais às linhas de \\(B\\); em geral \\(AB \\ne BA\\).\n\n**Determinante 2×2:** \\(\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix} = ad - bc\\). Para 3×3, use Sarrus.\n\n**Propriedades:** \\(\\det(AB) = \\det A \\cdot \\det B\\); trocar duas linhas troca o sinal; uma linha nula zera o determinante.\n\n**Sistemas lineares:** \\(\\det \\ne 0\\) dá solução única (SPD). Com \\(\\det = 0\\), o sistema pode ser indeterminado ou impossível: escalone para descobrir.\n\n**Armadilha comum:** \\(\\det(kA) = k^n \\det A\\) para matriz de ordem \\(n\\), não \\(k \\det A\\).",
-    "ref": {"label": "Fundamentos de Matemática Elementar, vol. 4, cap. IV a VI, p. 45", "file": "Fundamentos de matemática elementar - Vol. 04.pdf", "page": 53}
-  },
-  "mat-combinatoria": {
-    "title": "Análise combinatória",
-    "body": "**Princípio fundamental da contagem:** etapas independentes se multiplicam.\n\n**A ordem importa?** Sim: arranjo \\(A_{n,p} = \\dfrac{n!}{(n-p)!}\\). Não: combinação \\(C_{n,p} = \\dfrac{n!}{p!\\,(n-p)!}\\).\n\n**Permutação** de \\(n\\) elementos: \\(n!\\). Com repetições: \\(\\dfrac{n!}{a!\\,b!\\cdots}\\).\n\n**Binômio de Newton:** termo geral \\(T_{k+1} = \\binom{n}{k} a^{n-k} b^k\\).\n\n**Armadilha comum:** escolher uma comissão (ordem não importa) é combinação; escolher presidente e vice (ordem importa) é arranjo.",
-    "ref": {"label": "Fundamentos de Matemática Elementar, vol. 5, cap. I (Análise combinatória), p. 1", "file": "Fundamentos de matemática elementar - Vol. 05.pdf", "page": 7}
-  },
-  "mat-probabilidade": {
-    "title": "Probabilidade",
-    "body": "\\(P(A) = \\dfrac{\\text{casos favoráveis}}{\\text{casos possíveis}}\\), com casos igualmente prováveis.\n\n**Complementar:** \\(P(\\bar A) = 1 - P(A)\\). Use quando a pergunta tem \"pelo menos um\".\n\n**União:** \\(P(A \\cup B) = P(A) + P(B) - P(A \\cap B)\\).\n\n**Independentes:** \\(P(A \\cap B) = P(A)\\cdot P(B)\\). **Condicional:** \\(P(A \\mid B) = \\dfrac{P(A \\cap B)}{P(B)}\\).\n\n**Armadilha comum:** sorteio sem reposição muda o total a cada retirada.",
-    "ref": {"label": "Fundamentos de Matemática Elementar, vol. 5, cap. III (Probabilidade), p. 89", "file": "Fundamentos de matemática elementar - Vol. 05.pdf", "page": 95}
-  },
-  "mat-estatistica": {
-    "title": "Média, mediana e moda",
-    "body": "**Média aritmética:** soma dos valores dividida pela quantidade. **Ponderada:** \\(\\bar x = \\dfrac{\\sum p_i x_i}{\\sum p_i}\\).\n\n**Mediana:** o valor do meio com os dados **em ordem**; com quantidade par, a média dos dois centrais.\n\n**Moda:** o valor mais frequente.\n\n**Desvio padrão:** mede a dispersão em torno da média; quanto menor, mais regulares os dados.\n\n**Armadilha comum:** esquecer de ordenar os dados antes de achar a mediana.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "mat-complexos-polinomios": {
-    "title": "Números complexos e polinômios",
-    "body": "\\(i^2 = -1\\) e as potências de \\(i\\) se repetem de 4 em 4. Forma algébrica \\(z = a + bi\\); módulo \\(|z| = \\sqrt{a^2 + b^2}\\); conjugado \\(\\bar z = a - bi\\).\n\n**Forma trigonométrica:** \\(z = |z|(\\cos\\theta + i\\sin\\theta)\\) e **De Moivre**: \\(z^n = |z|^n(\\cos n\\theta + i \\sin n\\theta)\\).\n\n**Polinômios:** o resto da divisão de \\(P(x)\\) por \\((x - a)\\) é \\(P(a)\\). Se \\(P(a) = 0\\), \\(a\\) é raiz.\n\n**Girard** (grau 3, \\(ax^3 + bx^2 + cx + d\\)): soma das raízes \\(-\\tfrac{b}{a}\\), produto \\(-\\tfrac{d}{a}\\).\n\n**Armadilha comum:** polinômio de coeficientes reais com raiz \\(a + bi\\) também tem \\(a - bi\\) como raiz.",
-    "ref": {"label": "Fundamentos de Matemática Elementar, vol. 6, cap. I a III, p. 1", "file": "Fundamentos de matemática elementar - Vol. 06.pdf", "page": 9}
-  },
-  "mat-geometria-plana": {
-    "title": "Geometria plana",
-    "body": "**Pitágoras:** \\(a^2 = b^2 + c^2\\). **Semelhança:** lados proporcionais e ângulos iguais; a razão das áreas é o quadrado da razão de semelhança.\n\n**Áreas:** triângulo \\(\\dfrac{b\\,h}{2}\\), trapézio \\(\\dfrac{(B + b)\\,h}{2}\\), losango \\(\\dfrac{D\\,d}{2}\\), círculo \\(\\pi r^2\\). Triângulo equilátero: \\(\\dfrac{\\ell^2\\sqrt3}{4}\\).\n\n**Ângulos:** soma interna de um polígono de \\(n\\) lados \\(= (n-2)\\cdot 180°\\).\n\n**Armadilha comum:** a altura precisa ser perpendicular à base escolhida.",
-    "ref": {"label": "Fundamentos de Matemática Elementar, vol. 3, cap. I (Revisão inicial de geometria), p. 2", "file": "Fundamentos de matemática elementar - Vol. 03.pdf", "page": 12}
-  },
-  "mat-geometria-espacial": {
-    "title": "Geometria espacial",
-    "body": "**Prisma e cilindro:** \\(V = A_{\\text{base}}\\cdot h\\). **Pirâmide e cone:** \\(V = \\dfrac{A_{\\text{base}}\\cdot h}{3}\\).\n\n**Esfera:** \\(V = \\dfrac{4}{3}\\pi r^3\\) e \\(A = 4\\pi r^2\\).\n\n**Euler** (poliedro convexo): \\(V - A + F = 2\\).\n\n**Semelhança de sólidos:** se as medidas lineares se multiplicam por \\(k\\), as áreas se multiplicam por \\(k^2\\) e os volumes por \\(k^3\\).\n\n**Conversão:** \\(1\\,\\text{dm}^3 = 1\\,\\text{L}\\) e \\(1\\,\\text{m}^3 = 1000\\,\\text{L}\\).",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "mat-geometria-analitica": {
-    "title": "Geometria analítica",
-    "body": "**Distância:** \\(d = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}\\). **Ponto médio:** média das coordenadas.\n\n**Reta:** \\(y = mx + n\\), com \\(m = \\dfrac{y_2 - y_1}{x_2 - x_1} = \\tan\\theta\\). Paralelas têm o mesmo \\(m\\); perpendiculares, \\(m_1 m_2 = -1\\).\n\n**Distância de ponto a reta** \\(ax + by + c = 0\\): \\(d = \\dfrac{|a x_0 + b y_0 + c|}{\\sqrt{a^2 + b^2}}\\).\n\n**Circunferência:** \\((x - a)^2 + (y - b)^2 = r^2\\), centro \\((a, b)\\).\n\n**Armadilha comum:** a equação geral precisa ser completada em quadrados para achar centro e raio.",
-    "ref": {"label": "Fundamentos de Matemática Elementar, vol. 7, cap. II (Equação da reta), p. 28", "file": "Fundamentos de matemática elementar - Vol. 07.pdf", "page": 36}
-  },
-  "mat-grandezas-medidas": {
-    "title": "Grandezas e conversões",
-    "body": "Converta tudo para a mesma unidade **antes** de calcular.\n\n**Comprimento:** km → m multiplica por 1000; m → cm por 100.\n\n**Área e volume:** o fator vai ao quadrado e ao cubo: \\(1\\,\\text{m}^2 = 10^4\\,\\text{cm}^2\\), \\(1\\,\\text{m}^3 = 10^6\\,\\text{cm}^3 = 1000\\,\\text{L}\\).\n\n**Tempo:** 1 h = 60 min = 3600 s; para km/h → m/s, divida por 3,6.\n\n**Escala:** \\(\\text{escala} = \\dfrac{\\text{medida no desenho}}{\\text{medida real}}\\), nas mesmas unidades.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "mat-limites-derivadas": {
-    "title": "Limites e derivadas",
-    "body": "**Limite:** o valor de que \\(f(x)\\) se aproxima quando \\(x \\to a\\). Em \\(\\tfrac00\\), fatore e simplifique.\n\n**Limite fundamental:** \\(\\lim_{x\\to0}\\dfrac{\\sin x}{x} = 1\\).\n\n**Derivadas:** \\((x^n)' = n x^{n-1}\\), \\((\\sin x)' = \\cos x\\), \\((e^x)' = e^x\\), \\((\\ln x)' = \\tfrac1x\\). Produto: \\((uv)' = u'v + uv'\\). Cadeia: \\((f(g(x)))' = f'(g(x))\\,g'(x)\\).\n\n**Uso:** \\(f'(x) = 0\\) indica pontos candidatos a máximo ou mínimo.",
-    "ref": {"label": "Fundamentos de Matemática Elementar, vol. 8, cap. VI e VII (Derivadas), p. 127", "file": "Fundamentos de matemática elementar - Vol. 08.pdf", "page": 135}
-  },
-  "fis-cinematica": {
-    "title": "Cinemática",
-    "body": "**MRU** (velocidade constante): \\(s = s_0 + v t\\).\n\n**MRUV** (aceleração constante): \\(v = v_0 + a t\\), \\(s = s_0 + v_0 t + \\dfrac{a t^2}{2}\\) e **Torricelli** \\(v^2 = v_0^2 + 2a\\,\\Delta s\\) (útil quando o tempo não aparece).\n\n**Queda livre:** MRUV com \\(a = g \\approx 10\\,\\text{m/s}^2\\).\n\n**Lançamento oblíquo:** separe os eixos; na horizontal é MRU, na vertical é MRUV.\n\n**MCU:** \\(v = \\omega R\\) e \\(a_c = \\dfrac{v^2}{R}\\).\n\n**Armadilha comum:** km/h ÷ 3,6 = m/s.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "fis-dinamica": {
-    "title": "Leis de Newton",
-    "body": "**1ª lei (inércia):** sem força resultante, o corpo mantém repouso ou MRU.\n\n**2ª lei:** \\(F_R = m\\,a\\). Desenhe todas as forças antes de somar.\n\n**3ª lei:** ação e reação têm mesmo módulo e sentidos opostos, e atuam em **corpos diferentes**.\n\n**Forças comuns:** peso \\(P = mg\\); atrito \\(f_{at} = \\mu N\\); no plano inclinado, \\(P\\sin\\theta\\) ao longo da rampa e \\(P\\cos\\theta\\) perpendicular.\n\n**Equilíbrio de corpo extenso:** soma das forças nula e soma dos momentos (\\(M = F\\,d\\)) nula.\n\n**Armadilha comum:** a normal nem sempre é igual ao peso (rampas, elevadores, forças inclinadas).",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "fis-energia": {
-    "title": "Energia, trabalho e quantidade de movimento",
-    "body": "**Trabalho:** \\(\\tau = F\\,d\\cos\\theta\\). **Teorema da energia cinética:** \\(\\tau_{total} = \\Delta E_c\\).\n\n**Energias:** \\(E_c = \\dfrac{mv^2}{2}\\), \\(E_p = mgh\\), elástica \\(\\dfrac{kx^2}{2}\\). Sem atrito, a energia mecânica se conserva.\n\n**Potência:** \\(P = \\dfrac{\\tau}{\\Delta t}\\); **rendimento** \\(\\eta = \\dfrac{P_{útil}}{P_{total}}\\).\n\n**Quantidade de movimento:** \\(Q = mv\\); impulso \\(I = F\\,\\Delta t = \\Delta Q\\). Em colisões, \\(Q\\) total se conserva.\n\n**Armadilha comum:** em colisão inelástica a energia cinética **não** se conserva, mas a quantidade de movimento sim.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "fis-hidrostatica": {
-    "title": "Hidrostática",
-    "body": "**Densidade:** \\(\\rho = \\dfrac{m}{V}\\). **Pressão:** \\(p = \\dfrac{F}{A}\\).\n\n**Stevin:** \\(p = p_0 + \\rho g h\\). Pontos na mesma altura de um mesmo líquido têm a mesma pressão.\n\n**Pascal:** acréscimo de pressão se transmite a todo o fluido; na prensa hidráulica, \\(\\dfrac{F_1}{A_1} = \\dfrac{F_2}{A_2}\\).\n\n**Arquimedes:** empuxo \\(E = \\rho_{líquido}\\,V_{imerso}\\,g\\). O corpo flutua se sua densidade for menor que a do líquido.\n\n**Armadilha comum:** no empuxo entra a densidade do **líquido**, não a do objeto.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "fis-termologia": {
-    "title": "Calor e termodinâmica",
-    "body": "**Escalas:** \\(\\dfrac{T_C}{5} = \\dfrac{T_F - 32}{9}\\) e \\(T_K = T_C + 273\\).\n\n**Calor sensível:** \\(Q = m c\\,\\Delta T\\). **Calor latente:** \\(Q = m L\\) (a temperatura não muda na mudança de fase).\n\n**Equilíbrio térmico:** \\(\\sum Q = 0\\) (calor cedido é negativo).\n\n**Gases ideais:** \\(pV = nRT\\) e \\(\\dfrac{p_1 V_1}{T_1} = \\dfrac{p_2 V_2}{T_2}\\) com \\(T\\) em kelvin.\n\n**1ª lei:** \\(Q = \\tau + \\Delta U\\). Rendimento de Carnot: \\(\\eta = 1 - \\dfrac{T_{fria}}{T_{quente}}\\).\n\n**Armadilha comum:** usar Celsius nas leis dos gases.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "fis-optica": {
-    "title": "Óptica geométrica",
-    "body": "**Reflexão:** ângulo de incidência = ângulo de reflexão. Espelho plano forma imagem virtual, direita, do mesmo tamanho e simétrica.\n\n**Refração (Snell):** \\(n_1 \\sin\\theta_1 = n_2 \\sin\\theta_2\\), com \\(n = \\dfrac{c}{v}\\). Ao entrar num meio mais refringente, o raio se aproxima da normal.\n\n**Espelhos esféricos e lentes:** \\(\\dfrac{1}{f} = \\dfrac{1}{p} + \\dfrac{1}{p'}\\) e aumento \\(A = -\\dfrac{p'}{p}\\). Vergência \\(V = \\dfrac{1}{f}\\) (em dioptrias, com \\(f\\) em metros).\n\n**Visão:** miopia se corrige com lente divergente; hipermetropia, com convergente.\n\n**Armadilha comum:** a convenção de sinais (\\(f > 0\\) para côncavo e convergente).",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "fis-ondulatoria": {
-    "title": "Ondas e som",
-    "body": "**Equação fundamental:** \\(v = \\lambda f\\). Ao mudar de meio, a **frequência não muda**; mudam a velocidade e o comprimento de onda.\n\n**Período:** \\(T = \\dfrac{1}{f}\\). **MHS:** pêndulo \\(T = 2\\pi\\sqrt{\\dfrac{L}{g}}\\); mola \\(T = 2\\pi\\sqrt{\\dfrac{m}{k}}\\).\n\n**Som:** altura depende da frequência; intensidade, da amplitude; timbre, da forma da onda.\n\n**Fenômenos:** reflexão, refração, difração (contornar obstáculos), interferência, ressonância e efeito Doppler (fonte se aproximando, frequência percebida maior).\n\n**Armadilha comum:** som é onda mecânica e não se propaga no vácuo; luz é eletromagnética e se propaga.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "fis-eletricidade": {
-    "title": "Eletricidade",
-    "body": "**Coulomb:** \\(F = k\\dfrac{|q_1 q_2|}{d^2}\\). Campo \\(E = \\dfrac{F}{q}\\); potencial \\(V = k\\dfrac{Q}{d}\\).\n\n**Ohm:** \\(U = R\\,i\\). Potência \\(P = U i = R i^2 = \\dfrac{U^2}{R}\\). Energia \\(E = P\\,\\Delta t\\) (kWh = kW × h).\n\n**Associações:** em série \\(R_{eq} = R_1 + R_2\\) (mesma corrente); em paralelo \\(\\dfrac{1}{R_{eq}} = \\dfrac{1}{R_1} + \\dfrac{1}{R_2}\\) (mesma tensão).\n\n**Resistência do fio:** \\(R = \\rho\\dfrac{L}{A}\\).\n\n**Armadilha comum:** na mesma tomada (tensão fixa), menor resistência significa **maior** potência.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "fis-eletromagnetismo": {
-    "title": "Eletromagnetismo",
-    "body": "**Força magnética numa carga:** \\(F = |q|\\,v\\,B\\sin\\theta\\) (regra da mão direita). Num fio: \\(F = B\\,i\\,L\\sin\\theta\\).\n\n**Campo de fio longo:** \\(B = \\dfrac{\\mu_0 i}{2\\pi d}\\).\n\n**Indução (Faraday):** \\(\\varepsilon = -\\dfrac{\\Delta\\Phi}{\\Delta t}\\), com fluxo \\(\\Phi = B A \\cos\\theta\\). Só há corrente induzida quando o fluxo **varia**.\n\n**Lenz:** a corrente induzida se opõe à variação que a criou.\n\n**Transformador:** \\(\\dfrac{U_1}{U_2} = \\dfrac{N_1}{N_2}\\); só funciona com corrente alternada.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "fis-gravitacao": {
-    "title": "Gravitação",
-    "body": "**Lei de Newton:** \\(F = G\\dfrac{M m}{d^2}\\).\n\n**Kepler:** órbitas elípticas com o Sol num foco; áreas iguais em tempos iguais (mais rápido perto do Sol); \\(\\dfrac{T^2}{R^3}\\) constante.\n\n**Satélite em órbita circular:** a gravidade faz o papel de força centrípeta: \\(v = \\sqrt{\\dfrac{GM}{R}}\\).\n\n**Gravidade na superfície:** \\(g = \\dfrac{GM}{R^2}\\).\n\n**Armadilha comum:** astronauta em órbita não está sem gravidade; está em queda livre contínua.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "fis-moderna": {
-    "title": "Física moderna",
-    "body": "**Fóton:** \\(E = h f\\). **Efeito fotoelétrico:** \\(E_c = h f - W\\); só há emissão acima de uma frequência mínima, não importa a intensidade.\n\n**Relatividade restrita:** velocidade da luz igual para todos os observadores; dilatação do tempo \\(\\Delta t = \\gamma\\,\\Delta t_0\\); \\(E = m c^2\\).\n\n**Radioatividade:** meia-vida é o tempo para metade dos núcleos decair: após \\(n\\) meias-vidas resta \\(\\dfrac{N_0}{2^n}\\).\n\n**Armadilha comum:** aumentar a intensidade da luz aumenta o número de elétrons emitidos, não a energia de cada um.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "his-brasil-colonia": {
-    "title": "Brasil Colônia (1500–1822)",
-    "body": "**Pacto colonial:** a colônia existia para enriquecer a metrópole, com comércio exclusivo com Portugal.\n\n**Economia:** pau-brasil, depois açúcar no Nordeste (engenhos, latifúndio, mão de obra escravizada africana) e, no século XVIII, mineração em Minas Gerais, que deslocou o eixo para o Centro-Sul.\n\n**Sociedade:** escravidão como base de tudo; resistência em quilombos, como Palmares.\n\n**Revoltas:** nativistas (Beckman, Mascates, Vila Rica) contestavam abusos; emancipacionistas (Inconfidência Mineira 1789, Conjuração Baiana 1798) já falavam em independência, com influência iluminista.\n\n**Armadilha comum:** a Conjuração Baiana teve caráter mais popular e defendia o fim da escravidão; a Mineira era de elite.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "his-brasil-imperio": {
-    "title": "Brasil Império (1822–1889)",
-    "body": "**Independência (1822):** conduzida pela elite, manteve monarquia, escravidão e latifúndio.\n\n**Primeiro Reinado:** Constituição de 1824 com o Poder Moderador (o imperador acima dos demais poderes) e voto censitário.\n\n**Regências (1831–1840):** revoltas provinciais (Cabanagem, Farroupilha, Sabinada, Balaiada, Malês).\n\n**Segundo Reinado:** café no Vale do Paraíba e no Oeste Paulista; Guerra do Paraguai (1864–1870).\n\n**Abolição gradual:** Eusébio de Queirós (1850, fim do tráfico), Ventre Livre (1871), Sexagenários (1885), Lei Áurea (1888). Lei de Terras (1850) dificultou o acesso à terra.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "his-republica-velha": {
-    "title": "Primeira República (1889–1930)",
-    "body": "**Proclamação (1889):** golpe militar com apoio de cafeicultores; Constituição de 1891 federalista e com voto aberto.\n\n**Política dos governadores e café com leite:** acordos entre União e oligarquias estaduais, com SP e MG alternando a presidência.\n\n**Coronelismo:** controle local do voto (voto de cabresto) pelos grandes proprietários.\n\n**Conflitos sociais:** Canudos e Contestado (messiânicos), Revolta da Vacina (1904), Revolta da Chibata (1910), greves operárias de 1917, tenentismo nos anos 1920.\n\n**Fim:** a crise de 1929 e a ruptura SP–MG levam à Revolução de 1930.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "his-era-vargas": {
-    "title": "Era Vargas (1930–1945)",
-    "body": "**Governo Provisório (1930–34):** centralização; Revolução Constitucionalista de 1932 em SP.\n\n**Governo Constitucional (1934–37):** Constituição de 1934 com voto secreto e voto feminino; polarização entre ANL (esquerda) e integralistas (direita).\n\n**Estado Novo (1937–45):** ditadura com censura (DIP), propaganda e repressão, junto com a CLT (1943), salário mínimo e industrialização estatal (CSN, Vale).\n\n**Trabalhismo e populismo:** direitos concedidos de cima, com sindicatos atrelados ao Estado.\n\n**Armadilha comum:** a CLT veio durante uma ditadura; direitos trabalhistas e autoritarismo coexistiram.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "his-brasil-contemporaneo": {
-    "title": "Da República Populista aos dias atuais",
-    "body": "**1946–1964:** Dutra, a volta de Vargas (Petrobras, suicídio em 1954), JK (Plano de Metas, Brasília) e Jango (reformas de base).\n\n**Ditadura militar (1964–1985):** AI-5 (1968) com censura, tortura e cassações; \"milagre econômico\" com concentração de renda e dívida externa; abertura lenta e gradual, Anistia (1979) e Diretas Já (1984).\n\n**Nova República:** Constituição de 1988 (\"cidadã\"); impeachment de Collor (1992); Plano Real (1994) contra a hiperinflação.\n\n**Armadilha comum:** a eleição de Tancredo em 1985 foi indireta; as Diretas Já foram derrotadas no Congresso.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "his-antiguidade": {
-    "title": "Antiguidade",
-    "body": "**Oriente Próximo:** Egito e Mesopotâmia, civilizações de rio, com Estado teocrático e servidão coletiva.\n\n**Grécia:** pólis independentes. Atenas criou a democracia direta, mas excluía mulheres, estrangeiros e escravizados; Esparta era oligárquica e militarista.\n\n**Roma:** Monarquia → República (Senado patrício, conflitos com plebeus, tribunos) → Império. Expansão baseada em conquistas e escravidão.\n\n**Fim do Império do Ocidente (476):** crise econômica, ruralização e migrações germânicas.\n\n**Armadilha comum:** a democracia ateniense não era universal.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "his-idade-media": {
-    "title": "Idade Média",
-    "body": "**Feudalismo:** terra como base do poder; relações de suserania e vassalagem; servos presos à terra, pagando corveia e talha.\n\n**Igreja:** maior poder ideológico e proprietária de terras; sociedade de ordens (os que rezam, guerreiam e trabalham).\n\n**Islã e Bizâncio:** o Islã se expandiu a partir do século VII; Bizâncio preservou o Império do Oriente até 1453.\n\n**Baixa Idade Média:** Cruzadas, renascimento comercial e urbano, burguesia e corporações de ofício.\n\n**Crise do século XIV:** fome, Peste Negra e Guerra dos Cem Anos.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "his-idade-moderna": {
-    "title": "Idade Moderna",
-    "body": "**Grandes navegações:** busca de rotas para as especiarias; Tordesilhas (1494) dividiu o mundo entre Portugal e Espanha.\n\n**Renascimento:** humanismo, antropocentrismo e racionalismo.\n\n**Reformas:** Lutero (1517), Calvino, anglicanismo; a Contrarreforma respondeu com o Concílio de Trento, a Inquisição e os jesuítas.\n\n**Absolutismo e mercantilismo:** rei com poder concentrado; metalismo, balança comercial favorável e colônias.\n\n**Iluminismo:** razão, crítica ao absolutismo (Locke, Montesquieu, Rousseau, Voltaire) e base para as revoluções liberais.",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "his-revolucoes-sec-xix": {
-    "title": "Revoluções e século XIX",
-    "body": "**Revolução Industrial:** começou na Inglaterra no século XVIII; fábricas, máquina a vapor, operariado e ludismo.\n\n**Revolução Francesa (1789):** fim do Antigo Regime e Declaração dos Direitos do Homem; fases: Monarquia Constitucional, Convenção (jacobinos e o Terror) e Diretório. Napoleão espalhou o Código Civil pela Europa.\n\n**Independências na América:** EUA (1776); América espanhola liderada pelos criollos (Bolívar, San Martín); Haiti (1804) foi a única feita por escravizados.\n\n**Ideias:** liberalismo, nacionalismo, socialismo e anarquismo.\n\n**Imperialismo:** partilha da África na Conferência de Berlim (1884–85).",
-    "ref": {"label": "Resumo Waterlearning"}
-  },
-  "his-seculo-xx": {
-    "title": "Guerras mundiais e século XX",
-    "body": "**1ª Guerra (1914–18):** imperialismo, nacionalismo e alianças; Tratado de Versalhes puniu a Alemanha.\n\n**Revolução Russa (1917):** bolcheviques no poder e, depois, a URSS de Stálin.\n\n**Crise de 1929 e totalitarismos:** fascismo na Itália e nazismo na Alemanha.\n\n**2ª Guerra (1939–45):** Eixo contra Aliados; Holocausto; bombas atômicas no Japão.\n\n**Guerra Fria (1947–91):** EUA contra URSS, sem confronto direto; corrida armamentista e espacial; Coreia, Vietnã, Cuba; queda do Muro de Berlim (1989).\n\n**Descolonização** da África e da Ásia após 1945.",
-    "ref": {"label": "Resumo Waterlearning"}
+ "mat-aritmetica": {
+  "title": "Proporção e regra de três",
+  "body": "Duas grandezas são **diretamente proporcionais** quando a razão entre elas é constante: \\(\\dfrac{a}{b} = k\\). São **inversamente proporcionais** quando o produto é constante: \\(a \\cdot b = k\\).\n\n**Regra de três:** antes de montar a conta, pergunte se aumentar uma grandeza aumenta ou diminui a outra. Se diminui, inverta a razão dessa grandeza.\n\n**MMC e MDC:** eventos que se repetem juntos pedem MMC; dividir em partes iguais e máximas pede MDC.\n\n**Armadilha comum:** em regra de três composta, cada grandeza é comparada com a incógnita separadamente, não entre si.",
+  "ref": {
+   "label": "Tópicos de Álgebra Elementar, Equação do primeiro grau, p. 126",
+   "file": "Tópicos de Álgebra Elementar (Bruno Pedra, Ivan Monteiro, Alex Ricardo) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
+   "page": 126
   }
+ },
+ "mat-porcentagem": {
+  "title": "Porcentagem e juros",
+  "body": "\\(p\\%\\) de \\(x\\) é \\(\\dfrac{p}{100}\\cdot x\\). Aumentar \\(p\\%\\) é multiplicar por \\(1 + \\dfrac{p}{100}\\); descontar \\(p\\%\\) é multiplicar por \\(1 - \\dfrac{p}{100}\\).\n\n**Variações sucessivas** se multiplicam, não se somam: subir 10% e depois cair 10% dá \\(1{,}1 \\cdot 0{,}9 = 0{,}99\\), uma perda de 1%.\n\n**Juros simples:** \\(M = C(1 + i\\,t)\\). **Juros compostos:** \\(M = C(1 + i)^t\\).\n\n**Armadilha comum:** taxa e tempo precisam estar na mesma unidade (ao mês com meses, ao ano com anos).",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "mat-conjuntos-funcoes": {
+  "title": "Funções e equações de 1º e 2º grau",
+  "body": "**1º grau:** \\(ax + b = 0 \\Rightarrow x = -\\dfrac{b}{a}\\). O gráfico de \\(f(x) = ax + b\\) é uma reta; \\(a\\) é a inclinação e \\(b\\) é onde corta o eixo \\(y\\).\n\n**2º grau:** \\(ax^2 + bx + c = 0\\), com \\(\\Delta = b^2 - 4ac\\) e \\(x = \\dfrac{-b \\pm \\sqrt{\\Delta}}{2a}\\). Soma das raízes \\(-\\dfrac{b}{a}\\), produto \\(\\dfrac{c}{a}\\).\n\n**Vértice da parábola:** \\(x_v = -\\dfrac{b}{2a}\\), \\(y_v = -\\dfrac{\\Delta}{4a}\\). Com \\(a > 0\\) a parábola tem mínimo; com \\(a < 0\\), máximo.\n\n**Armadilha comum:** ao multiplicar ou dividir uma inequação por número negativo, o sinal da desigualdade inverte.",
+  "ref": {
+   "label": "Fundamentos de Matemática Elementar, vol. 1, cap. VI e VII (funções afim e quadrática), p. 97",
+   "file": "Fundamentos de matemática elementar - Vol. 01.pdf",
+   "page": 105
+  }
+ },
+ "mat-log-exp": {
+  "title": "Logaritmos e exponenciais",
+  "body": "\\(\\log_b a = x \\iff b^x = a\\), com \\(a > 0\\), \\(b > 0\\) e \\(b \\ne 1\\).\n\n**Propriedades:** \\(\\log(xy) = \\log x + \\log y\\), \\(\\log\\dfrac{x}{y} = \\log x - \\log y\\), \\(\\log x^n = n \\log x\\).\n\n**Mudança de base:** \\(\\log_b a = \\dfrac{\\log_c a}{\\log_c b}\\).\n\n**Equação exponencial:** iguale as bases (\\(2^x = 8 = 2^3 \\Rightarrow x = 3\\)); se não der, aplique log dos dois lados.\n\n**Armadilha comum:** em inequações com base entre 0 e 1, o sentido da desigualdade inverte ao comparar expoentes.",
+  "ref": {
+   "label": "Fundamentos de Matemática Elementar, vol. 2, cap. III (Logaritmos), p. 57",
+   "file": "Fundamentos de matemática elementar - Vol. 02.pdf",
+   "page": 65
+  }
+ },
+ "mat-trigonometria": {
+  "title": "Trigonometria essencial",
+  "body": "No triângulo retângulo: \\(\\sin\\theta = \\dfrac{\\text{oposto}}{\\text{hipotenusa}}\\), \\(\\cos\\theta = \\dfrac{\\text{adjacente}}{\\text{hipotenusa}}\\), \\(\\tan\\theta = \\dfrac{\\sin\\theta}{\\cos\\theta}\\).\n\n**Relação fundamental:** \\(\\sin^2 x + \\cos^2 x = 1\\).\n\n**Arcos notáveis:** \\(\\sin 30° = \\tfrac12\\), \\(\\sin 45° = \\tfrac{\\sqrt2}{2}\\), \\(\\sin 60° = \\tfrac{\\sqrt3}{2}\\) (o cosseno faz o caminho inverso).\n\n**Triângulo qualquer:** lei dos senos \\(\\dfrac{a}{\\sin A} = 2R\\); lei dos cossenos \\(a^2 = b^2 + c^2 - 2bc\\cos A\\).\n\n**Armadilha comum:** confira se o ângulo está em graus ou radianos (\\(\\pi \\text{ rad} = 180°\\)).",
+  "ref": {
+   "label": "Fundamentos de Matemática Elementar, vol. 3, cap. II (Razões trigonométricas no triângulo retângulo), p. 10",
+   "file": "Fundamentos de matemática elementar - Vol. 03.pdf",
+   "page": 20
+  }
+ },
+ "mat-sequencias": {
+  "title": "Progressões aritmética e geométrica",
+  "body": "**PA** (soma uma razão \\(r\\)): \\(a_n = a_1 + (n-1)r\\) e \\(S_n = \\dfrac{(a_1 + a_n)\\,n}{2}\\).\n\n**PG** (multiplica por \\(q\\)): \\(a_n = a_1 q^{n-1}\\) e \\(S_n = a_1\\dfrac{q^n - 1}{q - 1}\\). Se \\(|q| < 1\\), a soma infinita é \\(S = \\dfrac{a_1}{1 - q}\\).\n\n**Truque:** três termos em PA podem ser escritos \\(x - r,\\ x,\\ x + r\\); em PG, \\(\\tfrac{x}{q},\\ x,\\ xq\\).\n\n**Armadilha comum:** o termo geral usa \\(n - 1\\), não \\(n\\).",
+  "ref": {
+   "label": "Fundamentos de Matemática Elementar, vol. 4, cap. II e III (PA e PG), p. 6",
+   "file": "Fundamentos de matemática elementar - Vol. 04.pdf",
+   "page": 14
+  }
+ },
+ "mat-matrizes-sistemas": {
+  "title": "Matrizes, determinantes e sistemas",
+  "body": "**Produto de matrizes:** \\(A_{m\\times n} \\cdot B_{n\\times p}\\) só existe se as colunas de \\(A\\) forem iguais às linhas de \\(B\\); em geral \\(AB \\ne BA\\).\n\n**Determinante 2×2:** \\(\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix} = ad - bc\\). Para 3×3, use Sarrus.\n\n**Propriedades:** \\(\\det(AB) = \\det A \\cdot \\det B\\); trocar duas linhas troca o sinal; uma linha nula zera o determinante.\n\n**Sistemas lineares:** \\(\\det \\ne 0\\) dá solução única (SPD). Com \\(\\det = 0\\), o sistema pode ser indeterminado ou impossível: escalone para descobrir.\n\n**Armadilha comum:** \\(\\det(kA) = k^n \\det A\\) para matriz de ordem \\(n\\), não \\(k \\det A\\).",
+  "ref": {
+   "label": "Fundamentos de Matemática Elementar, vol. 4, cap. IV a VI, p. 45",
+   "file": "Fundamentos de matemática elementar - Vol. 04.pdf",
+   "page": 53
+  }
+ },
+ "mat-combinatoria": {
+  "title": "Análise combinatória",
+  "body": "**Princípio fundamental da contagem:** etapas independentes se multiplicam.\n\n**A ordem importa?** Sim: arranjo \\(A_{n,p} = \\dfrac{n!}{(n-p)!}\\). Não: combinação \\(C_{n,p} = \\dfrac{n!}{p!\\,(n-p)!}\\).\n\n**Permutação** de \\(n\\) elementos: \\(n!\\). Com repetições: \\(\\dfrac{n!}{a!\\,b!\\cdots}\\).\n\n**Binômio de Newton:** termo geral \\(T_{k+1} = \\binom{n}{k} a^{n-k} b^k\\).\n\n**Armadilha comum:** escolher uma comissão (ordem não importa) é combinação; escolher presidente e vice (ordem importa) é arranjo.",
+  "ref": {
+   "label": "Fundamentos de Matemática Elementar, vol. 5, cap. I (Análise combinatória), p. 1",
+   "file": "Fundamentos de matemática elementar - Vol. 05.pdf",
+   "page": 7
+  }
+ },
+ "mat-probabilidade": {
+  "title": "Probabilidade",
+  "body": "\\(P(A) = \\dfrac{\\text{casos favoráveis}}{\\text{casos possíveis}}\\), com casos igualmente prováveis.\n\n**Complementar:** \\(P(\\bar A) = 1 - P(A)\\). Use quando a pergunta tem \"pelo menos um\".\n\n**União:** \\(P(A \\cup B) = P(A) + P(B) - P(A \\cap B)\\).\n\n**Independentes:** \\(P(A \\cap B) = P(A)\\cdot P(B)\\). **Condicional:** \\(P(A \\mid B) = \\dfrac{P(A \\cap B)}{P(B)}\\).\n\n**Armadilha comum:** sorteio sem reposição muda o total a cada retirada.",
+  "ref": {
+   "label": "Fundamentos de Matemática Elementar, vol. 5, cap. III (Probabilidade), p. 89",
+   "file": "Fundamentos de matemática elementar - Vol. 05.pdf",
+   "page": 95
+  }
+ },
+ "mat-estatistica": {
+  "title": "Média, mediana e moda",
+  "body": "**Média aritmética:** soma dos valores dividida pela quantidade. **Ponderada:** \\(\\bar x = \\dfrac{\\sum p_i x_i}{\\sum p_i}\\).\n\n**Mediana:** o valor do meio com os dados **em ordem**; com quantidade par, a média dos dois centrais.\n\n**Moda:** o valor mais frequente.\n\n**Desvio padrão:** mede a dispersão em torno da média; quanto menor, mais regulares os dados.\n\n**Armadilha comum:** esquecer de ordenar os dados antes de achar a mediana.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "mat-complexos-polinomios": {
+  "title": "Números complexos e polinômios",
+  "body": "\\(i^2 = -1\\) e as potências de \\(i\\) se repetem de 4 em 4. Forma algébrica \\(z = a + bi\\); módulo \\(|z| = \\sqrt{a^2 + b^2}\\); conjugado \\(\\bar z = a - bi\\).\n\n**Forma trigonométrica:** \\(z = |z|(\\cos\\theta + i\\sin\\theta)\\) e **De Moivre**: \\(z^n = |z|^n(\\cos n\\theta + i \\sin n\\theta)\\).\n\n**Polinômios:** o resto da divisão de \\(P(x)\\) por \\((x - a)\\) é \\(P(a)\\). Se \\(P(a) = 0\\), \\(a\\) é raiz.\n\n**Girard** (grau 3, \\(ax^3 + bx^2 + cx + d\\)): soma das raízes \\(-\\tfrac{b}{a}\\), produto \\(-\\tfrac{d}{a}\\).\n\n**Armadilha comum:** polinômio de coeficientes reais com raiz \\(a + bi\\) também tem \\(a - bi\\) como raiz.",
+  "ref": {
+   "label": "Fundamentos de Matemática Elementar, vol. 6, cap. I a III, p. 1",
+   "file": "Fundamentos de matemática elementar - Vol. 06.pdf",
+   "page": 9
+  }
+ },
+ "mat-geometria-plana": {
+  "title": "Geometria plana",
+  "body": "**Pitágoras:** \\(a^2 = b^2 + c^2\\). **Semelhança:** lados proporcionais e ângulos iguais; a razão das áreas é o quadrado da razão de semelhança.\n\n**Áreas:** triângulo \\(\\dfrac{b\\,h}{2}\\), trapézio \\(\\dfrac{(B + b)\\,h}{2}\\), losango \\(\\dfrac{D\\,d}{2}\\), círculo \\(\\pi r^2\\). Triângulo equilátero: \\(\\dfrac{\\ell^2\\sqrt3}{4}\\).\n\n**Ângulos:** soma interna de um polígono de \\(n\\) lados \\(= (n-2)\\cdot 180°\\).\n\n**Armadilha comum:** a altura precisa ser perpendicular à base escolhida.",
+  "ref": {
+   "label": "Fundamentos de Matemática Elementar, vol. 3, cap. I (Revisão inicial de geometria), p. 2",
+   "file": "Fundamentos de matemática elementar - Vol. 03.pdf",
+   "page": 12
+  }
+ },
+ "mat-geometria-espacial": {
+  "title": "Geometria espacial",
+  "body": "**Prisma e cilindro:** \\(V = A_{\\text{base}}\\cdot h\\). **Pirâmide e cone:** \\(V = \\dfrac{A_{\\text{base}}\\cdot h}{3}\\).\n\n**Esfera:** \\(V = \\dfrac{4}{3}\\pi r^3\\) e \\(A = 4\\pi r^2\\).\n\n**Euler** (poliedro convexo): \\(V - A + F = 2\\).\n\n**Semelhança de sólidos:** se as medidas lineares se multiplicam por \\(k\\), as áreas se multiplicam por \\(k^2\\) e os volumes por \\(k^3\\).\n\n**Conversão:** \\(1\\,\\text{dm}^3 = 1\\,\\text{L}\\) e \\(1\\,\\text{m}^3 = 1000\\,\\text{L}\\).",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "mat-geometria-analitica": {
+  "title": "Geometria analítica",
+  "body": "**Distância:** \\(d = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}\\). **Ponto médio:** média das coordenadas.\n\n**Reta:** \\(y = mx + n\\), com \\(m = \\dfrac{y_2 - y_1}{x_2 - x_1} = \\tan\\theta\\). Paralelas têm o mesmo \\(m\\); perpendiculares, \\(m_1 m_2 = -1\\).\n\n**Distância de ponto a reta** \\(ax + by + c = 0\\): \\(d = \\dfrac{|a x_0 + b y_0 + c|}{\\sqrt{a^2 + b^2}}\\).\n\n**Circunferência:** \\((x - a)^2 + (y - b)^2 = r^2\\), centro \\((a, b)\\).\n\n**Armadilha comum:** a equação geral precisa ser completada em quadrados para achar centro e raio.",
+  "ref": {
+   "label": "Fundamentos de Matemática Elementar, vol. 7, cap. II (Equação da reta), p. 28",
+   "file": "Fundamentos de matemática elementar - Vol. 07.pdf",
+   "page": 36
+  }
+ },
+ "mat-grandezas-medidas": {
+  "title": "Grandezas e conversões",
+  "body": "Converta tudo para a mesma unidade **antes** de calcular.\n\n**Comprimento:** km → m multiplica por 1000; m → cm por 100.\n\n**Área e volume:** o fator vai ao quadrado e ao cubo: \\(1\\,\\text{m}^2 = 10^4\\,\\text{cm}^2\\), \\(1\\,\\text{m}^3 = 10^6\\,\\text{cm}^3 = 1000\\,\\text{L}\\).\n\n**Tempo:** 1 h = 60 min = 3600 s; para km/h → m/s, divida por 3,6.\n\n**Escala:** \\(\\text{escala} = \\dfrac{\\text{medida no desenho}}{\\text{medida real}}\\), nas mesmas unidades.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "mat-limites-derivadas": {
+  "title": "Limites e derivadas",
+  "body": "**Limite:** o valor de que \\(f(x)\\) se aproxima quando \\(x \\to a\\). Em \\(\\tfrac00\\), fatore e simplifique.\n\n**Limite fundamental:** \\(\\lim_{x\\to0}\\dfrac{\\sin x}{x} = 1\\).\n\n**Derivadas:** \\((x^n)' = n x^{n-1}\\), \\((\\sin x)' = \\cos x\\), \\((e^x)' = e^x\\), \\((\\ln x)' = \\tfrac1x\\). Produto: \\((uv)' = u'v + uv'\\). Cadeia: \\((f(g(x)))' = f'(g(x))\\,g'(x)\\).\n\n**Uso:** \\(f'(x) = 0\\) indica pontos candidatos a máximo ou mínimo.",
+  "ref": {
+   "label": "Fundamentos de Matemática Elementar, vol. 8, cap. VI e VII (Derivadas), p. 127",
+   "file": "Fundamentos de matemática elementar - Vol. 08.pdf",
+   "page": 135
+  }
+ },
+ "fis-cinematica": {
+  "title": "Cinemática",
+  "body": "**MRU** (velocidade constante): \\(s = s_0 + v t\\).\n\n**MRUV** (aceleração constante): \\(v = v_0 + a t\\), \\(s = s_0 + v_0 t + \\dfrac{a t^2}{2}\\) e **Torricelli** \\(v^2 = v_0^2 + 2a\\,\\Delta s\\) (útil quando o tempo não aparece).\n\n**Queda livre:** MRUV com \\(a = g \\approx 10\\,\\text{m/s}^2\\).\n\n**Lançamento oblíquo:** separe os eixos; na horizontal é MRU, na vertical é MRUV.\n\n**MCU:** \\(v = \\omega R\\) e \\(a_c = \\dfrac{v^2}{R}\\).\n\n**Armadilha comum:** km/h ÷ 3,6 = m/s.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "fis-dinamica": {
+  "title": "Leis de Newton",
+  "body": "**1ª lei (inércia):** sem força resultante, o corpo mantém repouso ou MRU.\n\n**2ª lei:** \\(F_R = m\\,a\\). Desenhe todas as forças antes de somar.\n\n**3ª lei:** ação e reação têm mesmo módulo e sentidos opostos, e atuam em **corpos diferentes**.\n\n**Forças comuns:** peso \\(P = mg\\); atrito \\(f_{at} = \\mu N\\); no plano inclinado, \\(P\\sin\\theta\\) ao longo da rampa e \\(P\\cos\\theta\\) perpendicular.\n\n**Equilíbrio de corpo extenso:** soma das forças nula e soma dos momentos (\\(M = F\\,d\\)) nula.\n\n**Armadilha comum:** a normal nem sempre é igual ao peso (rampas, elevadores, forças inclinadas).",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "fis-energia": {
+  "title": "Energia, trabalho e quantidade de movimento",
+  "body": "**Trabalho:** \\(\\tau = F\\,d\\cos\\theta\\). **Teorema da energia cinética:** \\(\\tau_{total} = \\Delta E_c\\).\n\n**Energias:** \\(E_c = \\dfrac{mv^2}{2}\\), \\(E_p = mgh\\), elástica \\(\\dfrac{kx^2}{2}\\). Sem atrito, a energia mecânica se conserva.\n\n**Potência:** \\(P = \\dfrac{\\tau}{\\Delta t}\\); **rendimento** \\(\\eta = \\dfrac{P_{útil}}{P_{total}}\\).\n\n**Quantidade de movimento:** \\(Q = mv\\); impulso \\(I = F\\,\\Delta t = \\Delta Q\\). Em colisões, \\(Q\\) total se conserva.\n\n**Armadilha comum:** em colisão inelástica a energia cinética **não** se conserva, mas a quantidade de movimento sim.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "fis-hidrostatica": {
+  "title": "Hidrostática",
+  "body": "**Densidade:** \\(\\rho = \\dfrac{m}{V}\\). **Pressão:** \\(p = \\dfrac{F}{A}\\).\n\n**Stevin:** \\(p = p_0 + \\rho g h\\). Pontos na mesma altura de um mesmo líquido têm a mesma pressão.\n\n**Pascal:** acréscimo de pressão se transmite a todo o fluido; na prensa hidráulica, \\(\\dfrac{F_1}{A_1} = \\dfrac{F_2}{A_2}\\).\n\n**Arquimedes:** empuxo \\(E = \\rho_{líquido}\\,V_{imerso}\\,g\\). O corpo flutua se sua densidade for menor que a do líquido.\n\n**Armadilha comum:** no empuxo entra a densidade do **líquido**, não a do objeto.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "fis-termologia": {
+  "title": "Calor e termodinâmica",
+  "body": "**Escalas:** \\(\\dfrac{T_C}{5} = \\dfrac{T_F - 32}{9}\\) e \\(T_K = T_C + 273\\).\n\n**Calor sensível:** \\(Q = m c\\,\\Delta T\\). **Calor latente:** \\(Q = m L\\) (a temperatura não muda na mudança de fase).\n\n**Equilíbrio térmico:** \\(\\sum Q = 0\\) (calor cedido é negativo).\n\n**Gases ideais:** \\(pV = nRT\\) e \\(\\dfrac{p_1 V_1}{T_1} = \\dfrac{p_2 V_2}{T_2}\\) com \\(T\\) em kelvin.\n\n**1ª lei:** \\(Q = \\tau + \\Delta U\\). Rendimento de Carnot: \\(\\eta = 1 - \\dfrac{T_{fria}}{T_{quente}}\\).\n\n**Armadilha comum:** usar Celsius nas leis dos gases.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "fis-optica": {
+  "title": "Óptica geométrica",
+  "body": "**Reflexão:** ângulo de incidência = ângulo de reflexão. Espelho plano forma imagem virtual, direita, do mesmo tamanho e simétrica.\n\n**Refração (Snell):** \\(n_1 \\sin\\theta_1 = n_2 \\sin\\theta_2\\), com \\(n = \\dfrac{c}{v}\\). Ao entrar num meio mais refringente, o raio se aproxima da normal.\n\n**Espelhos esféricos e lentes:** \\(\\dfrac{1}{f} = \\dfrac{1}{p} + \\dfrac{1}{p'}\\) e aumento \\(A = -\\dfrac{p'}{p}\\). Vergência \\(V = \\dfrac{1}{f}\\) (em dioptrias, com \\(f\\) em metros).\n\n**Visão:** miopia se corrige com lente divergente; hipermetropia, com convergente.\n\n**Armadilha comum:** a convenção de sinais (\\(f > 0\\) para côncavo e convergente).",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "fis-ondulatoria": {
+  "title": "Ondas e som",
+  "body": "**Equação fundamental:** \\(v = \\lambda f\\). Ao mudar de meio, a **frequência não muda**; mudam a velocidade e o comprimento de onda.\n\n**Período:** \\(T = \\dfrac{1}{f}\\). **MHS:** pêndulo \\(T = 2\\pi\\sqrt{\\dfrac{L}{g}}\\); mola \\(T = 2\\pi\\sqrt{\\dfrac{m}{k}}\\).\n\n**Som:** altura depende da frequência; intensidade, da amplitude; timbre, da forma da onda.\n\n**Fenômenos:** reflexão, refração, difração (contornar obstáculos), interferência, ressonância e efeito Doppler (fonte se aproximando, frequência percebida maior).\n\n**Armadilha comum:** som é onda mecânica e não se propaga no vácuo; luz é eletromagnética e se propaga.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "fis-eletricidade": {
+  "title": "Eletricidade",
+  "body": "**Coulomb:** \\(F = k\\dfrac{|q_1 q_2|}{d^2}\\). Campo \\(E = \\dfrac{F}{q}\\); potencial \\(V = k\\dfrac{Q}{d}\\).\n\n**Ohm:** \\(U = R\\,i\\). Potência \\(P = U i = R i^2 = \\dfrac{U^2}{R}\\). Energia \\(E = P\\,\\Delta t\\) (kWh = kW × h).\n\n**Associações:** em série \\(R_{eq} = R_1 + R_2\\) (mesma corrente); em paralelo \\(\\dfrac{1}{R_{eq}} = \\dfrac{1}{R_1} + \\dfrac{1}{R_2}\\) (mesma tensão).\n\n**Resistência do fio:** \\(R = \\rho\\dfrac{L}{A}\\).\n\n**Armadilha comum:** na mesma tomada (tensão fixa), menor resistência significa **maior** potência.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "fis-eletromagnetismo": {
+  "title": "Eletromagnetismo",
+  "body": "**Força magnética numa carga:** \\(F = |q|\\,v\\,B\\sin\\theta\\) (regra da mão direita). Num fio: \\(F = B\\,i\\,L\\sin\\theta\\).\n\n**Campo de fio longo:** \\(B = \\dfrac{\\mu_0 i}{2\\pi d}\\).\n\n**Indução (Faraday):** \\(\\varepsilon = -\\dfrac{\\Delta\\Phi}{\\Delta t}\\), com fluxo \\(\\Phi = B A \\cos\\theta\\). Só há corrente induzida quando o fluxo **varia**.\n\n**Lenz:** a corrente induzida se opõe à variação que a criou.\n\n**Transformador:** \\(\\dfrac{U_1}{U_2} = \\dfrac{N_1}{N_2}\\); só funciona com corrente alternada.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "fis-gravitacao": {
+  "title": "Gravitação",
+  "body": "**Lei de Newton:** \\(F = G\\dfrac{M m}{d^2}\\).\n\n**Kepler:** órbitas elípticas com o Sol num foco; áreas iguais em tempos iguais (mais rápido perto do Sol); \\(\\dfrac{T^2}{R^3}\\) constante.\n\n**Satélite em órbita circular:** a gravidade faz o papel de força centrípeta: \\(v = \\sqrt{\\dfrac{GM}{R}}\\).\n\n**Gravidade na superfície:** \\(g = \\dfrac{GM}{R^2}\\).\n\n**Armadilha comum:** astronauta em órbita não está sem gravidade; está em queda livre contínua.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "fis-moderna": {
+  "title": "Física moderna",
+  "body": "**Fóton:** \\(E = h f\\). **Efeito fotoelétrico:** \\(E_c = h f - W\\); só há emissão acima de uma frequência mínima, não importa a intensidade.\n\n**Relatividade restrita:** velocidade da luz igual para todos os observadores; dilatação do tempo \\(\\Delta t = \\gamma\\,\\Delta t_0\\); \\(E = m c^2\\).\n\n**Radioatividade:** meia-vida é o tempo para metade dos núcleos decair: após \\(n\\) meias-vidas resta \\(\\dfrac{N_0}{2^n}\\).\n\n**Armadilha comum:** aumentar a intensidade da luz aumenta o número de elétrons emitidos, não a energia de cada um.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "his-brasil-colonia": {
+  "title": "Brasil Colônia (1500–1822)",
+  "body": "**Pacto colonial:** a colônia existia para enriquecer a metrópole, com comércio exclusivo com Portugal.\n\n**Economia:** pau-brasil, depois açúcar no Nordeste (engenhos, latifúndio, mão de obra escravizada africana) e, no século XVIII, mineração em Minas Gerais, que deslocou o eixo para o Centro-Sul.\n\n**Sociedade:** escravidão como base de tudo; resistência em quilombos, como Palmares.\n\n**Revoltas:** nativistas (Beckman, Mascates, Vila Rica) contestavam abusos; emancipacionistas (Inconfidência Mineira 1789, Conjuração Baiana 1798) já falavam em independência, com influência iluminista.\n\n**Armadilha comum:** a Conjuração Baiana teve caráter mais popular e defendia o fim da escravidão; a Mineira era de elite.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "his-brasil-imperio": {
+  "title": "Brasil Império (1822–1889)",
+  "body": "**Independência (1822):** conduzida pela elite, manteve monarquia, escravidão e latifúndio.\n\n**Primeiro Reinado:** Constituição de 1824 com o Poder Moderador (o imperador acima dos demais poderes) e voto censitário.\n\n**Regências (1831–1840):** revoltas provinciais (Cabanagem, Farroupilha, Sabinada, Balaiada, Malês).\n\n**Segundo Reinado:** café no Vale do Paraíba e no Oeste Paulista; Guerra do Paraguai (1864–1870).\n\n**Abolição gradual:** Eusébio de Queirós (1850, fim do tráfico), Ventre Livre (1871), Sexagenários (1885), Lei Áurea (1888). Lei de Terras (1850) dificultou o acesso à terra.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "his-republica-velha": {
+  "title": "Primeira República (1889–1930)",
+  "body": "**Proclamação (1889):** golpe militar com apoio de cafeicultores; Constituição de 1891 federalista e com voto aberto.\n\n**Política dos governadores e café com leite:** acordos entre União e oligarquias estaduais, com SP e MG alternando a presidência.\n\n**Coronelismo:** controle local do voto (voto de cabresto) pelos grandes proprietários.\n\n**Conflitos sociais:** Canudos e Contestado (messiânicos), Revolta da Vacina (1904), Revolta da Chibata (1910), greves operárias de 1917, tenentismo nos anos 1920.\n\n**Fim:** a crise de 1929 e a ruptura SP–MG levam à Revolução de 1930.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "his-era-vargas": {
+  "title": "Era Vargas (1930–1945)",
+  "body": "**Governo Provisório (1930–34):** centralização; Revolução Constitucionalista de 1932 em SP.\n\n**Governo Constitucional (1934–37):** Constituição de 1934 com voto secreto e voto feminino; polarização entre ANL (esquerda) e integralistas (direita).\n\n**Estado Novo (1937–45):** ditadura com censura (DIP), propaganda e repressão, junto com a CLT (1943), salário mínimo e industrialização estatal (CSN, Vale).\n\n**Trabalhismo e populismo:** direitos concedidos de cima, com sindicatos atrelados ao Estado.\n\n**Armadilha comum:** a CLT veio durante uma ditadura; direitos trabalhistas e autoritarismo coexistiram.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "his-brasil-contemporaneo": {
+  "title": "Da República Populista aos dias atuais",
+  "body": "**1946–1964:** Dutra, a volta de Vargas (Petrobras, suicídio em 1954), JK (Plano de Metas, Brasília) e Jango (reformas de base).\n\n**Ditadura militar (1964–1985):** AI-5 (1968) com censura, tortura e cassações; \"milagre econômico\" com concentração de renda e dívida externa; abertura lenta e gradual, Anistia (1979) e Diretas Já (1984).\n\n**Nova República:** Constituição de 1988 (\"cidadã\"); impeachment de Collor (1992); Plano Real (1994) contra a hiperinflação.\n\n**Armadilha comum:** a eleição de Tancredo em 1985 foi indireta; as Diretas Já foram derrotadas no Congresso.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "his-antiguidade": {
+  "title": "Antiguidade",
+  "body": "**Oriente Próximo:** Egito e Mesopotâmia, civilizações de rio, com Estado teocrático e servidão coletiva.\n\n**Grécia:** pólis independentes. Atenas criou a democracia direta, mas excluía mulheres, estrangeiros e escravizados; Esparta era oligárquica e militarista.\n\n**Roma:** Monarquia → República (Senado patrício, conflitos com plebeus, tribunos) → Império. Expansão baseada em conquistas e escravidão.\n\n**Fim do Império do Ocidente (476):** crise econômica, ruralização e migrações germânicas.\n\n**Armadilha comum:** a democracia ateniense não era universal.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "his-idade-media": {
+  "title": "Idade Média",
+  "body": "**Feudalismo:** terra como base do poder; relações de suserania e vassalagem; servos presos à terra, pagando corveia e talha.\n\n**Igreja:** maior poder ideológico e proprietária de terras; sociedade de ordens (os que rezam, guerreiam e trabalham).\n\n**Islã e Bizâncio:** o Islã se expandiu a partir do século VII; Bizâncio preservou o Império do Oriente até 1453.\n\n**Baixa Idade Média:** Cruzadas, renascimento comercial e urbano, burguesia e corporações de ofício.\n\n**Crise do século XIV:** fome, Peste Negra e Guerra dos Cem Anos.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "his-idade-moderna": {
+  "title": "Idade Moderna",
+  "body": "**Grandes navegações:** busca de rotas para as especiarias; Tordesilhas (1494) dividiu o mundo entre Portugal e Espanha.\n\n**Renascimento:** humanismo, antropocentrismo e racionalismo.\n\n**Reformas:** Lutero (1517), Calvino, anglicanismo; a Contrarreforma respondeu com o Concílio de Trento, a Inquisição e os jesuítas.\n\n**Absolutismo e mercantilismo:** rei com poder concentrado; metalismo, balança comercial favorável e colônias.\n\n**Iluminismo:** razão, crítica ao absolutismo (Locke, Montesquieu, Rousseau, Voltaire) e base para as revoluções liberais.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "his-revolucoes-sec-xix": {
+  "title": "Revoluções e século XIX",
+  "body": "**Revolução Industrial:** começou na Inglaterra no século XVIII; fábricas, máquina a vapor, operariado e ludismo.\n\n**Revolução Francesa (1789):** fim do Antigo Regime e Declaração dos Direitos do Homem; fases: Monarquia Constitucional, Convenção (jacobinos e o Terror) e Diretório. Napoleão espalhou o Código Civil pela Europa.\n\n**Independências na América:** EUA (1776); América espanhola liderada pelos criollos (Bolívar, San Martín); Haiti (1804) foi a única feita por escravizados.\n\n**Ideias:** liberalismo, nacionalismo, socialismo e anarquismo.\n\n**Imperialismo:** partilha da África na Conferência de Berlim (1884–85).",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "his-seculo-xx": {
+  "title": "Guerras mundiais e século XX",
+  "body": "**1ª Guerra (1914–18):** imperialismo, nacionalismo e alianças; Tratado de Versalhes puniu a Alemanha.\n\n**Revolução Russa (1917):** bolcheviques no poder e, depois, a URSS de Stálin.\n\n**Crise de 1929 e totalitarismos:** fascismo na Itália e nazismo na Alemanha.\n\n**2ª Guerra (1939–45):** Eixo contra Aliados; Holocausto; bombas atômicas no Japão.\n\n**Guerra Fria (1947–91):** EUA contra URSS, sem confronto direto; corrida armamentista e espacial; Coreia, Vietnã, Cuba; queda do Muro de Berlim (1989).\n\n**Descolonização** da África e da Ásia após 1945.",
+  "ref": {
+   "label": "Resumo Waterlearning"
+  }
+ },
+ "mat-equacao-1grau": {
+  "title": "Equação do 1º grau",
+  "body": "**Ideia:** uma equação é uma balança em equilíbrio. O que você fizer de um lado, faça do outro.\n\n**Roteiro:** (1) tire parênteses (distributiva); (2) tire denominadores multiplicando **tudo** pelo MMC; (3) termos com \\(x\\) de um lado, números do outro, **trocando o sinal** de quem muda de lado; (4) divida pelo coeficiente de \\(x\\).\n\n\\[3x + 5 = x + 13 \\Rightarrow 3x - x = 13 - 5 \\Rightarrow 2x = 8 \\Rightarrow x = 4\\]\n\n**Problemas:** chame de \\(x\\) o que a pergunta pede, traduza cada frase (\"o dobro\" = \\(2x\\), \"3 a mais\" = \\(x + 3\\)) e confira a resposta no enunciado.\n\n**Armadilha comum:** multiplicar só um termo pelo MMC, ou esquecer o sinal de menos antes de um parêntese: \\(-(x - 2) = -x + 2\\).",
+  "ref": {
+   "label": "Tópicos de Álgebra Elementar, Equação do primeiro grau, p. 126",
+   "file": "Tópicos de Álgebra Elementar (Bruno Pedra, Ivan Monteiro, Alex Ricardo) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
+   "page": 126
+  }
+ },
+ "mat-inequacoes": {
+  "title": "Inequações do 1º grau",
+  "body": "Resolve-se como a equação, com **uma regra a mais:** multiplicar ou dividir os dois lados por um número **negativo** inverte o sinal da desigualdade.\n\n\\[-2x + 1 > 7 \\Rightarrow -2x > 6 \\Rightarrow x < -3\\]\n\n**A resposta é um conjunto,** não um número: \\(x < -3\\) é o intervalo \\(]-\\infty, -3[\\). Bolinha aberta para \\(<\\) e \\(>\\), fechada para \\(\\le\\) e \\(\\ge\\).\n\n**Sistema de inequações:** resolva cada uma e fique com a **interseção** das soluções.\n\n**Armadilha comum:** esquecer de inverter o sinal ao dividir por negativo.",
+  "ref": {
+   "label": "Tópicos de Álgebra Elementar, Inequações do primeiro grau, p. 216",
+   "file": "Tópicos de Álgebra Elementar (Bruno Pedra, Ivan Monteiro, Alex Ricardo) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
+   "page": 216
+  }
+ },
+ "mat-equacao-2grau": {
+  "title": "Equação do 2º grau",
+  "body": "Forma geral: \\(ax^2 + bx + c = 0\\), com \\(a \\ne 0\\).\n\n**Incompletas, sem fórmula:** \\(x^2 - 9 = 0 \\Rightarrow x = \\pm 3\\); \\(x^2 - 5x = 0 \\Rightarrow x(x - 5) = 0 \\Rightarrow x = 0\\) ou \\(x = 5\\).\n\n**Bhaskara:** \\(\\Delta = b^2 - 4ac\\) e \\(x = \\dfrac{-b \\pm \\sqrt{\\Delta}}{2a}\\). Se \\(\\Delta > 0\\), duas raízes reais; \\(\\Delta = 0\\), uma (dupla); \\(\\Delta < 0\\), nenhuma real.\n\n**Soma e produto:** \\(x_1 + x_2 = -\\dfrac{b}{a}\\) e \\(x_1 \\cdot x_2 = \\dfrac{c}{a}\\). Com \\(a = 1\\), procure dois números que somam \\(-b\\) e multiplicam \\(c\\).\n\n**Armadilha comum:** em \\(x^2 = 9\\), esquecer a raiz negativa; em \\(\\Delta\\), errar o sinal de \\(-4ac\\) quando \\(c < 0\\).",
+  "ref": {
+   "label": "Tópicos de Álgebra Elementar, Equação do segundo grau, p. 231",
+   "file": "Tópicos de Álgebra Elementar (Bruno Pedra, Ivan Monteiro, Alex Ricardo) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
+   "page": 231
+  }
+ },
+ "mat-algebra-basica": {
+  "title": "Produtos notáveis e fatoração",
+  "body": "\\[(a + b)^2 = a^2 + 2ab + b^2 \\qquad (a - b)^2 = a^2 - 2ab + b^2\\]\n\\[(a + b)(a - b) = a^2 - b^2\\]\n\n**Fatorar** é fazer o caminho de volta: transformar soma em produto. Primeiro tente **colocar em evidência** (\\(6x^2 + 9x = 3x(2x + 3)\\)); depois procure diferença de quadrados ou trinômio quadrado perfeito.\n\n**Frações algébricas:** fatore numerador e denominador e só então cancele **fatores** (nunca parcelas).\n\n**Armadilha comum:** achar que \\((a + b)^2 = a^2 + b^2\\). Falta o \\(2ab\\).",
+  "ref": {
+   "label": "Tópicos de Álgebra Elementar, Produtos notáveis, p. 73",
+   "file": "Tópicos de Álgebra Elementar (Bruno Pedra, Ivan Monteiro, Alex Ricardo) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
+   "page": 73
+  }
+ },
+ "mat-funcao-afim": {
+  "title": "Função afim",
+  "body": "\\(f(x) = ax + b\\): o gráfico é uma **reta**.\n\n- \\(a\\) (coeficiente angular) é quanto \\(y\\) muda quando \\(x\\) aumenta 1: \\(a = \\dfrac{\\Delta y}{\\Delta x}\\). Se \\(a > 0\\), cresce; se \\(a < 0\\), decresce.\n- \\(b\\) (coeficiente linear) é onde a reta corta o eixo \\(y\\): \\(f(0) = b\\).\n- **Raiz (zero):** onde corta o eixo \\(x\\): \\(ax + b = 0 \\Rightarrow x = -\\dfrac{b}{a}\\).\n\n**Achar a lei por dois pontos:** calcule \\(a\\) pela variação e depois \\(b\\) substituindo um dos pontos.\n\n**Armadilha comum:** confundir a raiz com o coeficiente linear \\(b\\).",
+  "ref": {
+   "label": "Fundamentos de Matemática Elementar, vol. 1, cap. VI (função afim), p. 97",
+   "file": "Fundamentos de matemática elementar - Vol. 01.pdf",
+   "page": 105
+  }
+ },
+ "mat-funcao-quadratica": {
+  "title": "Função quadrática",
+  "body": "\\(f(x) = ax^2 + bx + c\\): o gráfico é uma **parábola**. Com \\(a > 0\\) abre para cima (tem mínimo); com \\(a < 0\\), para baixo (tem máximo).\n\n**Vértice:** \\(x_v = -\\dfrac{b}{2a}\\) e \\(y_v = f(x_v) = -\\dfrac{\\Delta}{4a}\\). O valor máximo ou mínimo da função é \\(y_v\\); \\(x_v\\) diz **onde** ele acontece.\n\n**Raízes:** onde a parábola corta o eixo \\(x\\) (as soluções de \\(ax^2 + bx + c = 0\\)). O ponto \\((0, c)\\) é onde corta o eixo \\(y\\).\n\n**Armadilha comum:** responder \\(x_v\\) quando a pergunta é o valor máximo (\\(y_v\\)).",
+  "ref": {
+   "label": "Fundamentos de Matemática Elementar, vol. 1, cap. VII (função quadrática), p. 137",
+   "file": "Fundamentos de matemática elementar - Vol. 01.pdf",
+   "page": 145
+  }
+ }
 }

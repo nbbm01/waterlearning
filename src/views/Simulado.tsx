@@ -3,7 +3,7 @@ import { loadQuestion, type Bank } from '../core/data'
 import { sounds } from '../core/sounds'
 import { store, useStore, type SimResult } from '../core/store'
 import { formatClock } from '../core/time'
-import type { Question, Row } from '../core/types'
+import { F_DEEP, type Question, type Row } from '../core/types'
 import { LETTERS, optionCount, QuestionView } from './QuestionView'
 
 const STANDARD_MIN_PER_Q = 3
@@ -40,7 +40,8 @@ function draw(bank: Bank, c: Config): { rows: Row[]; borrowed: number } {
   const subjects = c.subjects.length ? c.subjects : bank.meta.subjects.map((_, i) => i)
   const examIdx = bank.meta.exams.indexOf(c.exam)
   const own = (r: Row) =>
-    c.kind === 'militar' ? r.e === examIdx : (!c.exams.length || c.exams.includes(r.e)) && (!c.diff || r.d === c.diff)
+    c.kind === 'militar' ? r.e === examIdx
+      : (c.exams.length ? c.exams.includes(r.e) : !(r.f & F_DEEP)) && (!c.diff || r.d === c.diff)
   const picked: Row[] = []
   let borrowed = 0
   subjects.forEach((s, k) => {

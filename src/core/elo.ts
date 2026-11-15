@@ -24,3 +24,6 @@ export function tier(elo: number): string {
   for (const [min, label] of TIERS) if (elo >= min) name = label
   return name
 }
+
+/** Elo de habilidade a partir do qual o aprofundamento (ITA, IME, olimpíada) entra sozinho no treino */
+export const DEEP_UNLOCK = 1350

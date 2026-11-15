@@ -27,7 +27,7 @@ TARGETS = [
     ("bancaId", "COMVEST UNICAMP", "UNICAMP"), ("bancaId", "DSEA UERJ", "UERJ"), ("bancaId", "COPERSE UFRGS", "UFRGS"),
     ("bancaId", "COPEVE UFMG", "UFMG"), ("bancaId", "NC UFPR (FUNPAR)", "UFPR"),
 ]
-state = {"left": None}
+state = {"left": None, "day": None}
 
 
 def key():
@@ -56,6 +56,9 @@ def get(path, params=None, auth=True):
                 left = r.headers.get("x-quota-questoes-restantes")
                 if left is not None:
                     state["left"] = int(left)
+                day = r.headers.get("x-quota-questoes-dia-restantes")
+                if day is not None:
+                    state["day"] = int(day)
                 data = json.loads(r.read())
             break
         except urllib.error.HTTPError as e:
@@ -63,6 +66,8 @@ def get(path, params=None, auth=True):
                 time.sleep(20 * (attempt + 1))
                 continue
             raise SystemExit(f"{e.code} em {path}: {e.read()[:300]!r}")
+    else:
+        raise SystemExit(f"limite de requisições (429) persistente em {path}; tente mais tarde")
     cached.parent.mkdir(parents=True, exist_ok=True)
     cached.write_text(json.dumps(data, ensure_ascii=False))
     time.sleep(1.1)  # limite de requisições por minuto
@@ -86,7 +91,7 @@ def counts():
     print("cota restante:", state["left"])
 
 
-def fetch(budget, only=None):
+def fetch(budget, only=None, subjects=None):
     """baixa páginas de 50 e os gabaritos, por prioridade, até gastar `budget` de cota"""
     start = state["left"]
     spent = lambda: (start - state["left"]) if start is not None and state["left"] is not None else 0
@@ -94,6 +99,8 @@ def fetch(budget, only=None):
         if only and label != only:
             continue
         for mid, subj in SUBJECTS.items():
+            if subjects and subj not in subjects:
+                continue
             page_no = 0
             while True:
                 page = get("/questoes", {field: ident, "materiaId": mid, "page": page_no, "size": 50})
@@ -120,9 +127,12 @@ def fetch(budget, only=None):
 # assuntos básicos que os vestibulares cobram dentro de problemas e quase nunca rotulam:
 # (topicoId da API, máximo de questões)
 BASICS = [
-    (11940, 160), (11952, 110), (11941, 110), (11954, 90), (11953, 70), (11931, 90), (11932, 60),
-    (11929, 70), (11934, 110), (11916, 70), (11920, 50), (11945, 50), (11926, 50), (11955, 40),
+    (11940, 250), (11934, 150), (11931, 120), (11920, 100), (11941, 120), (11916, 100), (11952, 80), (11922, 80),
+    (11932, 60), (11929, 80), (11954, 60), (11953, 60), (11936, 60), (11926, 50), (11945, 40), (11912, 50),
 ]
+
+
+NIVEL = "FUNDAMENTAL,MEDIO,SUPERIOR"
 
 
 def fetch_topics(budget):
@@ -132,7 +142,7 @@ def fetch_topics(budget):
         taken, page_no = 0, 0
         while taken < limit:
             params = {"materiaId": 10, "topicoId": topic_id, "certoOuErrado": "false", "anulada": "false",
-                      "nivel": "MEDIO,SUPERIOR", "page": page_no, "size": 50}
+                      "nivel": NIVEL, "page": page_no, "size": 50}
             page = get("/questoes", params)
             if start is None:
                 start = state["left"]
@@ -156,10 +166,58 @@ def fetch_topics(budget):
         print(f"tópico {topic_id}: {taken} questões (cota restante {state['left']})")
 
 
+# concursos com questões fáceis de verdade: (rótulo, filtro da API, máximo de questões)
+CONCURSOS = [
+    ("Banco do Brasil", {"instituicaoId": 194}, 100),
+    ("Prefeituras", {"nivel": "FUNDAMENTAL"}, 150),
+    ("Caixa", {"instituicaoId": 285}, 100),
+    ("Prefeituras", {"nivel": "MEDIO", "dificuldade": "FACIL"}, 400),
+]
+DAY_RESERVE = 8
+
+
+def fetch_concursos():
+    """Banco do Brasil, Caixa e provas de prefeitura (Matemática), até a cota do dia acabar; retoma de onde parou"""
+    for label, flt, limit in CONCURSOS:
+        taken, page_no = 0, 0
+        while taken < limit:
+            params = {"materiaId": 10, "certoOuErrado": "false", "anulada": "false", **flt, "page": page_no, "size": 50}
+            cached = (CACHE / "http" / (urllib.parse.quote("/questoes?" + urllib.parse.urlencode(sorted(params.items())), safe="") + ".json")).exists()
+            if not cached and state["day"] is not None and state["day"] < 50 + DAY_RESERVE:
+                print(f"cota do dia no fim ({state['day']}); rode de novo amanhã")
+                return
+            page = get("/questoes", params)
+            for q in page["content"]:
+                if taken >= limit:
+                    break
+                if q.get("certoOuErrado") or q.get("anulada") or q.get("desatualizada") or len(q.get("options") or []) < 4:
+                    continue
+                inst = (q.get("instituicao") or {}).get("nome") or ""
+                if label == "Prefeituras" and not inst.startswith(("Prefeitura", "Câmara")):
+                    continue
+                out = CACHE / "questions" / f"{q['id']}.json"
+                if not out.exists():
+                    if state["day"] is not None and state["day"] <= DAY_RESERVE:
+                        print(f"cota do dia no fim ({state['day']}); rode de novo amanhã")
+                        return
+                    gab = get(f"/questoes/{q['id']}/gabarito")
+                    out.parent.mkdir(parents=True, exist_ok=True)
+                    out.write_text(json.dumps({"q": q, "gab": gab, "label": label, "subject": "mat"}, ensure_ascii=False))
+                taken += 1
+            if page.get("last", True):
+                break
+            page_no += 1
+        print(f"{label} {flt}: {taken} questões (cota do dia {state['day']}, total {state['left']})", flush=True)
+
+
 if __name__ == "__main__":
+    if sys.argv[1] == "concursos":
+        fetch_concursos()
+        raise SystemExit
     if sys.argv[1] == "counts":
         counts()
     elif sys.argv[1] == "topics":
         fetch_topics(int(sys.argv[2]) if len(sys.argv) > 2 else 2300)
     else:
-        fetch(int(sys.argv[2]) if len(sys.argv) > 2 else 4500, sys.argv[3] if len(sys.argv) > 3 else None)
+        only = sys.argv[3] if len(sys.argv) > 3 and sys.argv[3] != "-" else None
+        fetch(int(sys.argv[2]) if len(sys.argv) > 2 else 4500, only, sys.argv[4].split(",") if len(sys.argv) > 4 else None)

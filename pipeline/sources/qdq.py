@@ -129,12 +129,27 @@ def to_markdown(fragment, images):
     text = html.unescape(text).replace("\xa0", " ")
     text = re.sub(r"\*\*\s*\*\*", "", text)
     text = re.sub(r"[ \t]+", " ", text)
-    return wrap_math(re.sub(r"\n{3,}", "\n\n", text).strip())
+    return text_out_of_math(wrap_math(re.sub(r"\n{3,}", "\n\n", text).strip()))
 
 
 DELIMITED = re.compile(r"(\\\(.*?\\\)|\\\[.*?\\\]|\$\$.*?\$\$|!\[\]\([^)]*\))", re.S)
 MATHY = re.compile(r"^[\w().,;:=+\-*/<>|\[\]^_{}\\'!°∈∉⊂⊃⊆⊇∪∩≤≥⩾⩽≠±×÷·→∞]+$")
 WORDS = {"e", "a", "o", "de", "da", "do", "em", "ou", "que", "os", "as", "se", "um", "uma", "é", "no", "na"}
+
+
+# palavras do enunciado que a API deixa dentro da fórmula ("com x > 0", "a inequaçãox^2 tem como")
+PT = re.compile(r"(?<![\\a-zA-Z{])(com|tem|como|para|sendo|onde|que|qual|todo|toda|entre|seja|tal|rad|real|reais|"
+                r"[a-záéíóúâêôãõç]*[áéíóúâêôãõç][a-záéíóúâêôãõç]*)(?![a-zA-Z}])")
+
+
+def text_out_of_math(text):
+    """dentro de \\( \\), palavra em português vira \\text{...}: senão sai em itálico e sem espaços"""
+    def fix(m):
+        body = re.sub(r"(ção|ções)(?=[a-z])", r"\1 ", m.group(1))  # "inequaçãox" → "inequação x"
+        body = PT.sub(lambda w: f"\\text{{ {w.group(0)} }}", body)
+        body = re.sub(r"(?<= )(e|ou)(?= )", r"\\text{\1}", body)  # conectivo solto; e^x fica
+        return f"\\({body}\\)"
+    return re.sub(r"\\\((.+?)\\\)", fix, text, flags=re.S)
 
 
 def wrap_math(text):

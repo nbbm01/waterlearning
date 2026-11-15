@@ -60,10 +60,10 @@ export function App() {
   return (
     <>
       {!focusMode && <TopBar bank={bank} view={view} go={go} onOpenFilters={() => setFilters(true)} />}
-      {view === 'practice' && <Practice bank={bank} onOpenFilters={() => setFilters(true)} />}
+      {view === 'practice' && <Practice bank={bank} onOpenFilters={() => setFilters(true)} go={go} />}
       {view === 'review' && <Review bank={bank} go={go} />}
       {view === 'sim' && <Simulado bank={bank} onFocusMode={setFocusMode} />}
-      {view === 'details' && <Details bank={bank} />}
+      {view === 'details' && <Details bank={bank} go={go} />}
       {filters && (
         <FilterSheet bank={bank} initial={st.s.filter} onClose={() => setFilters(false)}
           onApply={(f) => { store.setFilter(f); setFilters(false); go('practice') }} />

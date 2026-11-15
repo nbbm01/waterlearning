@@ -41,7 +41,7 @@ def main():
     checked, bad = 0, []
     for q in qs:
         gen = q["id"].split("-")[1]
-        if gen not in ("eq1_simples", "eq1_dois_lados", "eq1_fracao", "eq1_parenteses", "eq1_consecutivos"):
+        if gen not in ("eq1_simples", "eq1_dois_lados", "eq1_fracao", "eq1_parenteses", "eq1_consecutivos", "eq1_mmc"):
             continue
         eq = re.search(r"\\\((.+?)\\\)", q["stem"]).group(1)
         truth = solve(eq)

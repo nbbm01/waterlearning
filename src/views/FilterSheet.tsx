@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import type { Bank } from '../core/data'
+import { skillKey, type Bank } from '../core/data'
 import { select } from '../core/filters'
 import { fold } from '../core/search'
 import { store } from '../core/store'
-import { EMPTY_FILTER, type Difficulty, type Filter } from '../core/types'
+import { EMPTY_FILTER, type Difficulty, type Filter, type Row } from '../core/types'
+import { DEEP_UNLOCK } from '../core/elo'
 
 const DIFFS: [Difficulty, string, string][] = [
   ['prog', 'Progressivo', 'Começa no fácil e sobe conforme você acerta'],
@@ -22,11 +23,12 @@ interface Props {
 export function FilterSheet({ bank, initial, onApply, onClose }: Props) {
   const [f, setF] = useState<Filter>({ ...initial, subs: initial.subs ?? [] })
   const [topicQuery, setTopicQuery] = useState('')
-  const count = useMemo(() => select(bank.rows, f, store).length, [bank, f])
+  const unlocked = (r: Row) => store.elo(skillKey(bank, r)) >= DEEP_UNLOCK
+  const count = useMemo(() => select(bank.rows, f, store, unlocked).length, [bank, f])
   // quantas questões cada subtópico tem com os demais filtros aplicados
   const subCounts = useMemo(() => {
     const out: Record<number, number> = {}
-    for (const r of select(bank.rows, { ...f, subs: [], topics: [] }, store)) if (r.u >= 0) out[r.u] = (out[r.u] ?? 0) + 1
+    for (const r of select(bank.rows, { ...f, subs: [], topics: [] }, store, unlocked)) if (r.u >= 0) out[r.u] = (out[r.u] ?? 0) + 1
     return out
   }, [bank, f])
   const years = useMemo(() => [...new Set(bank.rows.map((r) => r.y).filter(Boolean))].sort((a, b) => b - a), [bank])
@@ -72,6 +74,7 @@ export function FilterSheet({ bank, initial, onApply, onClose }: Props) {
     ['classic', 'Clássicas', 'Tópicos mais cobrados de cada banca'],
     ['military', 'Apenas militares', bank.meta.military.join(', ') || 'ITA, IME, AFA, EFOMM, EsPCEx'],
     ['commented', 'Com resolução comentada', 'Explicação passo a passo'],
+    ['deep', 'Aprofundamento', 'ITA, IME e olimpíada (liberadas sozinhas quando seu Elo chega lá)'],
   ]
 
   return (

@@ -1,0 +1,12 @@
+{
+  "_": "Auditoria humana (olhando o recorte): vence a classificação automática. u = subtópico, d = nível, deep = só no aprofundamento.",
+  "tae-126-24": {"u": "mat-equacao-2grau", "why": "(4x²-9)... é equação do 2º grau; o OCR perdeu o expoente"},
+  "tqmf-22-90": {"u": "mat-algebra-basica", "why": "identidade de frações algébricas (frações parciais), não equação do 1º grau"},
+  "tqmf-22-104": {"u": "mat-algebra-basica", "why": "simplificação de frações algébricas"},
+  "tqmf-22-109": {"u": "mat-problemas-raciocinio", "why": "ladrilhamento com peças, raciocínio"},
+  "tqmf-26-122": {"u": "mat-equacao-2grau", "d": 3, "why": "discussão das raízes pelo discriminante: fim do capítulo de 2º grau; os sinais < > estão só nas alternativas"},
+  "tqmf-22-93": {"d": 2, "why": "problema de modelagem simples (múltiplos consecutivos): aplicação, não aprofundamento"},
+  "ita-2009-mat-4": {"drop": true, "why": "o PDF não traz o glifo de π: aparece 'cos ¨/5'"},
+  "ita-2010-mat-15": {"drop": true, "why": "numeradores 2α sumiram no PDF"},
+  "fme7-251": {"drop": true, "why": "a primeira curva do enunciado não saiu no recorte"}
+}

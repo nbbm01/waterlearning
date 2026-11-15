@@ -1,3 +1,6 @@
+import '@fontsource-variable/inter'
+import '@fontsource-variable/source-serif-4'
+import '@fontsource-variable/source-serif-4/wght-italic.css'
 import 'katex/dist/katex.min.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'

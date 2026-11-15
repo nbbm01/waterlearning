@@ -40,8 +40,8 @@ def difficulty(position, size, exam):
     return max(1, min(3, third))
 
 
-def render_pages(pdf, pages, tag):
-    """renderiza cada página uma vez (cache em pipeline/raw/pages/<tag>)"""
+def render_pages(pdf, pages, tag, rotations=None):
+    """renderiza cada página uma vez (cache em pipeline/raw/pages/<tag>); gira as escaneadas de cabeça para baixo"""
     out = RAW / "pages" / tag
     out.mkdir(parents=True, exist_ok=True)
 
@@ -50,6 +50,8 @@ def render_pages(pdf, pages, tag):
         if not target.exists():
             subprocess.run(["pdftoppm", "-f", str(p), "-l", str(p), "-r", str(DPI), "-gray", "-png", "-singlefile",
                             str(pdf), str(out / str(p))], check=True)
+            if rotations and rotations.get(p):
+                subprocess.run(["magick", str(target), "-rotate", str(rotations[p]), str(target)], check=True)
         return p, target
 
     with ThreadPoolExecutor(8) as ex:

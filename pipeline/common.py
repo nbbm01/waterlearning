@@ -71,6 +71,11 @@ def subtopic(text, subject, topic, hint=""):
               for t in subj["topics"] for sb in t.get("subs", [])}
     own = {k: v for k, v in scores.items() if k[0] == topic}
     best_own = max(own.items(), key=lambda kv: kv[1], default=(None, 0))
+    if not hint and best_own[0]:
+        # sem pista da fonte, só classifica com folga: questão "nada a ver" num subtópico estraga o treino
+        second = max((v for k, v in own.items() if k != best_own[0]), default=0)
+        if best_own[1] < 3 or best_own[1] < 1.5 * second:
+            best_own = (None, 0)
     if not hint:
         best_any = max(scores.items(), key=lambda kv: kv[1], default=(None, 0))
         if best_any[0] and best_any[0][0] != topic and best_any[1] >= 6 and best_any[1] >= 2 * best_own[1]:

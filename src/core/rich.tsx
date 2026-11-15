@@ -2,10 +2,16 @@ import katex from 'katex'
 import { memo } from 'react'
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-const asset = (p: string) => (/^(https?:)?\/\//.test(p) || p.startsWith('/') ? p : `/${p}`)
+const asset = (p: string) => (/^(https?:)?\/\//.test(p) || p.startsWith('/') ? p : `${import.meta.env.BASE_URL}${p}`)
 
 function math(tex: string, display: boolean): string {
   try {
+    // vírgula decimal: no TeX a vírgula é pontuação e ganha espaço ("0, 5"); entre chaves vira dígito
+    // ...menos em ponto e intervalo, "P(2,2)" e "[1,2]", a não ser que venha expoente: "(1,05)^2" é decimal
+    tex = tex
+      .replace(/([([]\s*-?\d+),(\d+\s*[)\]])(?!\s*\^)/g, '$1\u0000$2')
+      .replace(/(\d),(?=\d)/g, '$1{,}')
+      .replace(/\u0000/g, ',')
     return katex.renderToString(tex, { displayMode: display, throwOnError: false, strict: false })
   } catch {
     return esc(tex)

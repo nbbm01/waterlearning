@@ -79,6 +79,9 @@ export function TopBar({ bank, view, go, onOpenFilters }: Props) {
   const streak = visibleStreak(store.s.streak, today)
   const week = store.weekCount(today)
   const goal = store.s.settings.weeklyGoal
+  const dayGoal = store.dailyGoal()
+  const dayCount = store.todayCount(today)
+  const dayDone = dayCount >= dayGoal
   const due = store.dueCards(today).length
   const { sound, theme } = store.s.settings
   const filtered = !isEmptyFilter(store.s.filter)
@@ -131,11 +134,18 @@ export function TopBar({ bank, view, go, onOpenFilters }: Props) {
           🔥 <b className="tabular">{streak.count}</b> {streak.count === 1 ? 'dia' : 'dias'}
           {streak.shieldsLeft > 0 && <span className="shields" title="Escudos: cada um cobre um dia de folga">{'🛡️'.repeat(streak.shieldsLeft)}</span>}
         </span>
+        <span className={`today ${dayDone ? 'done' : ''}`} title={dayDone ? 'Meta de hoje cumprida' : `Meta de hoje: ${dayGoal} questões`}>
+          <svg className="ring" viewBox="0 0 20 20" width="18" height="18" role="progressbar" aria-valuemin={0} aria-valuemax={dayGoal} aria-valuenow={Math.min(dayCount, dayGoal)}>
+            <circle cx="10" cy="10" r="8" />
+            <circle cx="10" cy="10" r="8" pathLength={100} strokeDasharray={`${Math.min(100, (dayCount / dayGoal) * 100)} 100`} />
+          </svg>
+          <b className="tabular">{dayCount}/{dayGoal}</b> hoje
+        </span>
         <span className="week" title="Questões respondidas nesta semana">
           <span className="meter" role="progressbar" aria-valuemin={0} aria-valuemax={goal} aria-valuenow={Math.min(week, goal)}>
             <i style={{ width: `${Math.min(100, (week / goal) * 100)}%` }} />
           </span>
-          <b className="tabular">{week}/{goal}</b> questões na semana
+          <b className="tabular">{week}/{goal}</b> na semana
         </span>
         {view !== 'practice' && <button className="btn primary small" onClick={() => go('practice')}>Continuar estudando</button>}
         <button className="link details-link" onClick={() => go(view === 'details' ? 'practice' : 'details')}>

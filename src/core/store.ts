@@ -1,6 +1,7 @@
 import Dexie, { type Table } from 'dexie'
 import { useSyncExternalStore } from 'react'
-import type { Bank } from './data'
+import { dailyGoal, type SkillStat } from './coach'
+import { skillKey, theoryKey, type Bank } from './data'
 import { START_ELO, updateElo } from './elo'
 import type { ProgressView } from './filters'
 import { START_PROG, stepProg, type Prog } from './progressive'
@@ -67,15 +68,23 @@ interface Saved {
 export interface AnswerResult {
   eloDelta: number
   elo: number
+  skillElo: number // Elo do subtópico da questão
+  skillDelta: number
   combo: number
   streakEvent: StreakEvent
   levelChange: -1 | 0 | 1
   theoryTopic: string | null
   queued: boolean // entrou (ou ficou) na fila de revisão
+  recovered: boolean // já tinha errado esta questão e agora acertou
+  slow: boolean
+  wrongRun: number // erros seguidos no assunto, contando este
+  goalHit: boolean // a meta do dia foi batida nesta resposta
 }
 
 const THEORY_AFTER = 4
 const SLOW_MS = 5 * 60_000
+/** acerto demorado: merece o elogio à persistência */
+const SLOW_ANSWER_MS = 3 * 60_000
 const IDLE_CAP_MS = 10 * 60_000
 
 class DB extends Dexie {
@@ -106,6 +115,12 @@ class Store implements ProgressView {
   seenMap = new Map<string, number>() // qid → nº de acertos
   cards = new Map<string, Card>()
   sims: SimResult[] = []
+  /** acertos e tentativas por habilidade (subtópico, ou tópico se não houver) */
+  skills = new Map<string, SkillStat>()
+  /** questões erradas que ainda não foram acertadas depois */
+  private missed = new Set<string>()
+  /** quantas questões o aluno errou e depois acertou */
+  recovered = 0
   ready = false
 
   subscribe = (fn: () => void) => {
@@ -131,7 +146,11 @@ class Store implements ProgressView {
       if (state) this.s = { ...fresh(), ...(state.value as Saved) }
       this.s.settings = { ...fresh().settings, ...this.s.settings }
       this.s.filter = { ...EMPTY_FILTER, ...this.s.filter }
-      for (const a of attempts) this.seenMap.set(a.qid, (this.seenMap.get(a.qid) ?? 0) + (a.ok ? 1 : 0))
+      for (const a of attempts.sort((x, y) => x.ts - y.ts)) {
+        this.seenMap.set(a.qid, (this.seenMap.get(a.qid) ?? 0) + (a.ok ? 1 : 0))
+        const row = bank.byId.get(a.qid)
+        this.track(row ? skillKey(bank, row) : a.t, a.qid, a.ok)
+      }
       for (const c of cards) if (bank.byId.has(c.qid)) this.cards.set(c.qid, c)
       this.sims = sims
     } catch {
@@ -145,7 +164,26 @@ class Store implements ProgressView {
     this.emit()
   }
 
+  /** conta a resposta na habilidade e diz se foi uma recuperação (errou antes, acertou agora) */
+  private track(skill: string, qid: string, ok: boolean): boolean {
+    const v = this.skills.get(skill) ?? { n: 0, ok: 0 }
+    this.skills.set(skill, { n: v.n + 1, ok: v.ok + (ok ? 1 : 0) })
+    if (!ok) {
+      this.missed.add(qid)
+      return false
+    }
+    const back = this.missed.delete(qid)
+    if (back) this.recovered++
+    return back
+  }
+
   // ----- leitura -----
+  todayCount(today = dayNumber()): number {
+    return this.s.days[today]?.n ?? 0
+  }
+  dailyGoal(): number {
+    return dailyGoal(this.s.settings.weeklyGoal)
+  }
   seen(id: string): boolean {
     return this.seenMap.has(id)
   }
@@ -156,8 +194,9 @@ class Store implements ProgressView {
   dueCards(today = dayNumber()): Card[] {
     return [...this.cards.values()].filter((c) => isDue(c, today)).sort((a, b) => a.due - b.due)
   }
-  elo(subjectId: string): number {
-    return this.s.elo[subjectId] ?? START_ELO
+  /** Elo de uma matéria ("mat") ou de uma habilidade ("mat-equacao-2grau") */
+  elo(id: string): number {
+    return this.s.elo[id] ?? START_ELO
   }
   weekCount(today = dayNumber()): number {
     const start = weekStart(today)
@@ -171,7 +210,10 @@ class Store implements ProgressView {
 
   // ----- escrita -----
   setFilter(filter: Filter) {
-    this.s = { ...this.s, filter }
+    // assunto novo começa na fixação, como capítulo novo do livro: o degrau do Progressivo não vem junto
+    const sameSubject = JSON.stringify([filter.subjects, filter.topics, filter.subs]) ===
+      JSON.stringify([this.s.filter.subjects, this.s.filter.topics, this.s.filter.subs])
+    this.s = { ...this.s, filter, prog: sameSubject ? this.s.prog : START_PROG }
     this.persist()
     this.emit()
   }
@@ -207,11 +249,18 @@ class Store implements ProgressView {
 
     const before = this.elo(subject)
     const after = updateElo(before, row.r, ok)
+    const skill = skillKey(bank, row)
+    const skillBefore = this.elo(skill)
+    const skillAfter = updateElo(skillBefore, row.r, ok)
+    const recovered = this.track(skill, row.id, ok)
+    const goal = this.dailyGoal()
+    const goalHit = day.n + 1 === goal
     const { streak, event } = studyOn(s.streak, today)
 
     let prog = s.prog
     let levelChange: -1 | 0 | 1 = 0
     let theoryTopic: string | null = null
+    let wrongRun = 0
     const errRun = { ...s.errRun }
     if (mode !== 'sim') {
       if (mode === 'practice' && s.filter.diff === 'prog') {
@@ -220,9 +269,10 @@ class Store implements ProgressView {
         levelChange = step.changed
       }
       errRun[topic] = ok ? 0 : (errRun[topic] ?? 0) + 1
+      wrongRun = errRun[topic]
       if (errRun[topic] >= THEORY_AFTER) {
         errRun[topic] = 0
-        if (bank.meta.theory[topic]) theoryTopic = topic
+        theoryTopic = theoryKey(bank, row)
       }
     }
 
@@ -230,10 +280,13 @@ class Store implements ProgressView {
     const queued = this.reschedule(row.id, outcome, today)
     const combo = mode === 'sim' ? s.combo : ok ? s.combo + 1 : 0
 
-    this.s = { ...s, days, topics, elo: { ...s.elo, [subject]: after }, streak, prog, errRun, combo }
+    this.s = { ...s, days, topics, elo: { ...s.elo, [subject]: after, [skill]: skillAfter }, streak, prog, errRun, combo }
     this.persist()
     this.emit()
-    return { eloDelta: after - before, elo: after, combo, streakEvent: event, levelChange, theoryTopic, queued }
+    return {
+      eloDelta: after - before, elo: after, skillElo: skillAfter, skillDelta: skillAfter - skillBefore, combo, streakEvent: event, levelChange, theoryTopic, queued,
+      recovered, slow: ok && ms > SLOW_ANSWER_MS, wrongRun, goalHit,
+    }
   }
 
   private reschedule(qid: string, outcome: 'wrong' | 'hard' | 'ok', today: number): boolean {
