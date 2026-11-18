@@ -1,6 +1,6 @@
 # Waterlearning
 
-Prática de vestibular sem atrito: você abre o site e já tem uma questão na tela. Sem cadastro, sem boas-vindas, sem menu no caminho. Matemática, Física e História, com **7.254 questões**: ENEM, FUVEST, UNICAMP, ITA, EsPCEx, Colégio Naval, EPCAr, federais, PUC, FGV, Mackenzie, concursos (Banco do Brasil, prefeituras), livros didáticos e questões autorais.
+Prática de provas sem atrito: você abre o site e já tem uma questão na tela. Sem cadastro, sem boas-vindas, sem menu no caminho. São **65 mil questões reais** de 18 matérias e mais de 200 provas: ENEM, FUVEST, UNICAMP e cerca de 200 vestibulares, ITA, IME, EsPCEx, ESA, EEAR, AFA, Colégio Naval, OAB, Revalida, ENARE, USMLE, ENADE, POSCOMP, concursos, o MMLU de Berkeley e os Exames Nacionais de Portugal. Questões geradas por computador são só 2,5% do banco e ficam no degrau de fixação, onde prova real não existe ([SOURCES.md](SOURCES.md)).
 
 A ideia que guia tudo: **você estuda a teoria em outro lugar e vem aqui praticar, como na lista de exercícios de um bom livro**, só que com muito mais variedade.
 
@@ -8,8 +8,13 @@ A ideia que guia tudo: **você estuda a teoria em outro lugar e vem aqui pratica
 bun install
 bun run dev        # http://localhost:5173
 bun run data       # reconstrói o banco (pipeline Python + auditorias)
-bun run test       # testes do núcleo (Elo, revisão espaçada, streak, filtros…)
+bun run test       # testes do núcleo (Elo, revisão espaçada, streak, filtros, trilhas…)
 bun run deploy     # publica em https://nbbm01.github.io/waterlearning/ (branch gh-pages)
+
+# bancos abertos do Hugging Face (uma vez; o pyarrow só entra aqui)
+uv run --no-project --with pyarrow python3 -I pipeline/sources/hf_fetch.py
+# laço diário: gasta a cota da API das Questões (Química primeiro, depois matérias de concurso) e reconstrói
+scripts/crescer.sh
 ```
 
 ---
@@ -18,12 +23,13 @@ bun run deploy     # publica em https://nbbm01.github.io/waterlearning/ (branch 
 
 | Superfície | O que faz |
 |---|---|
+| **Objetivo (trilha)** | Um chip discreto na barra da prática: ENEM e vestibulares (padrão), Escolas militares, Concursos públicos, OAB e Direito, Medicina e Saúde, Faculdade e internacionais, ou tudo. Recorta o banco antes de qualquer filtro. Na primeira visita, uma pergunta opcional acima da questão: "Para qual prova você está estudando?". |
 | **Prática** (abertura) | Questão na tela em menos de 2 s. Teclas `1–5` / `A–E` respondem e `Enter` avança. Fórmulas em KaTeX. Quando você erra, aparecem a alternativa certa e a resolução, sem vermelho agressivo e sem som de erro. |
 | **Busca de tópico** | Digite "equação do primeiro grau" e as questões aparecem na hora. A busca casa palavra a palavra e entende ordinais (primeiro = 1º). |
-| **Filtros** | Matéria, vestibular, tópico, subtópico (134), ano e dificuldade (Fácil, Médio, Difícil ou **Progressivo**). Também há atalhos: revisões pendentes, inéditas, clássicas, militares, com resolução e aprofundamento. A contagem aparece em tempo real ("142 questões encontradas"). |
+| **Filtros** | Matéria, prova (agrupadas: ENEM, Vestibulares, Militares, Concursos, OAB, Saúde…, com busca nos grupos grandes), tópico, subtópico (142), ano e dificuldade (Fácil, Médio, Difícil ou **Progressivo**). Também há atalhos: revisões pendentes, inéditas, clássicas, militares, com resolução e aprofundamento. A contagem aparece em tempo real ("142 questões encontradas"). |
 | **Socorro teórico** | Depois de 4 erros seguidos no mesmo tópico, aparece um card discreto com o conceito-chave e a página do livro de origem. Nunca bloqueia a tela. |
 | **Revisão** (aba própria) | Revisão espaçada automática ("Anki sem configurar"): o que você erra volta depois de alguns dias. |
-| **Simulado** | Você escolhe N questões e os filtros. O modo militar tem cronômetro rígido proporcional ao tempo oficial, não mostra o gabarito durante a prova e, no fim, compara sua nota com a nota de corte histórica. |
+| **Simulado** | Você escolhe N questões e os filtros, dentro do seu objetivo. A prova oficial (ITA, EsPCEx e OAB) tem cronômetro rígido proporcional ao tempo oficial, só as matérias que aquela prova cobra, não mostra o gabarito durante a prova e, no fim, compara sua nota com a nota de corte (na OAB, 50%). |
 | **Topo** | 🔥 streak, meta do dia (anel), meta semanal e o botão "Continuar estudando". Nada mais. |
 | **Treinador** | Uma sugestão por vez acima da questão: revisões vencendo, o ponto a fortalecer ou o quanto falta para a meta. É um convite com um clique e some com outro. |
 | **Detalhes** | Horas líquidas, heatmap de dias, Elo por matéria, domínio por tópico, histórico de simulados, Pomodoro e escudos de streak (1 a cada 7 dias, no máximo 2). |
@@ -34,14 +40,16 @@ Modo escuro por padrão. Sons sintetizados (Web Audio) só para acertos e marcos
 
 ```
 pipeline/                 Python: importa, classifica, calibra e audita
-  sources/*.py            um importador por fonte → pipeline/out/<fonte>.json
-  taxonomy.json           matérias → 37 tópicos → 134 subtópicos (com palavras-chave)
-  build.py                junta tudo, aplica pré-requisitos e níveis, gera public/data
+  sources/*.py            um importador por fonte → pipeline/out/<fonte>.json (lista e licenças em SOURCES.md)
+  sources/hf_fetch.py     baixa os bancos abertos do Hugging Face para pipeline/raw/hf
+  taxonomy.json           18 matérias → 193 tópicos → 142 subtópicos (com palavras-chave)
+  build.py                junta tudo, remove repetidas entre fontes, aplica pré-requisitos, níveis, grupos de
+                          provas e trilhas, gera public/data
   levels.json             auditoria humana: correções feitas olhando a questão
   theory/                 cards de teoria (referenciam capítulo e página dos livros)
   validate.py, audit_*.py gabarito, renderização KaTeX, quarentena
 public/data/
-  index.json              uma linha compacta por questão (filtra 6.7 mil no cliente, instantâneo)
+  index.json              uma linha compacta por questão, com a máscara das trilhas (filtra 65 mil no cliente, instantâneo)
   chunks/N.json           enunciados em blocos de 60, carregados sob demanda
   meta.json               taxonomia, bancas, teoria, notas de corte, versão
 src/core/                 Elo, revisão espaçada, streak, Progressivo, busca, sons (testados)
@@ -151,7 +159,50 @@ Não foi feita raspagem do QConcursos. O conteúdo é pago e os termos de uso pr
 - **Banco do Brasil e prefeituras.** `python3 pipeline/sources/qdq_fetch.py concursos` baixa Matemática do Banco do Brasil, da Caixa e de provas de prefeitura pela API das Questões. A cota é de 500 por dia e o comando retoma de onde parou. Primeira leva: 43 do Banco do Brasil e 147 de prefeituras. Prova de prefeitura entra no começo do degrau de Aplicação.
 - **Publicação.** O site roda em subpasta no GitHub Pages, então os caminhos de dados e imagens usam `import.meta.env.BASE_URL`. O link "abrir no livro" só aparece no servidor local, onde os PDFs existem.
 
+### 9. De 7 mil para 65 mil questões
+O pedido: *"ele é atropelado por concorrentes melhores… quero no mínimo 50 mil questões de concursos e provas importantes; seja inteligente"*.
+
+**A conta que mudou o plano.** O caminho óbvio era a API das Questões, que já alimentava o banco. Só que a cota é de 500 por dia, e cada questão gasta uma página e um gabarito: chegar a 50 mil levaria mais de cem dias. O caminho inteligente era outro: provas importantes já foram digitadas, conferidas e publicadas por grupos de pesquisa, porque são o teste padrão de modelos de linguagem em português. A sugestão de olhar para "Stanford e Harvard" levou ao lugar certo: o banco desse tipo mais usado no mundo é o **MMLU**, da Universidade da Califórnia em Berkeley (questões de AP, GRE e USMLE), e a OpenAI publicou uma tradução profissional dele para o português do Brasil. Os cursinhos (Estratégia Militares e afins) foram descartados pelo mesmo motivo do QConcursos: conteúdo pago, termos que proíbem coleta.
+
+**O levantamento.** Uma varredura no Hugging Face achou, além do MMLU: 15,7 mil questões de vestibular (CEIA), o USMLE traduzido (MedQA, 12,7 mil), o HealthQA-BR (Revalida e ENARE, financiado pelo Ministério da Saúde), a OAB de 2010 a 2025, o MMLU-Pro, ENADE, POSCOMP e os Exames Nacionais de Portugal. Também apareceram 2,3 milhões de "questões de concursos", recusadas: acesso fechado, sem origem declarada e com campos (órgão, cargo, slug) que denunciam raspagem de site pago. A tabela completa, com licenças, está em [SOURCES.md](SOURCES.md). E metade do ENEM e do BLUEX já estava baixada e era jogada fora, porque o banco só tinha Matemática, Física e História.
+
+**Cada fonte tinha uma pegadinha**, e cada uma virou regra no importador:
+- **Vestibulares (CEIA).** O dataset acrescentou "Nenhuma das anteriores" como alternativa E nas provas de 4 alternativas: 3.625 casos, e só 3 eram o gabarito. A alternativa falsa sai. Os 599 nomes de prova ("UECE 2° Fase 2° Dia", "FGV-SP Economia - Manhã") viraram ~200 bancas. As tags da fonte ("História do Brasil > República > Era Vargas") decidem o tópico antes das palavras-chave.
+- **OAB.** As provas de 2010 a 2018 vinham duas vezes (os dois datasets de origem). Nas de 2010–2014 o rótulo de área é confiável; nas de 2014–2018 não existe; e nas de 2018–2025 é ruído: a questão de honorários advocatícios aparecia como Direito Penal. A saída foi usar o que a FGV garante: a prova vem em blocos fixos por área (Ética nas 10 primeiras, Filosofia nas 2 seguintes…). A posição na prova, combinada com as palavras-chave da área, decide.
+- **USMLE.** 960 casos clínicos citam uma imagem que o dataset não tem ("a fotomicrografia é mostrada"). Saíram. E caso clínico cita vários sistemas do corpo, então o tópico (especialidade) passou a pesar a pergunta final e a resposta certa.
+- **MMLU-Pro** tem 10 alternativas; ficam a certa e 4 sorteadas de forma fixa, para caber nas teclas 1–5. As 895 questões de "cenários morais nos EUA" do MMLU ficaram de fora: não são questões de prova.
+- **Repetidas.** O mesmo ENEM chega pelo enem-api e pelo dataset de vestibulares; o ENARE repete a mesma questão de Clínica Médica em várias especialidades. A remoção de repetidas olha o começo e o fim do enunciado mais a resposta certa e fica com a fonte que já estava no banco, para não perder progresso salvo: 1.373 removidas.
+
+**Taxonomia.** De 3 para 18 matérias e de 37 para 193 tópicos (Direito por área da OAB, Medicina por especialidade, Química, Biologia, Geografia…). As palavras-chave saíram do vocabulário real das fontes, não de um chute.
+
+**Trilhas por objetivo.** Com 65 mil questões, abrir o site e cair num caso clínico do USMLE seria péssimo para um vestibulando. A primeira ideia seria uma tela de boas-vindas perguntando o objetivo, mas isso quebra a promessa da página inicial: questão na tela, sem nada no caminho. A solução: o banco abre em *ENEM e vestibulares* (o banco inteiro de antes cabe ali), e a troca é um chip discreto na barra. Na primeira visita, uma pergunta opcional aparece **acima** da questão, que já está na tela. Cada questão leva no índice a máscara das trilhas a que pertence. Química e Biologia eram as matérias mais finas das provas brasileiras abertas, então o que é currículo universal no MMLU e nos exames de Portugal (biologia, química, física, história mundial) também entra na trilha de vestibulares; história e governo dos EUA não.
+
+**Coisas que só apareceram usando o site** (como na seção 6):
+- **"Fixação" mentindo.** Na trilha OAB a barra dizia *Progressivo · Fixação* e mostrava questão média, porque a OAB não tem questão de fixação. O degrau agora segue o que o recorte tem: sem fixação, começa na aplicação.
+- **Afirmativas coladas.** O ENADE trazia "…entre elas. I. É cabível… PORQUE II. Nos casos…" num parágrafo só. O build agora põe cada afirmativa numa linha e isola o PORQUE, sem quebrar "Dom Pedro I" nem "Luís XIV".
+- **Filtro com 216 bancas em chips** virou grupos recolhíveis com busca. O simulado oficial dividia as questões entre *todas* as matérias e completava com "difíceis de outras bancas": numa OAB, isso traria Física. Agora usa só as matérias que a prova cobra.
+
+**"Questão de polias em Química? Meio errado, acha?"** Uma questão do ENEM 2016 sobre as polias de Arquimedes apareceu como *Química › Estequiometria*. A investigação achou três problemas em cadeia:
+1. Na expansão do ENEM, uma questão de Ciências da Natureza que não era Física "com folga" ia obrigatoriamente para Química ou Biologia. A Física nem concorria.
+2. O script que montou as palavras-chave de Química separava por vírgula, e "6,02" (Avogadro) virou as palavras-chave "6" e "02". A alternativa "6" da questão das polias casou com Estequiometria. "22,4" e "0,082" tinham o mesmo defeito.
+3. O rótulo de área do dataset do ENEM erra: a questão 109 de 2023 (polias numa academia) vinha como Humanas, e as questões 103–135 de 2010, que são de Linguagens, também. A área agora sai da numeração oficial da prova (em 2009 a ordem era Natureza, depois Humanas; de 2010 a 2016, o contrário; desde 2017, Linguagens e Humanas no primeiro dia). Física, Química e Biologia disputam, e a Física só leva se passar das duas. O aço do alto-forno e o desentupidor de pia continuam em Química.
+
+**Química, a pedido.** *"Tô querendo estudar Química, estequiometria."* A regra combinada foi: **questão real primeiro; gerada só onde faltar**. O diagnóstico: estequiometria tinha 628 questões, mas 486 eram do MMLU-Pro (graduação) e nenhuma de fixação. Então:
+- o laço diário da API das Questões passou a buscar Química primeiro, de vestibulares (FUVEST, UNICAMP, UERJ, EsPCEx…) e de concursos;
+- subtópicos novos na ordem do livro: balanceamento, mol e massa molar, cálculo estequiométrico, limitante/pureza/rendimento, concentração, diluição, volume molar;
+- 155 questões geradas, só de conta direta ("quantos mols há em 66 g de CO₂?"), cada uma com resolução e o erro típico por trás de cada alternativa ("aplicou os coeficientes direto nas massas, sem passar por mol"). As 16 equações químicas usadas são conferidas átomo por átomo quando o módulo carrega;
+- a auditoria refaz cada gabarito por outro caminho: outra tabela de massas, outro leitor de fórmulas, e os coeficientes achados por **força bruta**, não pela lista do gerador. Na primeira rodada ela pegou um caso real: em "massa de **1** mol de glicose", o distrator "somou em vez de multiplicar" dava 181 g, colado na resposta de 180 g;
+- cards de teoria para cada subtópico, que aparecem depois de 4 erros seguidos.
+
+**Concursos de verdade, todo dia.** Sobrava um ponto fraco no que mais se pediu: só 714 questões reais de concurso. A API das Questões tem as matérias certas (Português, Raciocínio Lógico, Informática, Direito Constitucional e Administrativo, Ética no Serviço Público…). O modo `amplo` do `qdq_fetch.py` faz rodízio entre elas, uma página por vez, e guarda o cursor. `scripts/crescer.sh` é o laço diário: gasta a cota, importa e reconstrói. A primeira rodada trouxe 225 questões.
+
+**Auditoria em paralelo.** Depois do caso das polias, quatro agentes auditaram ao mesmo tempo, por amostragem, a classificação de cada bloco de matérias (Exatas; Saúde e Biologia; Humanas; Linguagens e Direito). Eles só leram e relataram, e as correções foram aplicadas depois, num lugar só.
+
 ## Limites conhecidos e próximos passos
 - Recortes de livro dependem de OCR para a classificação. As regras pegam o padrão, mas uma revisão visual por subtópico (como a feita em equação do 1º grau) é o que garante. Os próximos candidatos são equação do 2º grau, inequações e funções.
 - Geradores autorais para mais assuntos (inequações, sistemas, função afim), para que cada subtópico tenha Fácil e Médio de sobra.
-- Física e História ainda não têm questões autorais de fixação. Ali o "fácil" é a questão de vestibular mais direta.
+- História, Geografia, Biologia e as matérias novas não têm questões autorais de fixação. Ali o "fácil" é a questão mais direta da própria prova (o dataset de vestibulares marca a dificuldade), e onde não há fácil o Progressivo começa na aplicação.
+- **Resolução comentada** só existe nas autorais e na curadoria de História. As 63 mil questões reais novas mostram a resposta certa e voltam na revisão, mas sem explicação. É o maior ponto a crescer.
+- **Medicina** é a classificação mais frágil: caso clínico cita vários sistemas do corpo. O ENARE vem com a especialidade da fonte; o USMLE e o Revalida dependem de palavras-chave.
+- MMLU e USMLE são **traduções** (a do MMLU é profissional). Algumas questões falam de leis, moeda e instituições dos EUA; por isso só o que é currículo universal entra na trilha de vestibulares.
+- **Concursos reais** ainda são poucos (~940). Crescem cerca de 225 por dia com `scripts/crescer.sh` agendado (instruções no próprio script).

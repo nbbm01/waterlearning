@@ -493,7 +493,8 @@ select, .settings input, .n-input input { padding: 0.3em 0.6em; border-radius: 8
 @media (max-width: 760px) {
   .topbar-main { flex-wrap: wrap; height: auto; padding-top: 8px; padding-bottom: 8px; }
   .brand span { display: none; }
-  .search { order: 5; flex: 1 1 0; min-width: 0; max-width: none; }
+  /* base de 180 px: sem ela a busca se espremia na sobra da primeira linha (55 px, sem espaço para digitar) */
+  .search { order: 5; flex: 1 1 180px; min-width: 0; max-width: none; }
   .filters-btn { order: 6; }
   .tabs { margin-left: auto; }
   .tabs button { padding: 0.35em 0.5em; font-size: 0.9rem; }
