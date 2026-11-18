@@ -12,27 +12,65 @@ CHUNK = 60
 F_COMMENTED, F_CLASSIC, F_MILITARY, F_IMAGE, F_DEEP = 1, 2, 4, 8, 16
 # deslocamento de Elo por banca: provas mais seletivas valem mais
 EXAM_OFFSET = {"ITA": 300, "IME": 300, "EN": 150, "AFA": 100, "EFOMM": 100, "EsPCEx": 100, "FUVEST": 100, "UNICAMP": 100,
+               "USMLE": 100, "ENARE": 100, "MMLU-Pro": 100, "POSCOMP": 100,
                # prova de prefeitura é a aplicação mais direta que existe: entra primeiro no degrau
                "Prefeituras": -100}
 
 
 # TQM Fundamental: amostra de 24 recortes teve 9 defeituosos (texto cortado, questões grudadas); fora até refazer o recorte
 SKIP_SOURCES = {"tqmf", "tqmm"}
+# a mesma questão chega por mais de uma fonte (o ENEM do enem-api e o do dataset de vestibulares; a FUVEST do BLUEX e a
+# do PDF). Fica a da fonte que vem antes aqui: as oficiais e as que já estavam no banco, para não perder o progresso salvo.
+SOURCE_ORDER = ["enem", "bluex", "fuvest", "ita", "qdq", "fme", "tae", "autoral", "oab", "saude", "extras", "vestibulares", "mmlu"]
+
+
+def dedupe_keys(q):
+    """começo e fim do enunciado (só letras e números) + a resposta certa; vale qualquer um dos dois"""
+    if q["k"] != "text" or q["e"] == "Waterlearning":  # as autorais variam só os números
+        return []
+    stem = re.sub(r"[^a-z0-9]+", "", norm(re.sub(r"!\[[^\]]*\]\([^)]*\)", "", q.get("stem") or "")))
+    if len(stem) < 60:
+        return []
+    ans = re.sub(r"[^a-z0-9]+", "", norm(q["opts"][q["ans"]].get("t") or ""))[:40]
+    return [f"a{stem[:120]}|{ans}", f"z{stem[-120:]}|{ans}"]
 
 
 def load():
-    questions = {}
-    for f in sorted(OUT.glob("*.json")):
-        if f.stem in SKIP_SOURCES:
-            continue
+    questions, seen, dropped = {}, set(), collections.Counter()
+    files = [f for f in OUT.glob("*.json") if f.stem not in SKIP_SOURCES]
+    files.sort(key=lambda f: (SOURCE_ORDER.index(f.stem) if f.stem in SOURCE_ORDER else len(SOURCE_ORDER), f.stem))
+    for f in files:
         for q in json.loads(f.read_text(encoding="utf-8")):
+            keys = dedupe_keys(q)
+            if any(k in seen for k in keys):
+                dropped[f.stem] += 1
+                continue
+            seen.update(keys)
             questions[q["id"]] = q
+    if dropped:
+        print("repetidas entre fontes (ficou a primeira):", dict(dropped))
     # curadoria: transcrições em KaTeX, resoluções e correções, por id
     for f in sorted((PIPE / "curated").glob("*.json")):
         for qid, patch in json.loads(f.read_text(encoding="utf-8")).items():
             if qid in questions:
                 questions[qid].update(patch)
     return list(questions.values())
+
+
+# Muitas fontes trazem afirmativas e asserções coladas num parágrafo só ("...a seguir. I. Texto. II. Texto. Assinale...").
+# Uma por linha se lê bem melhor. Só depois de pontuação, para não quebrar "Dom Pedro I" nem "Luís XIV".
+ROMAN_ITEM = re.compile(r"(?<=[.:;?!])[ \t]+(?=(?:I|II|III|IV|V|VI|VII|VIII)\s*[.)–-]\s)")
+BECAUSE = re.compile(r"[ \t\n]+PORQUE[ \t\n]+")
+COMMAND = re.compile(r"(?<=[.:;?!])[ \t]+(?=(?:Assinale|Marque|Indique|A respeito d|Acerca d|Está(?:ão)? corret|É corret|São corret|"
+                     r"Considerando (?:essas|estas|as|os) (?:afirma|asser|itens|proposi)))")
+
+
+def breathe(stem):
+    out = ROMAN_ITEM.sub("\n", stem)
+    if out != stem or BECAUSE.search(out):
+        out = BECAUSE.sub("\n\nPORQUE\n\n", out)
+        out = COMMAND.sub("\n\n", out)  # o comando da questão, depois da lista, num parágrafo próprio
+    return out
 
 
 def classify(q):
@@ -108,6 +146,10 @@ def calibrate(q):
         return 3
     if e == "Waterlearning":  # o gerador já sabe se é treino ou problema
         return d
+    # fora da Matemática não há questões autorais de fixação: vale o nível que a própria fonte atribui
+    # (o dataset de vestibulares marca fácil/médio/difícil; MMLU separa ensino médio de graduação)
+    if q["s"] != "mat" and q.get("lvl"):
+        return q["lvl"]
     if e in TOUGH:
         return 3
     if e in MILITARY_MID or e in SELECTIVE:
@@ -117,6 +159,79 @@ def calibrate(q):
     if e == "ENEM":  # contextualizado por natureza: no mínimo aplicação
         return max(2, d)
     return max(2, d)  # questões de vestibular (inclusive as dos livros) nunca são "treino"
+
+
+# Bancas agrupadas para o filtro (são ~250) e trilhas por objetivo. Cada questão leva no índice a máscara das
+# trilhas a que pertence; a trilha escolhida recorta o banco antes de qualquer filtro.
+HIGH_SCHOOL = {"mat", "fis", "qui", "bio", "his", "geo", "fil", "soc", "por", "ing", "esp"}
+GROUPS = [("enem", "ENEM"), ("vestibulares", "Vestibulares"), ("militares", "Militares"), ("concursos", "Concursos públicos"),
+          ("oab", "OAB"), ("saude", "Saúde"), ("superior", "Ensino superior"), ("internacionais", "Internacionais"),
+          ("livros", "Livros e autorais")]
+
+
+def group_of(e):
+    if e in ("ENEM", "ENCCEJA"):
+        return "enem"
+    if e in MILITARY:
+        return "militares"
+    if e in CONCURSOS:
+        return "concursos"
+    if e == "OAB":
+        return "oab"
+    if e in ("Revalida", "ENARE", "USMLE"):
+        return "saude"
+    if e in ("ENADE", "POSCOMP"):
+        return "superior"
+    if e in ("MMLU", "MMLU-Pro", "Exame Nacional (Portugal)"):
+        return "internacionais"
+    if e in ("Livros", "Waterlearning"):
+        return "livros"
+    return "vestibulares"
+
+
+# Do MMLU e dos exames de Portugal, o que é currículo universal do ensino médio também serve ao vestibulando
+# (Biologia, Química e Português são as matérias mais finas das provas brasileiras abertas). Fica de fora o que é
+# próprio de lá: história e governo dos EUA, geografia e história de Portugal.
+UNIVERSAL_HS = {"high_school_biology", "high_school_chemistry", "high_school_physics", "conceptual_physics", "high_school_mathematics",
+                "elementary_mathematics", "high_school_statistics", "high_school_geography", "astronomy", "high_school_world_history",
+                "high_school_european_history", "prehistory", "philosophy", "logical_fallacies", "sociology",
+                "Portuguese", "Philosophy", "Mathematics A", "Bio_Geo"}
+
+
+def universal(q):
+    return q["e"] in ("MMLU", "Exame Nacional (Portugal)") and bool(q.get("tags")) and q["tags"][0] in UNIVERSAL_HS
+
+
+TRACKS = [
+    ("vestibular", "ENEM e vestibulares", "ENEM, FUVEST, UNICAMP e mais de 150 vestibulares do país",
+     lambda q, g: (g in {"enem", "vestibulares", "militares", "livros"} or universal(q)) and q["s"] in HIGH_SCHOOL),
+    ("militar", "Escolas militares", "EsPCEx, ESA, EEAR, AFA, ITA, IME, Colégio Naval, EPCAr e a base de Matemática",
+     lambda q, g: g == "militares" or (g == "livros" and q["s"] == "mat")),
+    ("concursos", "Concursos públicos", "Provas de concursos, Direito, Português e Matemática",
+     lambda q, g: g in {"concursos", "oab"} or (q["s"] in {"por", "mat"} and g in {"enem", "vestibulares", "livros"})),
+    ("oab", "OAB e Direito", "Exame de Ordem de 2010 a 2025, todas as áreas, e o ENADE de Direito",
+     lambda q, g: q["s"] == "dir" and q["e"] != "MMLU"),
+    ("saude", "Medicina e Saúde", "Revalida, ENARE (residência médica e multiprofissional) e USMLE",
+     lambda q, g: q["s"] in {"med", "sau"} or (q["s"] == "psi" and g == "saude")),
+    ("superior", "Faculdade e internacionais", "ENADE, POSCOMP, MMLU (Berkeley) e Exames Nacionais de Portugal",
+     lambda q, g: g in {"superior", "internacionais"}),
+]
+# o que cada banca menos conhecida é (aparece no filtro)
+EXAM_INFO = {
+    "MMLU": "Banco da Universidade da Califórnia em Berkeley com questões de provas como AP, GRE e USMLE, na tradução profissional da OpenAI.",
+    "MMLU-Pro": "Versão mais difícil do MMLU (TIGER-Lab, Universidade de Waterloo), com problemas de livros de STEM. Ficam 5 das 10 alternativas originais.",
+    "USMLE": "Exame de licença médica dos Estados Unidos (dataset MedQA), traduzido para o português.",
+    "ENARE": "Exame Nacional de Residência: residência médica e multiprofissional.",
+    "Revalida": "Exame Nacional de Revalidação de Diplomas Médicos (INEP).",
+    "ENADE": "Exame Nacional de Desempenho dos Estudantes (INEP), por curso de graduação.",
+    "POSCOMP": "Exame nacional da SBC para ingresso na pós-graduação em Computação.",
+    "Exame Nacional (Portugal)": "Exames nacionais do ensino secundário de Portugal.",
+    "OAB": "Exame de Ordem Unificado, 1ª fase.",
+    "APMBB": "Academia de Polícia Militar do Barro Branco (PM-SP).",
+    "EAM": "Escola de Aprendizes-Marinheiros.",
+    "CFO-BM": "Curso de Formação de Oficiais do Corpo de Bombeiros Militar.",
+    "ENCCEJA": "Exame Nacional para Certificação de Competências de Jovens e Adultos.",
+}
 
 
 # as próprias regras entram na versão: mudar só a classificação também invalida o índice guardado na aba
@@ -145,6 +260,8 @@ def main():
         classify(q)
         q["d"] = calibrate(q)
         audited(q)
+        if q["k"] == "text" and q["e"] != "Waterlearning" and q.get("stem"):
+            q["stem"] = breathe(q["stem"])
     qs = [q for q in qs if not q.get("drop")]
     qs.sort(key=lambda q: (q["s"], q["e"], q["y"] or 0, q["id"]))
 
@@ -194,8 +311,10 @@ def main():
             # o difícil de FUVEST, UNICAMP e militares é vestibular comum e fica no Difícil
             if q["e"] in TOUGH or q.get("deep"):
                 flags |= F_DEEP
+            group = group_of(q["e"])
+            tracks = sum(1 << i for i, (*_, inside) in enumerate(TRACKS) if inside(q, group))
             index.append([q["id"], subj_ids.index(q["s"]), exams.index(q["e"]), q["y"] or 0,
-                          topic_ids.index(q["t"]), q["d"], flags, cid, rating, sub_ids.index(q["u"]) if q["u"] else -1])
+                          topic_ids.index(q["t"]), q["d"], flags, cid, rating, sub_ids.index(q["u"]) if q["u"] else -1, tracks])
             payload[q["id"]] = {k: q[k] for k in ("k", "stem", "opts", "ans", "n", "imgs", "exp", "src", "book") if q.get(k) is not None}
         (chunks_dir / f"{cid}.json").write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
 
@@ -214,6 +333,9 @@ def main():
         "subjects": subjects, "exams": exams, "military": sorted(MILITARY & set(exams)),
         "total": len(qs), "theory": theory, "version": version,
         "sims": json.loads(cut.read_text(encoding="utf-8")) if cut.exists() else {},
+        "groups": [{"id": gid, "name": name, "exams": [i for i, e in enumerate(exams) if group_of(e) == gid]} for gid, name in GROUPS],
+        "tracks": [{"id": tid, "name": name, "desc": desc} for tid, name, desc, _ in TRACKS],
+        "examInfo": {e: info for e, info in EXAM_INFO.items() if e in exams},
     }
     (PUBLIC / "meta.json").write_text(json.dumps(meta, ensure_ascii=False), encoding="utf-8")
     (PUBLIC / "index.json").write_text(json.dumps(index, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

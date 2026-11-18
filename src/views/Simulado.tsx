@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { loadQuestion, type Bank } from '../core/data'
+import { countBy, loadQuestion, trackName, trackRows, type Bank } from '../core/data'
 import { sounds } from '../core/sounds'
 import { store, useStore, type SimResult } from '../core/store'
 import { formatClock } from '../core/time'
 import { F_DEEP, type Question, type Row } from '../core/types'
+import { ExamGroups } from './FilterSheet'
 import { LETTERS, optionCount, QuestionView } from './QuestionView'
 
 const STANDARD_MIN_PER_Q = 3
@@ -35,18 +36,27 @@ function shuffle<T>(list: T[]): T[] {
   return a
 }
 
-/** Sorteia as questões equilibrando as matérias escolhidas. */
-function draw(bank: Bank, c: Config): { rows: Row[]; borrowed: number } {
-  const subjects = c.subjects.length ? c.subjects : bank.meta.subjects.map((_, i) => i)
+/**
+ * De onde sai o simulado: na prova oficial, as questões daquela banca (e só as matérias que ela cobra);
+ * no padrão, a trilha do aluno. Sem matéria marcada, valem as matérias que existem ali.
+ */
+function scope(bank: Bank, c: Config, track: string): { base: Row[]; subjects: number[] } {
   const examIdx = bank.meta.exams.indexOf(c.exam)
-  const own = (r: Row) =>
-    c.kind === 'militar' ? r.e === examIdx
-      : (c.exams.length ? c.exams.includes(r.e) : !(r.f & F_DEEP)) && (!c.diff || r.d === c.diff)
+  const base = c.kind === 'militar' ? bank.rows.filter((r) => r.e === examIdx) : trackRows(bank, track)
+  const present = [...countBy(base, 's').keys()].sort((a, b) => a - b)
+  return { base, subjects: c.subjects.length ? c.subjects.filter((s) => present.includes(s)) : present }
+}
+
+/** Sorteia as questões equilibrando as matérias escolhidas. */
+function draw(bank: Bank, c: Config, track: string): { rows: Row[]; borrowed: number } {
+  const { base, subjects } = scope(bank, c, track)
+  const examIdx = bank.meta.exams.indexOf(c.exam)
+  const own = (r: Row) => c.kind === 'militar' || ((c.exams.length ? c.exams.includes(r.e) : !(r.f & F_DEEP)) && (!c.diff || r.d === c.diff))
   const picked: Row[] = []
   let borrowed = 0
   subjects.forEach((s, k) => {
     const want = Math.floor(c.n / subjects.length) + (k < c.n % subjects.length ? 1 : 0)
-    const mine = shuffle(bank.rows.filter((r) => r.s === s && own(r))).slice(0, want)
+    const mine = shuffle(base.filter((r) => r.s === s && own(r))).slice(0, want)
     picked.push(...mine)
     if (c.kind === 'militar' && mine.length < want) {
       // banca ainda com poucas questões no banco: completa com as mais difíceis da matéria
@@ -58,8 +68,8 @@ function draw(bank: Bank, c: Config): { rows: Row[]; borrowed: number } {
   return { rows: picked, borrowed }
 }
 
-function available(bank: Bank, c: Config): number {
-  return draw(bank, { ...c, n: 100_000 }).rows.length
+function available(bank: Bank, c: Config, track: string): number {
+  return draw(bank, { ...c, n: 100_000 }, track).rows.length
 }
 
 export function Simulado({ bank, onFocusMode }: { bank: Bank; onFocusMode: (on: boolean) => void }) {
@@ -72,18 +82,19 @@ export function Simulado({ bank, onFocusMode }: { bank: Bank; onFocusMode: (on: 
   const [loading, setLoading] = useState(false)
   const patch = (p: Partial<Config>) => setConfig((c) => ({ ...c, ...p }))
   const spec = sims[config.exam]
-  const max = useMemo(() => available(bank, config), [bank, config])
+  const track = st.s.settings.track
+  const max = useMemo(() => available(bank, config, track), [bank, config, track])
   const n = Math.min(config.n, max)
   const minutes = config.kind === 'militar' && spec ? Math.round(n * spec.minutesPerQuestion) : n * STANDARD_MIN_PER_Q
+  const { base, subjects: inScope } = useMemo(() => scope(bank, { ...config, subjects: [] }, track), [bank, config, track])
   const ownCount = useMemo(() => {
-    const e = bank.meta.exams.indexOf(config.exam)
-    const subj = config.subjects.length ? config.subjects : bank.meta.subjects.map((_, i) => i)
-    return bank.rows.filter((r) => r.e === e && subj.includes(r.s)).length
-  }, [bank, config.exam, config.subjects])
+    const subj = config.subjects.length ? config.subjects : inScope
+    return base.filter((r) => subj.includes(r.s)).length
+  }, [base, config.subjects, inScope])
 
   const start = async () => {
     setLoading(true)
-    const { rows, borrowed } = draw(bank, { ...config, n })
+    const { rows, borrowed } = draw(bank, { ...config, n }, track)
     const ordered = shuffle(rows).sort((a, b) => a.s - b.s)
     const questions = await Promise.all(ordered.map(loadQuestion))
     setLoading(false)
@@ -128,15 +139,16 @@ export function Simulado({ bank, onFocusMode }: { bank: Bank; onFocusMode: (on: 
       <h1>Simulado</h1>
       <div className="segmented wide">
         <button className={config.kind === 'padrao' ? 'on' : ''} onClick={() => patch({ kind: 'padrao' })}>Padrão</button>
-        <button className={config.kind === 'militar' ? 'on' : ''} onClick={() => patch({ kind: 'militar', n: 20 })} disabled={!milExams.length}>Militar</button>
+        <button className={config.kind === 'militar' ? 'on' : ''} onClick={() => patch({ kind: 'militar', n: 20, subjects: [] })}
+          disabled={!milExams.length} title="Cronômetro oficial e nota de corte: ITA, EsPCEx, OAB">Prova oficial</button>
       </div>
 
       {config.kind === 'militar' && spec ? (
         <section>
-          <h3>Instituição</h3>
+          <h3>Prova</h3>
           <div className="chips">
             {milExams.map((e) => (
-              <button key={e} className={`chip ${config.exam === e ? 'on' : ''}`} onClick={() => patch({ exam: e })}>{e}</button>
+              <button key={e} className={`chip ${config.exam === e ? 'on' : ''}`} title={sims[e].name} onClick={() => patch({ exam: e, subjects: [] })}>{e}</button>
             ))}
           </div>
           <p className="muted">{spec.format}</p>
@@ -147,14 +159,10 @@ export function Simulado({ bank, onFocusMode }: { bank: Bank; onFocusMode: (on: 
         </section>
       ) : (
         <>
+          <p className="muted">Questões de <b>{trackName(bank, track)}</b>. O objetivo se troca na barra da prática.</p>
           <section>
-            <h3>Vestibular</h3>
-            <div className="chips">
-              {bank.meta.exams.map((e, i) => (
-                <button key={e} className={`chip ${config.exams.includes(i) ? 'on' : ''}`}
-                  onClick={() => patch({ exams: config.exams.includes(i) ? config.exams.filter((x) => x !== i) : [...config.exams, i] })}>{e}</button>
-              ))}
-            </div>
+            <h3>Prova</h3>
+            <ExamGroups bank={bank} rows={base} selected={config.exams} onChange={(exams) => patch({ exams })} />
           </section>
           <section>
             <h3>Dificuldade</h3>
@@ -170,10 +178,10 @@ export function Simulado({ bank, onFocusMode }: { bank: Bank; onFocusMode: (on: 
       <section>
         <h3>Matérias</h3>
         <div className="chips">
-          {bank.meta.subjects.map((s, i) => (
+          {bank.meta.subjects.map((s, i) => inScope.includes(i) ? (
             <button key={s.id} className={`chip ${config.subjects.includes(i) ? 'on' : ''}`}
               onClick={() => patch({ subjects: config.subjects.includes(i) ? config.subjects.filter((x) => x !== i) : [...config.subjects, i] })}>{s.name}</button>
-          ))}
+          ) : null)}
         </div>
       </section>
 

@@ -91,7 +91,7 @@ export function searchAll(meta: Meta, rows: Row[], raw: string, limit = 8): Hit[
   })
   meta.exams.forEach((e, ei) => {
     const sc = bestOf(query, [e])
-    if (sc) hits.push({ kind: 'exam', index: ei, label: e, hint: 'Vestibular', count: byExam.get(ei) ?? 0, sc: sc + 4 })
+    if (sc) hits.push({ kind: 'exam', index: ei, label: e, hint: 'Prova', count: byExam.get(ei) ?? 0, sc: sc + 4 })
   })
   return hits.filter((h) => h.count > 0).sort((a, b) => b.sc - a.sc || b.count - a.count).slice(0, limit)
 }

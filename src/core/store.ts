@@ -50,6 +50,10 @@ export interface Settings {
   weeklyGoal: number
   pomoFocus: number
   pomoBreak: number
+  /** objetivo do aluno (meta.tracks); o banco inteiro é "tudo" */
+  track: string
+  /** o aluno já escolheu o objetivo (ou dispensou a pergunta) */
+  trackChosen: boolean
 }
 
 interface Saved {
@@ -102,7 +106,8 @@ class DB extends Dexie {
 function fresh(): Saved {
   return {
     elo: {}, streak: EMPTY_STREAK, days: {}, topics: {}, prog: START_PROG, errRun: {},
-    settings: { sound: true, theme: 'dark', weeklyGoal: 100, pomoFocus: 25, pomoBreak: 5 },
+    // quem chega abre direto em ENEM e vestibulares, que era o banco inteiro antes das trilhas
+    settings: { sound: true, theme: 'dark', weeklyGoal: 100, pomoFocus: 25, pomoBreak: 5, track: 'vestibular', trackChosen: false },
     filter: EMPTY_FILTER, filterSig: '', combo: 0,
   }
 }
@@ -214,6 +219,21 @@ class Store implements ProgressView {
     const sameSubject = JSON.stringify([filter.subjects, filter.topics, filter.subs]) ===
       JSON.stringify([this.s.filter.subjects, this.s.filter.topics, this.s.filter.subs])
     this.s = { ...this.s, filter, prog: sameSubject ? this.s.prog : START_PROG }
+    this.persist()
+    this.emit()
+  }
+
+  /** troca o objetivo; o filtro recomeça vazio porque pode apontar para matérias que a trilha nova não tem */
+  setTrack(track: string) {
+    // objetivo novo é como livro novo: o Progressivo recomeça do primeiro degrau que a trilha tiver
+    this.s = { ...this.s, settings: { ...this.s.settings, track, trackChosen: true }, prog: START_PROG }
+    this.setFilter(EMPTY_FILTER)
+  }
+
+  /** acerta o degrau do Progressivo ao que o recorte tem (sem fixação, começa na aplicação) */
+  alignProg(level: Prog['level']) {
+    if (this.s.prog.level === level) return
+    this.s = { ...this.s, prog: { level, hist: [] } }
     this.persist()
     this.emit()
   }

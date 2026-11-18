@@ -12,7 +12,7 @@ PUBLIC = ROOT / "public" / "data"
 BOOKS = Path.home() / "Downloads" / "conteudo"
 
 TAXONOMY = json.loads((PIPE / "taxonomy.json").read_text(encoding="utf-8"))
-MILITARY = {"ITA", "IME", "AFA", "EFOMM", "EsPCEx", "EN", "CN", "EEAR", "ESA", "EPCAr", "CMRJ"}
+MILITARY = {"ITA", "IME", "AFA", "EFOMM", "EsPCEx", "EN", "CN", "EEAR", "ESA", "EPCAr", "CMRJ", "APMBB", "EAM", "CFO-BM"}
 
 # Elo inicial da questão por nível de dificuldade
 RATING = {1: 800, 2: 1050, 3: 1300}  # quem começa (Elo 1000) acerta ~76% do nível 1
@@ -25,14 +25,25 @@ def norm(text):
     return re.sub(r"\s+", " ", text.lower())
 
 
+_PATTERNS = {}
+
+
+def _pattern(kw):
+    p = _PATTERNS.get(kw)
+    if p is None:
+        # palavra-chave casa como prefixo de palavra
+        p = _PATTERNS[kw] = re.compile((r"(?<![a-z0-9])" if kw[0].isalnum() else "") + re.escape(kw))
+    return p
+
+
 def _score(ntext, kws):
     total = 0
     for kw in kws:
-        # palavra-chave casa como prefixo de palavra; termos compostos valem mais
-        pat = (r"(?<![a-z0-9])" if kw[0].isalnum() else "") + re.escape(kw)
-        hits = len(re.findall(pat, ntext))
+        if kw not in ntext:  # filtro barato: a maioria das palavras-chave nem aparece no texto
+            continue
+        hits = len(_pattern(kw).findall(ntext))
         if hits:
-            total += min(hits, 3) * (2 if " " in kw.strip() else 1)
+            total += min(hits, 3) * (2 if " " in kw.strip() else 1)  # termos compostos valem mais
     return total
 
 
@@ -40,6 +51,42 @@ def topic_scores(text, subject):
     ntext = norm(text)
     subj = next(s for s in TAXONOMY["subjects"] if s["id"] == subject)
     return {t["id"]: _score(ntext, t["kw"]) for t in subj["topics"]}
+
+
+def pick_subject(text, candidates):
+    """matéria mais provável entre as candidatas, pela soma das palavras-chave dos tópicos de cada uma"""
+    scores = {s: sum(topic_scores(text, s).values()) for s in candidates}
+    return max(scores, key=scores.get)
+
+
+# tópico de quem não casou com nada: o mais genérico da matéria
+DEFAULT_TOPIC = {"mat": "mat-aritmetica", "fis": "fis-energia", "his": "his-brasil-contemporaneo", "qui": "qui-inorganica",
+                 "bio": "bio-ecologia", "geo": "geo-globalizacao", "fil": "fil-etica", "soc": "soc-contemporanea",
+                 "por": "por-interpretacao", "ing": "ing-interpretacao", "esp": "esp-interpretacao", "dir": "dir-civil",
+                 "med": "med-preventiva", "sau": "sau-saude-coletiva", "psi": "psi-clinica", "eco": "eco-administracao",
+                 "com": "com-programacao", "ger": "ger-gerais"}
+
+
+def classify_topic(text, subject, hint=""):
+    """tópico pelo texto; a pista da fonte (tags, área, capítulo) pesa triplo"""
+    topic, _ = best_topic(f"{hint} " * 3 + text if hint else text, subject, DEFAULT_TOPIC[subject])
+    return topic
+
+
+# enunciado que depende de figura que a fonte não trouxe (o dataset é "sem imagem")
+NEEDS_FIGURE = re.compile(r"\b(figura|grafico|imagem|charge|tirinha|tira|cartum|fotografia|foto|ilustracao|esquema|diagrama|mapa|"
+                          r"quadrinho|cartaz|infografico|gravura|pintura|tela)\s+(a seguir|abaixo|acima|ao lado|seguinte|apresentad|mostrad|representad)"
+                          r"|\b(observe|analise|veja|considere|examine|leia) (a|o|as|os) (figura|grafico|imagem|charge|tirinha|cartum|fotografia|foto|"
+                          r"ilustracao|esquema|diagrama|mapa|quadrinho|cartaz|infografico|gravura|pintura|tela)s?\b"
+                          r"|\b(na|no|nas|nos|da|do|pela|pelo) (figura|grafico|imagem|charge|tirinha|cartum|fotografia|ilustracao|esquema|mapa|cartaz|infografico)s?\b"
+                          # casos clínicos: "uma fotomicrografia é mostrada", "(mostradas na imagem)", "o ECG abaixo"
+                          r"|\b(e|sao|esta|estao|foi|foram) (mostrad|exibid|apresentad)[oa]s?( abaixo| a seguir| ao lado)?\s*[.,:;)]"
+                          r"|\bmostrad[oa]s? (abaixo|a seguir|ao lado)|\b(fotomicrografia|micrografia|eletrocardiograma|ecg|radiografia|tomografia)"
+                          r" (abaixo|a seguir|ao lado|mostrad|exibid)")
+
+
+def needs_figure(text):
+    return bool(NEEDS_FIGURE.search(norm(text)))
 
 
 def reject_scores(text, areas):

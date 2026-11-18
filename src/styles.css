@@ -331,6 +331,37 @@ kbd {
 .coach .btn { flex: none; }
 .coach-close { flex: none; font-size: 0.8rem; color: var(--muted); }
 .coach.quiet { background: none; border-color: transparent; padding: 0 2px; color: var(--muted); }
+.coach.track-ask { flex-wrap: wrap; align-items: flex-start; }
+.coach.track-ask > span { flex: 1 1 260px; padding-top: 3px; }
+.coach.track-ask .chips { flex: 1 1 100%; order: 3; }
+
+/* ---------- trilha (objetivo do aluno) ---------- */
+.track { position: relative; }
+.track-btn { display: inline-flex; align-items: center; gap: 6px; padding: 0.22em 0.75em; border-radius: 99px; border: 1px solid var(--line);
+  background: var(--bg-2); color: var(--text); font-size: 0.84rem; font-weight: 600; }
+.track-btn:hover, .track-btn[aria-expanded='true'] { border-color: var(--accent); }
+.track-btn svg { color: var(--accent); }
+.track-btn span { color: var(--muted); font-size: 0.75em; }
+.track-menu { position: absolute; z-index: 30; top: calc(100% + 6px); left: 0; width: min(380px, calc(100vw - 32px)); margin: 0; padding: 6px; list-style: none;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); animation: rise 0.15s ease-out; }
+.track-menu button { width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 1px 10px; text-align: left; padding: 0.55em 0.75em;
+  border: 0; border-radius: 10px; background: none; color: var(--text-2); }
+.track-menu button:hover { background: var(--bg-2); }
+.track-menu button.on { background: var(--accent-soft); }
+.track-menu strong { color: var(--text); font-size: 0.92rem; }
+.track-menu span { grid-column: 1; font-size: 0.78rem; color: var(--muted); }
+.track-menu .track-count { grid-column: 2; grid-row: 1; align-self: center; font-variant-numeric: tabular-nums; }
+
+/* ---------- bancas agrupadas no filtro ---------- */
+.sheet-track { margin: 10px 0 2px; font-size: 0.85rem; }
+.sheet-track b { color: var(--text); }
+.exam-group { margin-bottom: 8px; }
+.exam-group > button.group-head { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 6px; padding: 0; border: 0; background: none;
+  color: var(--text-2); font-size: 0.82rem; font-weight: 600; }
+.exam-group > button.group-head:hover { color: var(--text); }
+.exam-group > button.group-head .caret { display: inline-block; transition: transform 0.15s; font-size: 0.7em; color: var(--muted); }
+.exam-group.open > button.group-head .caret { transform: rotate(90deg); }
+.exam-group .chip[title] { text-decoration: underline dotted color-mix(in srgb, var(--muted) 60%, transparent); text-underline-offset: 3px; }
 
 .today { display: inline-flex; align-items: center; gap: 7px; }
 .today b { color: var(--text); }

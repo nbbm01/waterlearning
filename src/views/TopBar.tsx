@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { Bank } from '../core/data'
-import { isEmptyFilter } from '../core/filters'
+import { trackRows, type Bank } from '../core/data'
+import { isEmptyFilter, select } from '../core/filters'
 import { searchAll, type Hit } from '../core/search'
 import { useStore } from '../core/store'
 import { visibleStreak } from '../core/streak'
 import { dayNumber } from '../core/time'
-import { EMPTY_FILTER } from '../core/types'
+import { ALL_TRACK, EMPTY_FILTER } from '../core/types'
 
 export type View = 'practice' | 'review' | 'sim' | 'details'
 
@@ -45,8 +45,8 @@ function Search({ bank, onPick }: { bank: Bank; onPick: (h: Hit) => void }) {
   return (
     <div className="search">
       <input
-        ref={input} type="search" value={q} placeholder="Buscar tópico: logaritmo, cinemática, Era Vargas…"
-        aria-label="Buscar tópico, matéria ou vestibular" role="combobox" aria-expanded={open && hits.length > 0} aria-controls="search-hits"
+        ref={input} type="search" value={q} placeholder="Buscar: logaritmo, Era Vargas, cardiologia, OAB…"
+        aria-label="Buscar tópico, matéria ou prova" role="combobox" aria-expanded={open && hits.length > 0} aria-controls="search-hits"
         onChange={(e) => { setQ(e.target.value); setActive(0); setOpen(true) }}
         onFocus={() => setOpen(true)} onBlur={() => setTimeout(() => setOpen(false), 120)}
         onKeyDown={(e) => {
@@ -92,6 +92,9 @@ export function TopBar({ bank, view, go, onOpenFilters }: Props) {
     else if (h.kind === 'sub') f.subs = [h.index]
     else if (h.kind === 'exam') f.exams = [h.index]
     else f.subjects = [h.index]
+    // a busca olha o banco inteiro; se o achado está fora do objetivo atual, vai para a primeira trilha que o tem
+    const has = (track: string) => select(trackRows(bank, track), f, store).length > 0
+    if (!has(store.s.settings.track)) store.setTrack(bank.meta.tracks.find((t) => has(t.id))?.id ?? ALL_TRACK)
     store.setFilter(f)
     go('practice')
   }

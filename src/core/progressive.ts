@@ -14,6 +14,19 @@ export const MASTERY = { window: 8, need: 7 }
 /** dificuldade persistente: 3 erros nas últimas 4 voltam um degrau */
 export const SLIP = { window: 4, wrong: 3 }
 
+/**
+ * O degrau que o recorte permite. OAB e Medicina não têm questões de fixação: ali o primeiro degrau é o de
+ * aplicação, e dizer "Fixação" mostrando questão média quebra a confiança no rótulo.
+ */
+export function levelFor(level: Prog['level'], available: ReadonlySet<number>): Prog['level'] {
+  const have = [1, 2, 3].filter((d) => available.has(d)) as Prog['level'][]
+  if (!have.length) return level
+  const clamped = Math.min(Math.max(level, have[0]), have[have.length - 1])
+  // buraco no meio (só fácil e difícil): o mais próximo, preferindo descer, como na escolha da questão
+  return have.includes(clamped as Prog['level']) ? (clamped as Prog['level'])
+    : have.reduce((best, d) => (Math.abs(d - clamped) < Math.abs(best - clamped) ? d : best))
+}
+
 export function masteredCount(p: Prog): number {
   return (p.hist ?? []).filter(Boolean).length
 }

@@ -16,8 +16,15 @@ def main():
     errors, ids = [], set()
     totals = collections.Counter()
     kinds = collections.Counter()
+    tracks = collections.Counter()
+    group_of = {e: g["name"] for g in meta["groups"] for e in g["exams"]}
     for row in index:
-        qid, s, e, y, t, d, flags, cid, rating, u = row
+        qid, s, e, y, t, d, flags, cid, rating, u, mask = row
+        if not mask:
+            errors.append(f"{qid}: fora de todas as trilhas ({meta['exams'][e]}, {meta['subjects'][s]['name']})")
+        for i, tr in enumerate(meta["tracks"]):
+            if mask & (1 << i):
+                tracks[tr["name"]] += 1
         if qid in ids:
             errors.append(f"{qid}: id duplicado")
         ids.add(qid)
@@ -49,15 +56,16 @@ def main():
         for p in paths:
             if not (ROOT / "public" / p).exists():
                 errors.append(f"{qid}: imagem ausente {p}")
-        totals[(meta["subjects"][s]["name"], meta["exams"][e])] += 1
+        totals[(meta["subjects"][s]["name"], group_of.get(e, "?"))] += 1
         kinds[q["k"]] += 1
 
-    print(f"Total: {len(index)} questões  ({kinds['text']} em texto, {kinds['image']} em recorte)")
-    by_subject = collections.Counter()
-    for (s, e), n in sorted(totals.items()):
+    print(f"Total: {len(index)} questões  ({kinds['text']} em texto, {kinds['image']} em recorte), {len(meta['exams'])} provas")
+    by_subject, by_group = collections.Counter(), collections.Counter()
+    for (s, g), n in totals.items():
         by_subject[s] += n
-        print(f"  {s:11s} {e:10s} {n}")
-    print("  " + "  ".join(f"{s}: {n}" for s, n in by_subject.items()))
+        by_group[g] += n
+    for title, counter in (("Matérias", by_subject), ("Grupos de provas", by_group), ("Trilhas", tracks)):
+        print(f"  {title}: " + ", ".join(f"{k} {n}" for k, n in counter.most_common()))
     if errors:
         print(f"\n{len(errors)} problema(s):")
         for e in errors[:40]:

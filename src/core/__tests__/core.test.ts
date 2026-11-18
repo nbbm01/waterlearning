@@ -8,7 +8,7 @@ import { GRADUATE_AFTER, schedule } from '../srs'
 import { EMPTY_STREAK, studyOn, visibleStreak, type Streak } from '../streak'
 import { EMPTY_FILTER, F_MILITARY, type Row } from '../types'
 
-const row = (p: Partial<Row>): Row => ({ id: 'q', s: 0, e: 0, y: 2020, t: 0, d: 2, f: 0, c: 0, r: 1250, u: -1, ...p })
+const row = (p: Partial<Row>): Row => ({ id: 'q', s: 0, e: 0, y: 2020, t: 0, d: 2, f: 0, c: 0, r: 1250, u: -1, k: -1, ...p })
 const none: ProgressView = { seen: () => false, due: () => false }
 
 describe('srs', () => {
@@ -142,7 +142,7 @@ describe('busca de tópico', async () => {
       { id: 'f', name: 'Funções, Equações e Inequações', aliases: ['função afim', 'bhaskara'], subs: [{ id: 'e1', name: 'Equação do 1º grau', aliases: ['equação do primeiro grau'] }] },
       { id: 'l', name: 'Logaritmos e Exponenciais', aliases: ['logaritmo'], subs: [] },
     ] }],
-    version: 't', exams: ['ENEM', 'ITA'], military: [], total: 2, theory: {}, sims: {},
+    version: 't', exams: ['ENEM', 'ITA'], military: [], total: 2, theory: {}, sims: {}, groups: [], tracks: [], examInfo: {},
   }
   const rows = [row({ id: 'a', t: 0, u: 0 }), row({ id: 'b', t: 1, e: 1 })]
   it('entende "primeiro" como "1º" e ignora "do"', () => {
@@ -155,6 +155,50 @@ describe('busca de tópico', async () => {
   })
   it('acha banca pelo nome', () => {
     expect(searchAll(meta, rows, 'ita')[0]).toMatchObject({ kind: 'exam', label: 'ITA' })
+  })
+})
+
+describe('degrau que o recorte permite', async () => {
+  const { levelFor } = await import('../progressive')
+  it('sem fixação (OAB, Medicina), o primeiro degrau é a aplicação', () => {
+    expect(levelFor(1, new Set([2, 3]))).toBe(2)
+  })
+  it('sem desafio, não fica preso num degrau vazio', () => {
+    expect(levelFor(3, new Set([1, 2]))).toBe(2)
+  })
+  it('recorte completo não muda nada', () => {
+    expect(levelFor(1, new Set([1, 2, 3]))).toBe(1)
+    expect(levelFor(3, new Set([1, 2, 3]))).toBe(3)
+  })
+  it('buraco no meio: o mais próximo, descendo', () => {
+    expect(levelFor(2, new Set([1, 3]))).toBe(1)
+  })
+})
+
+describe('trilhas (objetivo do aluno)', async () => {
+  const { trackRows, trackName, countBy } = await import('../data')
+  const meta = {
+    subjects: [], version: 't', exams: ['ENEM', 'OAB'], military: [], total: 3, theory: {}, sims: {}, examInfo: {},
+    groups: [{ id: 'enem', name: 'ENEM', exams: [0] }, { id: 'oab', name: 'OAB', exams: [1] }],
+    tracks: [{ id: 'vestibular', name: 'ENEM e vestibulares', desc: '' }, { id: 'oab', name: 'OAB e Direito', desc: '' }],
+  }
+  // bit 0 = vestibular, bit 1 = oab; -1 = índice antigo, sem trilhas
+  const rows = [row({ id: 'enem', k: 1 }), row({ id: 'oab', k: 2, e: 1, s: 1 }), row({ id: 'velha', k: -1 })]
+  const bank = { meta, rows, byId: new Map(rows.map((r) => [r.id, r])), topics: [], subs: [] }
+  it('recorta o banco pela trilha; questão de índice antigo vale para todas', () => {
+    expect(trackRows(bank, 'vestibular').map((r) => r.id)).toEqual(['enem', 'velha'])
+    expect(trackRows(bank, 'oab').map((r) => r.id)).toEqual(['oab', 'velha'])
+  })
+  it('"tudo" e trilha desconhecida devolvem o banco inteiro', () => {
+    expect(trackRows(bank, 'tudo')).toBe(rows)
+    expect(trackRows(bank, 'sumiu')).toBe(rows)
+    expect(trackName(bank, 'tudo')).toBe('Todas as provas')
+  })
+  it('guarda o recorte: a mesma trilha devolve a mesma lista', () => {
+    expect(trackRows(bank, 'oab')).toBe(trackRows(bank, 'oab'))
+  })
+  it('conta por matéria', () => {
+    expect(countBy(rows, 's')).toEqual(new Map([[0, 2], [1, 1]]))
   })
 })
 

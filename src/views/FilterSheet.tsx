@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { skillKey, type Bank } from '../core/data'
+import { countBy, skillKey, trackName, trackRows, type Bank } from '../core/data'
 import { select } from '../core/filters'
 import { fold } from '../core/search'
 import { store } from '../core/store'
@@ -12,6 +12,71 @@ const DIFFS: [Difficulty, string, string][] = [
 ]
 
 const toggle = (list: number[], i: number) => (list.includes(i) ? list.filter((x) => x !== i) : [...list, i])
+const n = (v: number) => v.toLocaleString('pt-BR')
+// grupo com até tantas bancas fica sempre aberto; nos maiores, a lista abre com um clique e mostra as mais frequentes
+const SMALL_GROUP = 8
+const FIRST_EXAMS = 30
+
+/** Bancas por grupo (ENEM, Vestibulares, Militares...), só as que a trilha tem, das mais frequentes às raras. */
+export function ExamGroups({ bank, rows, selected, onChange }: {
+  bank: Bank; rows: Row[]; selected: number[]; onChange: (exams: number[]) => void
+}) {
+  const counts = useMemo(() => countBy(rows, 'e'), [rows])
+  const [open, setOpen] = useState<string | null>(null)
+  const [query, setQuery] = useState('')
+  const [all, setAll] = useState(false)
+  const groups = bank.meta.groups.length ? bank.meta.groups : [{ id: 'all', name: 'Provas', exams: bank.meta.exams.map((_, i) => i) }]
+  const q = fold(query)
+  return (
+    <>
+      {groups.map((g) => {
+        const exams = g.exams.filter((i) => counts.get(i)).sort((a, b) => counts.get(b)! - counts.get(a)!)
+        if (!exams.length) return null
+        const total = exams.reduce((s, i) => s + counts.get(i)!, 0)
+        const chosen = exams.filter((i) => selected.includes(i))
+        const small = exams.length <= SMALL_GROUP
+        const isOpen = small || open === g.id
+        const shown = small ? exams : exams.filter((i) => !q || fold(bank.meta.exams[i]).includes(q))
+        const everything = chosen.length === exams.length
+        return (
+          <div key={g.id} className={`exam-group ${isOpen ? 'open' : ''}`}>
+            {small ? <span className="group-label">{g.name}</span> : (
+              <button className="group-head" aria-expanded={isOpen} onClick={() => { setOpen(isOpen ? null : g.id); setQuery(''); setAll(false) }}>
+                <span className="caret" aria-hidden="true">▶</span>
+                {g.name} <span className="chip-count">{exams.length} provas · {n(total)} questões{chosen.length ? ` · ${chosen.length} marcadas` : ''}</span>
+              </button>
+            )}
+            {isOpen && (
+              <>
+                {!small && exams.length > FIRST_EXAMS && (
+                  <input className="mini-input" placeholder={`buscar entre as ${exams.length} provas`} value={query} autoFocus
+                    onChange={(e) => setQuery(e.target.value)} aria-label={`Buscar prova em ${g.name}`} style={{ marginBottom: 6 }} />
+                )}
+                <div className="chips">
+                  {!small && (
+                    <button className={`chip small ${everything ? 'on' : ''}`}
+                      onClick={() => onChange(everything ? selected.filter((i) => !exams.includes(i)) : [...new Set([...selected, ...exams])])}>
+                      {everything ? 'Desmarcar todas' : 'Todas'}
+                    </button>
+                  )}
+                  {(all || q ? shown : shown.slice(0, FIRST_EXAMS)).map((i) => (
+                    <button key={i} className={`chip small ${selected.includes(i) ? 'on' : ''}`} title={bank.meta.examInfo[bank.meta.exams[i]]}
+                      onClick={() => onChange(toggle(selected, i))}>
+                      {bank.meta.exams[i]} <span className="chip-count">{n(counts.get(i)!)}</span>
+                    </button>
+                  ))}
+                  {!all && !q && shown.length > FIRST_EXAMS && (
+                    <button className="link" onClick={() => setAll(true)}>mais {shown.length - FIRST_EXAMS}</button>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        )
+      })}
+    </>
+  )
+}
 
 interface Props {
   bank: Bank
@@ -24,14 +89,22 @@ export function FilterSheet({ bank, initial, onApply, onClose }: Props) {
   const [f, setF] = useState<Filter>({ ...initial, subs: initial.subs ?? [] })
   const [topicQuery, setTopicQuery] = useState('')
   const unlocked = (r: Row) => store.elo(skillKey(bank, r)) >= DEEP_UNLOCK
-  const count = useMemo(() => select(bank.rows, f, store, unlocked).length, [bank, f])
-  // quantas questões cada subtópico tem com os demais filtros aplicados
-  const subCounts = useMemo(() => {
-    const out: Record<number, number> = {}
-    for (const r of select(bank.rows, { ...f, subs: [], topics: [] }, store, unlocked)) if (r.u >= 0) out[r.u] = (out[r.u] ?? 0) + 1
-    return out
-  }, [bank, f])
-  const years = useMemo(() => [...new Set(bank.rows.map((r) => r.y).filter(Boolean))].sort((a, b) => b - a), [bank])
+  // tudo aqui é dentro da trilha (objetivo) do aluno
+  const track = store.s.settings.track
+  const rows = trackRows(bank, track)
+  const count = useMemo(() => select(rows, f, store, unlocked).length, [rows, f])
+  const subjectCounts = useMemo(() => countBy(rows, 's'), [rows])
+  // quantas questões cada tópico e subtópico têm com os demais filtros aplicados
+  const [topicCounts, subCounts] = useMemo(() => {
+    const topics: Record<number, number> = {}
+    const subs: Record<number, number> = {}
+    for (const r of select(rows, { ...f, subs: [], topics: [] }, store, unlocked)) {
+      topics[r.t] = (topics[r.t] ?? 0) + 1
+      if (r.u >= 0) subs[r.u] = (subs[r.u] ?? 0) + 1
+    }
+    return [topics, subs]
+  }, [rows, f])
+  const years = useMemo(() => [...new Set(rows.map((r) => r.y).filter(Boolean))].sort((a, b) => b - a), [rows])
   const patch = (p: Partial<Filter>) => setF((cur) => ({ ...cur, ...p }))
 
   useEffect(() => {
@@ -58,9 +131,10 @@ export function FilterSheet({ bank, initial, onApply, onClose }: Props) {
           const subHits = subs.filter((sb) => tq && matchesQuery(sb.name, def?.subs.find((x) => x.id === sb.id)?.aliases ?? []))
           return { ...t, ti, subs, show: !tq || (def && matchesQuery(t.name, def.aliases)) || subHits.length > 0, subHits }
         })
-        .filter((t) => t.subject === si && t.show),
+        // tópico sem questão na trilha (ou nos demais filtros) só atrapalha a escolha
+        .filter((t) => t.subject === si && t.show && (topicCounts[t.ti] || f.topics.includes(t.ti))),
     }))
-    .filter((g, si) => (!f.subjects.length || f.subjects.includes(si)) && g.topics.length)
+    .filter((g, si) => (!f.subjects.length || f.subjects.includes(si)) && subjectCounts.get(si) && g.topics.length)
 
   const toggleTopic = (ti: number) => {
     const on = f.topics.includes(ti)
@@ -72,7 +146,7 @@ export function FilterSheet({ bank, initial, onApply, onClose }: Props) {
     ['pending', 'Revisões pendentes', `${store.dueCards().length} para hoje`],
     ['unseen', 'Questões inéditas', 'Só o que você ainda não fez'],
     ['classic', 'Clássicas', 'Tópicos mais cobrados de cada banca'],
-    ['military', 'Apenas militares', bank.meta.military.join(', ') || 'ITA, IME, AFA, EFOMM, EsPCEx'],
+    ['military', 'Apenas militares', 'EsPCEx, ESA, EEAR, AFA, EFOMM, ITA, IME, Colégio Naval e outras'],
     ['commented', 'Com resolução comentada', 'Explicação passo a passo'],
     ['deep', 'Aprofundamento', 'ITA, IME e olimpíada (liberadas sozinhas quando seu Elo chega lá)'],
   ]
@@ -86,24 +160,25 @@ export function FilterSheet({ bank, initial, onApply, onClose }: Props) {
         </header>
 
         <div className="sheet-body">
+          <p className="muted sheet-track">
+            Dentro de <b>{trackName(bank, track)}</b> ({n(rows.length)} questões). O objetivo se troca na barra da prática.
+          </p>
+
           <section>
             <h3>Matéria</h3>
             <div className="chips">
-              {bank.meta.subjects.map((s, i) => (
+              {bank.meta.subjects.map((s, i) => subjectCounts.get(i) ? (
                 <button key={s.id} className={`chip ${f.subjects.includes(i) ? 'on' : ''}`}
-                  onClick={() => patch({ subjects: toggle(f.subjects, i), topics: [], subs: [] })}>{s.name}</button>
-              ))}
+                  onClick={() => patch({ subjects: toggle(f.subjects, i), topics: [], subs: [] })}>
+                  {s.name} <span className="chip-count">{n(subjectCounts.get(i)!)}</span>
+                </button>
+              ) : null)}
             </div>
           </section>
 
           <section>
-            <h3>Vestibular</h3>
-            <div className="chips">
-              {bank.meta.exams.map((e, i) => (
-                <button key={e} className={`chip ${f.exams.includes(i) ? 'on' : ''}`}
-                  onClick={() => patch({ exams: toggle(f.exams, i) })}>{e}</button>
-              ))}
-            </div>
+            <h3>Prova</h3>
+            <ExamGroups bank={bank} rows={rows} selected={f.exams} onChange={(exams) => patch({ exams })} />
           </section>
 
           <section>
