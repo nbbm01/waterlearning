@@ -196,7 +196,7 @@ O pedido: *"ele é atropelado por concorrentes melhores… quero no mínimo 50 m
 
 **Concursos de verdade, todo dia.** Sobrava um ponto fraco no que mais se pediu: só 714 questões reais de concurso. A API das Questões tem as matérias certas (Português, Raciocínio Lógico, Informática, Direito Constitucional e Administrativo, Ética no Serviço Público…). O modo `amplo` do `qdq_fetch.py` faz rodízio entre elas, uma página por vez, e guarda o cursor. `scripts/crescer.sh` é o laço diário: gasta a cota, importa e reconstrói. A primeira rodada trouxe 225 questões.
 
-**Auditoria em paralelo.** Depois do caso das polias, quatro agentes auditaram ao mesmo tempo, por amostragem, a classificação de cada bloco de matérias (Exatas; Saúde e Biologia; Humanas; Linguagens e Direito). Eles só leram e relataram, e as correções foram aplicadas depois, num lugar só.
+**Auditoria em paralelo (pendente).** Depois do caso das polias, quatro agentes foram disparados para auditar ao mesmo tempo, por amostragem, a classificação de cada bloco de matérias (Exatas; Saúde e Biologia; Humanas; Linguagens e Direito). Eles só leem e relatam; as correções ficam para um lugar só. A rodada parou no limite de uso da sessão antes dos relatórios; um deles já tinha achado mais padrões de figura ausente nos casos clínicos ("ver anexo", "conforme imagem anexa"). Retomar essa auditoria é o próximo passo.
 
 ## Limites conhecidos e próximos passos
 - Recortes de livro dependem de OCR para a classificação. As regras pegam o padrão, mas uma revisão visual por subtópico (como a feita em equação do 1º grau) é o que garante. Os próximos candidatos são equação do 2º grau, inequações e funções.
