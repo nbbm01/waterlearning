@@ -7,12 +7,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from books import difficulty
-from common import PUBLIC, RAW, best_topic, write_out
+from common import PUBLIC, RAW, classify_topic, write_out
 
 SRC = RAW / "bluex-data"
-SUBJECTS = {"mathematics": "mat", "physics": "fis", "history": "his"}
+SUBJECTS = {"mathematics": "mat", "physics": "fis", "history": "his", "chemistry": "qui", "biology": "bio", "geography": "geo",
+            "philosophy": "fil", "portuguese": "por", "english": "ing"}
 EXAMS = {"USP": "FUVEST", "UNICAMP": "UNICAMP"}
-DEFAULT = {"mat": "mat-aritmetica", "fis": "fis-energia", "his": "his-brasil-contemporaneo"}
 OPT_PREFIX = re.compile(r"^\s*\(?[a-eA-E]\)\s*")
 
 
@@ -36,7 +36,8 @@ def main():
     by_exam = {}
     for f in files:
         d = json.loads(f.read_text(encoding="utf-8"))
-        subj = next((SUBJECTS[s] for s in d["subject"] if s in SUBJECTS), None)
+        # a fonte lista várias matérias por questão; a ordem de SUBJECTS decide (e mantém a classificação já auditada)
+        subj = next((v for k, v in SUBJECTS.items() if k in d["subject"]), None)
         if not subj or not d.get("answer") or d["answer"] not in "ABCDE":
             continue
         imgs = d.get("associated_images") or []
@@ -62,7 +63,7 @@ def main():
         exam = EXAMS[d["id"].split("_")[0]]
         year = int(d["id"].split("_")[1])
         plain = stem + " " + " ".join(o["t"] for o in opts)
-        topic, _ = best_topic(plain, subj, DEFAULT[subj])
+        topic = classify_topic(plain, subj)
         q = {"id": "bluex-" + d["id"].lower(), "s": subj, "e": exam, "y": year, "t": topic, "k": "text",
              "stem": stem, "opts": opts, "ans": "ABCDE".index(d["answer"]), "tags": [],
              "src": f"{exam} {year}, questão {d['number']}"}

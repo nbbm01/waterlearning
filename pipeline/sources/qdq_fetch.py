@@ -1,7 +1,8 @@
 """Baixa questões da API das Questões (apidasquestoes.com.br) com cache em disco e controle de cota.
 
 Cada questão entregue e cada gabarito consultado consomem cota; nada é pedido duas vezes.
-Uso: python3 qdq_fetch.py counts | fetch [orçamento]
+Uso: python3 qdq_fetch.py counts | fetch [orçamento] | concursos | amplo
+("amplo" é o laço diário das matérias de concurso; scripts/crescer.sh roda ele e reconstrói o banco)
 """
 import json
 import os
@@ -18,7 +19,7 @@ from common import RAW, ROOT
 API = "https://api.apidasquestoes.com.br/api/v1"
 CACHE = RAW / "qdq"
 RESERVE = 50  # nunca gasta a cota até o fim
-SUBJECTS = {10: "mat", 103: "fis", 109: "his"}
+SUBJECTS = {10: "mat", 103: "fis", 109: "his", 146: "qui"}
 # instituição/banca → rótulo no banco; ordem = prioridade
 TARGETS = [
     ("instituicaoId", 1795, "EsPCEx"),
@@ -103,7 +104,12 @@ def fetch(budget, only=None, subjects=None):
                 continue
             page_no = 0
             while True:
-                page = get("/questoes", {field: ident, "materiaId": mid, "page": page_no, "size": 50})
+                params = {field: ident, "materiaId": mid, "page": page_no, "size": 50}
+                cached = (CACHE / "http" / (urllib.parse.quote("/questoes?" + urllib.parse.urlencode(sorted(params.items())), safe="") + ".json")).exists()
+                if not cached and state["day"] is not None and state["day"] < 50 + DAY_RESERVE:
+                    print(f"cota do dia no fim ({state['day']}); rode de novo amanhã")
+                    return
+                page = get("/questoes", params)
                 if start is None:
                     start = state["left"]
                 for q in page["content"]:
@@ -112,6 +118,9 @@ def fetch(budget, only=None, subjects=None):
                     out = CACHE / "questions" / f"{q['id']}.json"
                     if out.exists():
                         continue
+                    if state["day"] is not None and state["day"] <= DAY_RESERVE:
+                        print(f"cota do dia no fim ({state['day']}); rode de novo amanhã")
+                        return
                     gab = get(f"/questoes/{q['id']}/gabarito")
                     out.parent.mkdir(parents=True, exist_ok=True)
                     out.write_text(json.dumps({"q": q, "gab": gab, "label": label, "subject": subj}, ensure_ascii=False))
@@ -210,9 +219,63 @@ def fetch_concursos():
         print(f"{label} {flt}: {taken} questões (cota do dia {state['day']}, total {state['left']})", flush=True)
 
 
+# matérias típicas de concurso: materiaId da API → (nossa matéria, tópico; None = palavras-chave)
+AMPLO = [
+    (146, "qui", None), (134, "por", None), (29, "mat", "mat-raciocinio-logico"), (110, "com", "com-informatica"),
+    (64, "dir", "dir-constitucional"), (59, "dir", "dir-administrativo"), (99, "dir", "dir-administrativo"),
+    (2, "dir", "dir-penal"), (82, "dir", "dir-processo-penal"), (20, "dir", "dir-civil"), (80, "dir", "dir-processo-civil"),
+    (70, "dir", "dir-trabalho"), (86, "dir", "dir-tributario"), (79, "dir", "dir-previdenciario"), (85, "dir", "dir-humanos"),
+    (34, "eco", "eco-administracao"), (53, "eco", "eco-contabilidade"), (137, "mat", "mat-porcentagem"), (98, "mat", "mat-estatistica"),
+    (148, "por", "por-redacao-oficial"), (24, "sau", "sau-saude-coletiva"), (27, "sau", "sau-enfermagem"), (42, "ger", "ger-gerais"),
+]
+AMPLO_STATE = CACHE / "amplo.json"
+
+
+def fetch_amplo():
+    """múltipla escolha das matérias de concurso, uma página de cada por vez (rodízio), até a cota do dia acabar.
+    O cursor fica em raw/qdq/amplo.json: rodar todo dia continua de onde parou."""
+    cursor = json.loads(AMPLO_STATE.read_text()) if AMPLO_STATE.exists() else {}
+    got = 0
+    while True:
+        open_ = [(mid, subj, topic) for mid, subj, topic in AMPLO if not cursor.get(str(mid), {}).get("done")]
+        if not open_:
+            print("todas as matérias foram até o fim")
+            break
+        for mid, subj, topic in open_:
+            pos = cursor.setdefault(str(mid), {"page": 0, "done": False})
+            params = {"materiaId": mid, "certoOuErrado": "false", "anulada": "false", "page": pos["page"], "size": 50}
+            cached = (CACHE / "http" / (urllib.parse.quote("/questoes?" + urllib.parse.urlencode(sorted(params.items())), safe="") + ".json")).exists()
+            if not cached and state["day"] is not None and state["day"] < 50 + DAY_RESERVE:
+                AMPLO_STATE.write_text(json.dumps(cursor))
+                print(f"cota do dia no fim ({state['day']}); {got} questões novas hoje. Rode de novo amanhã.")
+                return
+            page = get("/questoes", params)
+            for q in page["content"]:
+                if q.get("certoOuErrado") or q.get("anulada") or q.get("desatualizada") or len(q.get("options") or []) < 4:
+                    continue
+                out = CACHE / "questions" / f"{q['id']}.json"
+                if out.exists():
+                    continue
+                if state["day"] is not None and state["day"] <= DAY_RESERVE:
+                    AMPLO_STATE.write_text(json.dumps(cursor))
+                    print(f"cota do dia no fim ({state['day']}); {got} questões novas hoje. Rode de novo amanhã.")
+                    return
+                gab = get(f"/questoes/{q['id']}/gabarito")
+                out.parent.mkdir(parents=True, exist_ok=True)
+                out.write_text(json.dumps({"q": q, "gab": gab, "label": "Concursos", "subject": subj, "topic": topic}, ensure_ascii=False))
+                got += 1
+            pos["page"] += 1
+            pos["done"] = page.get("last", True)
+            AMPLO_STATE.write_text(json.dumps(cursor))
+        print(f"rodada completa: {got} questões novas (cota do dia {state['day']})", flush=True)
+
+
 if __name__ == "__main__":
     if sys.argv[1] == "concursos":
         fetch_concursos()
+        raise SystemExit
+    if sys.argv[1] == "amplo":
+        fetch_amplo()
         raise SystemExit
     if sys.argv[1] == "counts":
         counts()

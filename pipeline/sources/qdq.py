@@ -9,7 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from common import PUBLIC, RAW, best_topic, norm, write_out
+from common import DEFAULT_TOPIC, PUBLIC, RAW, best_topic, classify_topic, norm, write_out
 
 SRC = RAW / "qdq" / "questions"
 IMG = PUBLIC / "img" / "qdq"
@@ -245,10 +245,14 @@ def main():
         hint = (q.get("topico") or {}).get("nome") or ""
         # o tópico da API é curado por pessoas: vale mais que qualquer palavra-chave
         topic, sub = map_api_topic(hint, subj) if hint else (None, None)
-        if not topic:
+        if not topic and item.get("topic"):  # matéria de concurso (qdq_fetch amplo) já diz o tópico
+            topic = item["topic"]
+        if not topic and subj in DEFAULT:
             topic, _ = best_topic(f"{hint} {hint} {hint}", subj)
+            if not topic:
+                topic, _ = best_topic(stem + " " + " ".join(o["t"] for o in opts), subj, DEFAULT[subj])
         if not topic:
-            topic, _ = best_topic(stem + " " + " ".join(o["t"] for o in opts), subj, DEFAULT[subj])
+            topic = classify_topic(stem + " " + " ".join(o["t"] for o in opts), subj, hint) or DEFAULT_TOPIC[subj]
         out.append({
             "id": f"espcex-{q['id']}", "s": subj, "e": item["label"], "y": q.get("ano") or 0, "t": topic,
             "d": DIFF.get(q.get("dificuldade"), 2), "d_src": q.get("dificuldade"), "k": "text", "stem": stem, "opts": opts,

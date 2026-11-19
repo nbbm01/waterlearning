@@ -18,5 +18,15 @@
       "note": "Nota mínima de 2023 para ter a redação corrigida (ampla concorrência: 65,75 masculino, 66,75 feminino), lida como porcentagem. A nota final de classificação não é publicada de forma consolidada.",
       "source": "Estratégia Militares, lista dos aptos à correção da redação da EsPCEx 2023."
     }
+  },
+  "OAB": {
+    "name": "Exame de Ordem (OAB), 1ª fase",
+    "minutesPerQuestion": 3.75,
+    "format": "80 questões objetivas de todas as áreas do Direito em 5 horas.",
+    "cutoff": {
+      "percent": 50,
+      "note": "Aprovado na 1ª fase quem acerta pelo menos 50% (40 de 80) e segue para a prova prático-profissional.",
+      "source": "Provimento nº 144/2011 do Conselho Federal da OAB e editais do Exame de Ordem Unificado (FGV)."
+    }
   }
 }

@@ -1064,6 +1064,346 @@ def temperatura(b):
     return b.make(stem, F, [Fraction(9 * C, 5), C + 32, Fraction(5 * (C - 32), 9), C + 273], exp, 2, show=lambda x: fmt(round(float(x), 1), "°F"))
 
 
+# ---------------------------------------------------------------- química
+# Só o degrau de fixação (conta direta) e um pouco de aplicação: vestibular não cobra "quantos mols há em 36 g de água",
+# e é por aí que a estequiometria começa. Os problemas e desafios vêm das provas reais.
+
+ATOMIC = {"H": 1, "C": 12, "N": 14, "O": 16, "Na": 23, "Mg": 24, "Al": 27, "S": 32, "Cl": Fraction(71, 2), "K": 39, "Ca": 40,
+          "Fe": 56, "Zn": 65}
+NAMES = {"H2O": "água", "CO2": "gás carbônico", "CH4": "metano", "NH3": "amônia", "O2": "gás oxigênio", "N2": "gás nitrogênio",
+         "H2": "gás hidrogênio", "NaCl": "cloreto de sódio", "NaOH": "hidróxido de sódio", "HCl": "cloreto de hidrogênio",
+         "H2SO4": "ácido sulfúrico", "CaCO3": "carbonato de cálcio", "CaO": "óxido de cálcio", "C6H12O6": "glicose", "C2H6O": "etanol",
+         "Ca(OH)2": "hidróxido de cálcio", "MgO": "óxido de magnésio", "Fe2O3": "óxido de ferro(III)", "SO2": "dióxido de enxofre",
+         "C3H8": "propano", "KCl": "cloreto de potássio", "Al2O3": "óxido de alumínio", "Na2SO4": "sulfato de sódio",
+         "ZnCl2": "cloreto de zinco", "Zn": "zinco", "Mg": "magnésio", "Fe": "ferro", "CO": "monóxido de carbono",
+         "KClO3": "clorato de potássio", "S": "enxofre", "MgCl2": "cloreto de magnésio", "Al": "alumínio", "AlCl3": "cloreto de alumínio"}
+GASES = ["O2", "N2", "H2", "CO2", "CH4", "NH3", "SO2", "C3H8"]
+# (reagentes, produtos, nome) com os menores coeficientes inteiros; conferidas átomo a átomo logo abaixo
+REACTIONS = [
+    ([(2, "H2"), (1, "O2")], [(2, "H2O")], "síntese da água"),
+    ([(1, "CH4"), (2, "O2")], [(1, "CO2"), (2, "H2O")], "combustão do metano"),
+    ([(1, "C3H8"), (5, "O2")], [(3, "CO2"), (4, "H2O")], "combustão do propano"),
+    ([(1, "C2H6O"), (3, "O2")], [(2, "CO2"), (3, "H2O")], "combustão do etanol"),
+    ([(1, "C6H12O6"), (6, "O2")], [(6, "CO2"), (6, "H2O")], "respiração celular"),
+    ([(1, "N2"), (3, "H2")], [(2, "NH3")], "síntese da amônia"),
+    ([(1, "CaCO3")], [(1, "CaO"), (1, "CO2")], "decomposição do calcário"),
+    ([(2, "NaOH"), (1, "H2SO4")], [(1, "Na2SO4"), (2, "H2O")], "neutralização do ácido sulfúrico"),
+    ([(1, "Zn"), (2, "HCl")], [(1, "ZnCl2"), (1, "H2")], "reação do zinco com ácido clorídrico"),
+    ([(1, "Mg"), (2, "HCl")], [(1, "MgCl2"), (1, "H2")], "reação do magnésio com ácido clorídrico"),
+    ([(2, "Al"), (6, "HCl")], [(2, "AlCl3"), (3, "H2")], "reação do alumínio com ácido clorídrico"),
+    ([(1, "Fe2O3"), (3, "CO")], [(2, "Fe"), (3, "CO2")], "redução do minério de ferro no alto-forno"),
+    ([(2, "Mg"), (1, "O2")], [(2, "MgO")], "queima do magnésio"),
+    ([(4, "Fe"), (3, "O2")], [(2, "Fe2O3")], "oxidação do ferro"),
+    ([(2, "KClO3")], [(2, "KCl"), (3, "O2")], "decomposição do clorato de potássio"),
+    ([(1, "C6H12O6")], [(2, "C2H6O"), (2, "CO2")], "fermentação alcoólica"),
+]
+
+
+def parse_formula(f):
+    """'Ca(OH)2' → {'Ca': 1, 'O': 2, 'H': 2}"""
+    stack = [{}]
+    for m in re.finditer(r"([A-Z][a-z]?)(\d*)|\(|\)(\d*)", f):
+        if m.group(0) == "(":
+            stack.append({})
+        elif m.group(0).startswith(")"):
+            for el, c in stack.pop().items():
+                stack[-1][el] = stack[-1].get(el, 0) + c * int(m.group(3) or 1)
+        else:
+            stack[-1][m.group(1)] = stack[-1].get(m.group(1), 0) + int(m.group(2) or 1)
+    return stack[0]
+
+
+def molar(f):
+    return sum(ATOMIC[el] * n for el, n in parse_formula(f).items())
+
+
+def atoms(side):
+    out = {}
+    for c, f in side:
+        for el, n in parse_formula(f).items():
+            out[el] = out.get(el, 0) + c * n
+    return out
+
+
+for _left, _right, _name in REACTIONS:  # equação desbalanceada aqui viraria gabarito errado lá na frente
+    assert atoms(_left) == atoms(_right), f"equação desbalanceada: {_name}"
+
+
+def tex(f):
+    return re.sub(r"(?<=[A-Za-z)])(\d+)", r"_{\1}", f)
+
+
+def chem(f):
+    return f"\\(\\mathrm{{{tex(f)}}}\\)"
+
+
+def equation(left, right, coefs=True):
+    side = lambda s: " + ".join((f"{c}\\,{tex(f)}" if c > 1 and coefs else tex(f)) for c, f in s)
+    return f"\\(\\mathrm{{{side(left)} \\rightarrow {side(right)}}}\\)"
+
+
+def data(*formulas):
+    """'Dados (g/mol): H = 1; O = 16', só com os elementos que aparecem"""
+    els = sorted({el for f in formulas for el in parse_formula(f)}, key=list(ATOMIC).index)
+    return "Dados (massas molares, g/mol): " + "; ".join(f"{el} = {fmt(ATOMIC[el])}" for el in els) + "."
+
+
+def molar_steps(f):
+    comp = parse_formula(f)
+    parts = [f"{n}\\cdot{fmt(ATOMIC[el])}" if n > 1 else fmt(ATOMIC[el]) for el, n in comp.items()]
+    return f"\\(M(\\mathrm{{{tex(f)}}}) = {' + '.join(parts)} = {fmt(molar(f))}\\text{{ g/mol}}\\)"
+
+
+def qty(unit):
+    """número no padrão brasileiro com até 3 casas, para medidas químicas (0,25 mol; 11,2 L; 58,5 g/mol)"""
+    def show(x):
+        v = float(x)
+        # valor pequeno (0,0001 mol/L de um distrator) não pode virar "0"
+        places = 3 if v == 0 or abs(v) >= 0.01 else 2 - math.floor(math.log10(abs(v)))
+        s = f"{round(v, places):,.{places}f}".rstrip("0").rstrip(".").replace(",", "X").replace(".", ",").replace("X", ".")
+        return f"{s} {unit}".strip()
+    return show
+
+
+def sci(x):
+    """6,0·10²³ e companhia, em KaTeX"""
+    x = Fraction(x)
+    e = len(str(int(x))) - 1 if x >= 1 else -len(str(int(1 / x)))
+    a = x / Fraction(10) ** e
+    if a >= 10:
+        a, e = a / 10, e + 1
+    return f"\\({fmt(round(float(a), 2))}\\cdot10^{{{e}}}\\)"
+
+
+AVOGADRO = 6 * 10 ** 23
+MOLS = [Fraction(1, 4), Fraction(1, 2), 1, Fraction(3, 2), 2, 3, 4, 5]
+SUBSTANCES = ["H2O", "CO2", "CH4", "NH3", "O2", "NaCl", "NaOH", "H2SO4", "CaCO3", "C6H12O6", "C2H6O", "Ca(OH)2", "MgO", "Fe2O3", "SO2", "KCl"]
+
+
+def qui_massa_molar(b):
+    r = b.rng
+    f = r.choice(SUBSTANCES)
+    comp, M = parse_formula(f), molar(f)
+    flat = sum(ATOMIC[el] for el in comp)
+    wrong = [Why(flat, "somou cada elemento uma vez só, sem multiplicar pelo índice")]
+    if "(" in f:
+        wrong.append(Why(molar(f.replace("(", "").replace(")2", "")), "não multiplicou o que está dentro dos parênteses pelo índice de fora"))
+    wrong.append(Why(M + 16 if comp.get("O") else M + 1, "contou um átomo a mais"))
+    stem = f"Qual é a massa molar do {chem(f)} ({NAMES[f]})?\n\n{data(f)}"
+    exp = (f"Some a massa de cada átomo, multiplicada pelo índice:\n\n{molar_steps(f)}\n\n"
+           "*Erro comum:* esquecer o índice (o 2 de H₂O são **dois** hidrogênios) ou o índice de fora dos parênteses.")
+    q = b.make(stem, M, wrong, exp, 1, show=qty("g/mol"))
+    q["chk"] = {"kind": "massa_molar", "f": f}
+    return q
+
+
+def qui_mol_massa(b):
+    r = b.rng
+    f, n = r.choice(SUBSTANCES), r.choice(MOLS)
+    M = molar(f)
+    m = n * M
+    flat = sum(ATOMIC[el] for el in parse_formula(f))
+    if r.random() < 0.5:
+        stem = f"Quantos mols de {NAMES[f]} ({chem(f)}) há em {qty('g')(m)} dessa substância?\n\n{data(f)}"
+        exp = (f"Primeiro a massa molar: {molar_steps(f)}.\n\nDepois \\(n = \\dfrac{{m}}{{M}} = \\dfrac{{{qty('')(m)}}}{{{qty('')(M)}}} = "
+               f"{qty('')(n)}\\text{{ mol}}\\).\n\n*Erro comum:* multiplicar a massa pela massa molar, ou inverter a divisão.")
+        wrong = [Why(m * M, "multiplicou a massa pela massa molar; o certo é dividir"), Why(M / m, "inverteu a divisão (M/m)"),
+                 Why(m / flat, "usou a massa molar sem multiplicar pelos índices"), Why(n * 2, "dobrou a quantidade sem motivo")]
+        q = b.make(stem, n, wrong, exp, 1, show=qty("mol"))
+        q["chk"] = {"kind": "mol", "f": f, "m": str(m)}
+        return q
+    if n == 1:  # "massa de 1 mol" é a própria massa molar e os erros típicos colapsam na resposta
+        n = r.choice([x for x in MOLS if x != 1])
+        m = n * M
+    stem = f"Qual é a massa de {qty('mol')(n)} de {NAMES[f]} ({chem(f)})?\n\n{data(f)}"
+    exp = (f"Massa molar: {molar_steps(f)}.\n\n\\(m = n\\cdot M = {qty('')(n)}\\cdot{qty('')(M)} = {qty('')(m)}\\text{{ g}}\\).")
+    wrong = [Why(M / n, "dividiu a massa molar pela quantidade; o certo é multiplicar"), Why(n * flat, "usou a massa molar sem os índices"),
+             Why(M, "deu a massa de 1 mol, a massa molar"), Why(n + M, "somou em vez de multiplicar")]
+    q = b.make(stem, m, wrong, exp, 1, show=qty("g"))
+    q["chk"] = {"kind": "massa", "f": f, "n": str(n)}
+    return q
+
+
+def qui_avogadro(b):
+    r = b.rng
+    f, n = r.choice(["H2O", "CO2", "CH4", "NH3", "O2", "C6H12O6", "C2H6O", "SO2"]), r.choice([Fraction(1, 2), 1, 2, 3, 5])
+    M, m = molar(f), n * molar(f)
+    atoms = sum(parse_formula(f).values())
+    given = f"{data(f)} Constante de Avogadro: \\(6{{,}}0\\cdot10^{{23}}\\text{{ mol}}^{{-1}}\\)."
+    if r.random() < 0.6:
+        stem = f"Quantas moléculas há em {qty('g')(m)} de {NAMES[f]} ({chem(f)})?\n\n{given}"
+        exp = (f"\\(n = \\dfrac{{m}}{{M}} = \\dfrac{{{qty('')(m)}}}{{{qty('')(M)}}} = {qty('')(n)}\\text{{ mol}}\\); cada mol tem "
+               f"\\(6{{,}}0\\cdot10^{{23}}\\) moléculas, então \\(N = {qty('')(n)}\\cdot6{{,}}0\\cdot10^{{23}}\\) = {sci(n * AVOGADRO)}.")
+        wrong = [Why(m * AVOGADRO, "multiplicou a massa, e não a quantidade em mol, pela constante de Avogadro"),
+                 Why(n * atoms * AVOGADRO, "contou átomos em vez de moléculas"), Why(Fraction(AVOGADRO) / n if n != 1 else AVOGADRO * 10, "dividiu em vez de multiplicar"),
+                 Why(n * AVOGADRO / 10, "errou a potência de 10")]
+        q = b.make(stem, n * AVOGADRO, wrong, exp, 1, show=sci)
+        q["chk"] = {"kind": "moleculas", "f": f, "m": str(m)}
+        return q
+    el = r.choice(sorted(parse_formula(f)))
+    k = parse_formula(f)[el]
+    stem = f"Quantos átomos de {el} há em {qty('g')(m)} de {NAMES[f]} ({chem(f)})?\n\n{given}"
+    exp = (f"\\(n = {qty('')(m)}/{qty('')(M)} = {qty('')(n)}\\text{{ mol}}\\) de moléculas. Cada molécula tem {k} átomo(s) de {el}: "
+           f"\\(N = {qty('')(n)}\\cdot{k}\\cdot6{{,}}0\\cdot10^{{23}}\\) = {sci(n * k * AVOGADRO)}.")
+    wrong = [Why(n * AVOGADRO, "contou moléculas, não átomos de " + el), Why(n * atoms * AVOGADRO, "contou todos os átomos da molécula"),
+             Why(m * k * AVOGADRO, "usou a massa no lugar da quantidade em mol"), Why(n * k * AVOGADRO * 10, "errou a potência de 10")]
+    q = b.make(stem, n * k * AVOGADRO, wrong, exp, 2, show=sci)
+    q["chk"] = {"kind": "atomos", "f": f, "m": str(m), "el": el}
+    return q
+
+
+def qui_balanceamento(b):
+    r = b.rng
+    left, right, name = r.choice([x for x in REACTIONS if any(c > 1 for c, _ in x[0] + x[1])])
+    species = left + right
+    total = sum(c for c, _ in species)
+    check = "; ".join(f"{el}: {sum(c * parse_formula(f).get(el, 0) for c, f in left)} = {sum(c * parse_formula(f).get(el, 0) for c, f in right)}"
+                      for el in sorted({el for _, f in species for el in parse_formula(f)}, key=list(ATOMIC).index))
+    exp = (f"Comece pelo elemento que aparece em uma substância só de cada lado e deixe para o fim o que aparece sozinho "
+           f"(como \\(\\mathrm{{O_2}}\\) ou um metal). Equação balanceada:\n\n{equation(left, right)}\n\n"
+           f"Conferência, átomo por átomo: {check}.")
+    d = 2 if total > 10 else 1
+    if r.random() < 0.5:
+        stem = (f"Na {name}, {equation(left, right, coefs=False)}, qual é a **soma** dos coeficientes quando a equação é balanceada "
+                "com os menores números inteiros possíveis?")
+        wrong = [Why(len(species), "somou 1 para cada substância, como se a equação já estivesse balanceada"),
+                 Why(total * 2, "chegou a coeficientes certos, mas não simplificou para os menores inteiros"),
+                 Why(total - 1, "esqueceu de balancear o último elemento"), Why(total + 2, "balanceou o oxigênio contando átomos a mais")]
+        q = b.make(stem, total, wrong, exp, d)
+        q["chk"] = {"kind": "soma_coef", "left": [f for _, f in left], "right": [f for _, f in right]}
+        return q
+    c, f = r.choice([(c, f) for c, f in species if c > 1])
+    stem = (f"Na {name}, {equation(left, right, coefs=False)}, qual é o coeficiente de {chem(f)} quando a equação é balanceada "
+            "com os menores números inteiros possíveis?")
+    wrong = [Why(1, "deixou a equação como estava; ela não estava balanceada"), Why(c * 2, "não simplificou para os menores inteiros"),
+             Why(c + 1, "contou um átomo a mais ao balancear"), Why(max(1, c - 1) if c > 2 else c + 2, "parou antes de conferir todos os elementos")]
+    q = b.make(stem, c, wrong, exp, d)
+    q["chk"] = {"kind": "coef", "left": [f for _, f in left], "right": [f for _, f in right], "f": f}
+    return q
+
+
+def qui_proporcao(b):
+    r = b.rng
+    # pares com coeficientes diferentes: na proporção 1:1 o erro "esqueceu os coeficientes" dá a resposta certa
+    pairs = [(x, y) for left, right, name in REACTIONS for x in left + right for y in left + right if x[0] != y[0]]
+    (ca, a), (cb, bf) = r.choice(pairs)
+    left, right, name = next(t for t in REACTIONS if (ca, a) in t[0] + t[1] and (cb, bf) in t[0] + t[1])
+    a_in, b_in = (ca, a) in left, (cb, bf) in left
+    # o verbo diz o papel de cada substância: reagente com reagente, reagente que forma produto...
+    relation = {(True, True): "reagem com", (True, False): "são formados a partir de",
+                (False, True): "são consumidos para formar", (False, False): "são formados junto com"}[(a_in, b_in)]
+    if r.random() < 0.5:  # mol a mol, direto da equação
+        na = ca * r.choice([1, 2, 3, Fraction(1, 2), 4])
+        nb = na * cb / ca
+        stem = (f"Na {name}, {equation(left, right)}, quantos mols de {chem(bf)} {relation} {qty('mol')(na)} de {chem(a)}?")
+        exp = (f"Os coeficientes dão a proporção em mol: {ca} mol de \\(\\mathrm{{{tex(a)}}}\\) para {cb} mol de \\(\\mathrm{{{tex(bf)}}}\\).\n\n"
+               f"\\(n = {qty('')(na)}\\cdot\\dfrac{{{cb}}}{{{ca}}} = {qty('')(nb)}\\text{{ mol}}\\).")
+        wrong = [Why(na, "ignorou os coeficientes: a proporção não é 1 para 1"), Why(na * ca / cb, "inverteu a proporção dos coeficientes"),
+                 Why(na * cb, "multiplicou pelo coeficiente sem dividir pelo outro"), Why(nb + 1, "errou a conta da regra de três")]
+        q = b.make(stem, nb, wrong, exp, 1, show=qty("mol"))
+        q["chk"] = {"kind": "mol_mol", "left": left, "right": right, "a": a, "b": bf, "na": str(na)}
+        return q
+    Ma, Mb = molar(a), molar(bf)
+    na = ca * r.choice([Fraction(1, 2), 1, 2])
+    ma, nb = na * Ma, na * cb / ca
+    mb = nb * Mb
+    stem = f"Na {name}, {equation(left, right)}, que massa de {chem(bf)} corresponde a {qty('g')(ma)} de {chem(a)}?\n\n{data(a, bf)}"
+    exp = (f"Passe tudo por mol. \\(n(\\mathrm{{{tex(a)}}}) = \\dfrac{{{qty('')(ma)}}}{{{qty('')(Ma)}}} = {qty('')(na)}\\text{{ mol}}\\).\n\n"
+           f"Proporção da equação: \\(n(\\mathrm{{{tex(bf)}}}) = {qty('')(na)}\\cdot\\dfrac{{{cb}}}{{{ca}}} = {qty('')(nb)}\\text{{ mol}}\\).\n\n"
+           f"Massa: \\(m = {qty('')(nb)}\\cdot{qty('')(Mb)} = {qty('')(mb)}\\text{{ g}}\\).\n\n"
+           "*Erro comum:* aplicar a proporção dos coeficientes direto nas massas. Coeficiente é proporção em **mol**.")
+    wrong = [Why(ma * cb / ca, "aplicou os coeficientes direto nas massas, sem passar por mol"), Why(na * Mb, "esqueceu a proporção dos coeficientes"),
+             Why(na * ca / cb * Mb, "inverteu a proporção dos coeficientes"), Why(nb * Ma, "usou a massa molar do reagente de partida"),
+             Why(ma, "achou que a massa passa igual de uma substância para outra")]
+    q = b.make(stem, mb, wrong, exp, 2, show=qty("g"))
+    q["chk"] = {"kind": "massa_massa", "left": left, "right": right, "a": a, "b": bf, "ma": str(ma)}
+    return q
+
+
+def qui_volume_molar(b):
+    r = b.rng
+    f, n = r.choice(GASES), r.choice([Fraction(1, 4), Fraction(1, 2), 1, Fraction(3, 2), 2, 3])
+    M = molar(f)
+    if r.random() < 0.6:
+        m, V = n * M, n * Fraction(224, 10)
+        stem = (f"Qual é o volume ocupado por {qty('g')(m)} de {NAMES[f]} ({chem(f)}) nas CNTP?\n\n{data(f)} "
+                "Volume molar nas CNTP: 22,4 L/mol.")
+        exp = (f"\\(n = \\dfrac{{{qty('')(m)}}}{{{qty('')(M)}}} = {qty('')(n)}\\text{{ mol}}\\) e cada mol de gás ocupa 22,4 L nas CNTP:\n\n"
+               f"\\(V = {qty('')(n)}\\cdot22{{,}}4 = {qty('')(V)}\\text{{ L}}\\).")
+        wrong = [Why(m * Fraction(224, 10), "multiplicou a massa, e não a quantidade em mol, por 22,4"), Why(Fraction(224, 10) / n, "dividiu 22,4 pela quantidade"),
+                 Why(m / Fraction(224, 10), "dividiu a massa por 22,4, sem passar por mol"), Why(V * 2, "contou o volume em dobro")]
+        q = b.make(stem, V, wrong, exp, 1, show=qty("L"))
+        q["chk"] = {"kind": "cntp", "f": f, "m": str(m)}
+        return q
+    tc, P = r.choice([(27, 300), (77, 350), (127, 400), (227, 500)]), r.choice([1, 2, 3, 4])
+    R = Fraction(82, 1000)
+    V = n * R * tc[1] / P
+    stem = (f"Que volume ocupam {qty('mol')(n)} de {NAMES[f]} a {tc[0]} °C e {P} atm? Use \\(R = 0{{,}}082\\text{{ atm·L/(mol·K)}}\\).")
+    exp = (f"Equação de Clapeyron com a temperatura em **kelvin**: \\(T = {tc[0]} + 273 = {tc[1]}\\text{{ K}}\\).\n\n"
+           f"\\(V = \\dfrac{{nRT}}{{P}} = \\dfrac{{{qty('')(n)}\\cdot0{{,}}082\\cdot{tc[1]}}}{{{P}}} = {qty('')(V)}\\text{{ L}}\\).")
+    wrong = [Why(n * R * tc[0] / P, "usou a temperatura em °C; na equação dos gases ela vai em kelvin"),
+             Why(n * R * tc[1], "esqueceu de dividir pela pressão"), Why(n * R * tc[1] * P, "multiplicou pela pressão em vez de dividir"),
+             Why(V * 10, "errou a vírgula de R (0,82 em vez de 0,082)")]
+    q = b.make(stem, V, wrong, exp, 2, show=qty("L"))
+    q["chk"] = {"kind": "clapeyron", "n": str(n), "tc": tc[0], "P": P}
+    return q
+
+
+def qui_concentracao(b):
+    r = b.rng
+    f = r.choice(["NaCl", "NaOH", "KCl", "C6H12O6", "H2SO4", "HCl"])
+    V = r.choice([100, 200, 250, 500, 1000, 2000])
+    if r.random() < 0.5:
+        C = r.choice([4, 5, 8, 10, 20, 40, 50, 80])
+        m = Fraction(C * V, 1000)
+        stem = f"Dissolvem-se {qty('g')(m)} de {NAMES[f]} em água até completar {V} mL de solução. Qual é a concentração comum, em g/L?"
+        exp = (f"Concentração comum é massa de soluto por **litro** de solução: \\({V}\\text{{ mL}} = {qty('')(Fraction(V, 1000))}\\text{{ L}}\\).\n\n"
+               f"\\(C = \\dfrac{{m}}{{V}} = \\dfrac{{{qty('')(m)}}}{{{qty('')(Fraction(V, 1000))}}} = {C}\\text{{ g/L}}\\).")
+        wrong = [Why(m / V, "não converteu mL para L"), Why(m * Fraction(V, 1000), "multiplicou massa por volume"),
+                 Why(Fraction(V, 1000) / m, "inverteu a divisão"), Why(C * 2, "usou metade do volume")]
+        q = b.make(stem, C, wrong, exp, 1, show=qty("g/L"))
+        q["chk"] = {"kind": "conc_comum", "m": str(m), "V": V}
+        return q
+    M = molar(f)
+    mol = r.choice([Fraction(1, 10), Fraction(1, 5), Fraction(1, 2), 1, 2])
+    n = mol * Fraction(V, 1000)
+    m = n * M
+    stem = f"Dissolvem-se {qty('g')(m)} de {NAMES[f]} ({chem(f)}) em água até {V} mL de solução. Qual é a concentração em mol/L?\n\n{data(f)}"
+    exp = (f"\\(n = \\dfrac{{{qty('')(m)}}}{{{qty('')(M)}}} = {qty('')(n)}\\text{{ mol}}\\) e \\(V = {qty('')(Fraction(V, 1000))}\\text{{ L}}\\).\n\n"
+           f"\\(C = \\dfrac{{n}}{{V}} = \\dfrac{{{qty('')(n)}}}{{{qty('')(Fraction(V, 1000))}}} = {qty('')(mol)}\\text{{ mol/L}}\\).")
+    wrong = [Why(m / Fraction(V, 1000), "parou na concentração em g/L, sem converter massa em mol"), Why(n / V, "não converteu mL em L"),
+             Why(n, "esqueceu de dividir pelo volume"), Why(Fraction(V, 1000) / n, "inverteu a divisão")]
+    q = b.make(stem, mol, wrong, exp, 2, show=qty("mol/L"))
+    q["chk"] = {"kind": "molaridade", "f": f, "m": str(m), "V": V}
+    return q
+
+
+def qui_diluicao(b):
+    r = b.rng
+    C1, V1 = r.choice([Fraction(1, 2), 1, 2, 3, 4, 5]), r.choice([50, 100, 200, 250])
+    k = r.choice([2, 4, 5])
+    if r.random() < 0.5:
+        V2 = V1 * k
+        stem = f"Uma solução de concentração {qty('mol/L')(C1)} tem {V1} mL. Ela é diluída com água até o volume final de {V2} mL. Qual é a nova concentração?"
+        trap = Why(C1 * V1 / (V1 + V2), "somou o volume inicial ao final; o volume final já inclui a solução de antes")
+        d = 1
+    else:
+        Vw = V1 * (k - 1)
+        V2 = V1 + Vw
+        stem = f"A {V1} mL de uma solução {qty('mol/L')(C1)} adicionam-se {Vw} mL de água. Qual é a concentração da solução final?"
+        trap = Why(C1 * V1 / Vw, "dividiu pelo volume de água adicionado; o volume final é a soma")
+        d = 2
+    C2 = C1 * V1 / V2
+    exp = (f"Na diluição a quantidade de soluto não muda: \\(C_1V_1 = C_2V_2\\). O volume final é {V2} mL.\n\n"
+           f"\\(C_2 = \\dfrac{{{qty('')(C1)}\\cdot{V1}}}{{{V2}}} = {qty('')(C2)}\\text{{ mol/L}}\\).\n\n"
+           "*Erro comum:* achar que diluir aumenta a concentração, ou usar só o volume de água acrescentado.")
+    wrong = [trap, Why(C1 * V2 / V1, "inverteu os volumes: diluir diminui a concentração"),
+             Why(C1, "achou que a concentração não muda; o soluto é o mesmo, mas o volume cresceu")]
+    q = b.make(stem, C2, wrong, exp, d, show=qty("mol/L"))
+    q["chk"] = {"kind": "diluicao", "C1": str(C1), "V1": V1, "V2": V2}
+    return q
+
+
 GENERATORS = [
     (eq1_simples, "mat", "mat-conjuntos-funcoes", "mat-equacao-1grau", 40),
     (eq1_dois_lados, "mat", "mat-conjuntos-funcoes", "mat-equacao-1grau", 30),
@@ -1123,6 +1463,15 @@ GENERATORS = [
     (calor, "fis", "fis-termologia", "fis-calorimetria", 25),
     (ondas, "fis", "fis-ondulatoria", "fis-ondas", 20),
     (temperatura, "fis", "fis-termologia", "fis-termometria", 15),
+    # química: poucas, só a conta direta que as provas reais não trazem (a prioridade é questão real)
+    (qui_massa_molar, "qui", "qui-estequiometria", "qui-mol-massa-molar", 15),
+    (qui_mol_massa, "qui", "qui-estequiometria", "qui-mol-massa-molar", 25),
+    (qui_avogadro, "qui", "qui-estequiometria", "qui-mol-massa-molar", 15),
+    (qui_balanceamento, "qui", "qui-inorganica", "qui-balanceamento", 20),
+    (qui_proporcao, "qui", "qui-estequiometria", "qui-calculo-estequiometrico", 30),
+    (qui_volume_molar, "qui", "qui-gases", "qui-volume-molar", 15),
+    (qui_concentracao, "qui", "qui-solucoes", "qui-concentracao", 20),
+    (qui_diluicao, "qui", "qui-solucoes", "qui-diluicao", 15),
 ]
 SUB_BY_GEN = {"volumes": {"Uma caixa": "mat-prismas", "Um cilindro": "mat-cilindros"},
               "media_mediana": {"média": "mat-medias", "mediana": "mat-mediana-moda"},

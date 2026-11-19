@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { strongSpots, weakSpots } from '../core/coach'
-import { skillTarget, type Bank } from '../core/data'
+import { countBy, skillTarget, trackRows, type Bank } from '../core/data'
 import { START_ELO, tier } from '../core/elo'
 import { pomodoro } from '../core/pomodoro'
 import { useStore } from '../core/store'
@@ -26,6 +26,9 @@ export function Details({ bank, go }: { bank: Bank; go: (v: View) => void }) {
   const today = dayNumber()
   const streak = visibleStreak(store.s.streak, today)
   const { settings, days, topics } = store.s
+  // 18 matérias e 190 tópicos de uma vez afogam o que importa: aparecem as do objetivo e as já praticadas
+  const inTrack = useMemo(() => countBy(trackRows(bank, settings.track), 's'), [bank, settings.track])
+  const shown = bank.meta.subjects.filter((s, i) => inTrack.has(i) || s.id in store.s.elo)
   const file = useRef<HTMLInputElement>(null)
   const [focus, setFocus] = useState(settings.pomoFocus)
   const [rest, setRest] = useState(settings.pomoBreak)
@@ -139,7 +142,7 @@ export function Details({ bank, go }: { bank: Bank; go: (v: View) => void }) {
       <section>
         <h3>Elo por matéria</h3>
         <div className="elos">
-          {bank.meta.subjects.map((s) => {
+          {shown.map((s) => {
             const elo = store.elo(s.id)
             const played = s.id in store.s.elo
             return (
@@ -156,7 +159,7 @@ export function Details({ bank, go }: { bank: Bank; go: (v: View) => void }) {
 
       <section>
         <h3>Domínio por tópico</h3>
-        {bank.meta.subjects.map((s) => (
+        {shown.map((s) => (
           <div key={s.id} className="mastery-group">
             <span className="group-label">{s.name}</span>
             <div className="mastery">
@@ -186,7 +189,7 @@ export function Details({ bank, go }: { bank: Bank; go: (v: View) => void }) {
               {[...store.sims].reverse().map((r) => (
                 <tr key={r.ts}>
                   <td>{new Date(r.ts).toLocaleDateString('pt-BR')}</td>
-                  <td>{r.exam ? `Militar · ${r.exam}` : 'Padrão'}</td>
+                  <td>{r.exam ? `Oficial · ${r.exam}` : 'Padrão'}</td>
                   <td className="tabular">{r.correct}/{r.total} ({Math.round((r.correct / r.total) * 100)}%)</td>
                   <td className="tabular">{formatClock(r.seconds)}</td>
                 </tr>

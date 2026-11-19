@@ -1,6 +1,6 @@
-import type { Meta, Question, Row } from './types'
+import { ALL_TRACK, type Meta, type Question, type Row } from './types'
 
-type RawRow = [string, number, number, number, number, 1 | 2 | 3, number, number, number, number]
+type RawRow = [string, number, number, number, number, 1 | 2 | 3, number, number, number, number, number]
 
 export interface Bank {
   meta: Meta
@@ -51,10 +51,39 @@ async function getJson<T>(path: string, fresh = false): Promise<T> {
 export async function loadBank(): Promise<Bank> {
   const [meta, raw] = await Promise.all([getJson<Meta>(BASE + 'data/meta.json'), getJson<RawRow[]>(BASE + 'data/index.json')])
   version = meta.version
-  const rows = raw.map(([id, s, e, y, t, d, f, c, r, u]) => ({ id, s, e, y, t, d, f, c, r, u: u ?? -1 }))
+  meta.groups ??= []
+  meta.tracks ??= []
+  meta.examInfo ??= {}
+  // índice antigo, sem trilhas: a questão vale para todas
+  const rows = raw.map(([id, s, e, y, t, d, f, c, r, u, k]) => ({ id, s, e, y, t, d, f, c, r, u: u ?? -1, k: k ?? -1 }))
   const topics = meta.subjects.flatMap((s, si) => s.topics.map((t) => ({ id: t.id, name: t.name, subject: si })))
   const subs = meta.subjects.flatMap((s) => s.topics).flatMap((t, ti) => (t.subs ?? []).map((sb) => ({ id: sb.id, name: sb.name, topic: ti })))
   return { meta, rows, byId: new Map(rows.map((r) => [r.id, r])), topics, subs }
+}
+
+const trackCache = new WeakMap<Bank, Map<string, Row[]>>()
+
+/** As questões da trilha (objetivo) escolhida; "tudo" ou trilha desconhecida devolve o banco inteiro. */
+export function trackRows(bank: Bank, track: string): Row[] {
+  const bit = bank.meta.tracks.findIndex((t) => t.id === track)
+  if (track === ALL_TRACK || bit < 0) return bank.rows
+  let cache = trackCache.get(bank)
+  if (!cache) trackCache.set(bank, (cache = new Map()))
+  let rows = cache.get(track)
+  if (!rows) cache.set(track, (rows = bank.rows.filter((r) => r.k & (1 << bit))))
+  return rows
+}
+
+/** nome da trilha para mostrar ao aluno */
+export function trackName(bank: Bank, track: string): string {
+  return bank.meta.tracks.find((t) => t.id === track)?.name ?? 'Todas as provas'
+}
+
+/** quantas questões cada matéria (ou banca) tem num conjunto de linhas */
+export function countBy(rows: Row[], key: 's' | 'e'): Map<number, number> {
+  const out = new Map<number, number>()
+  for (const r of rows) out.set(r[key], (out.get(r[key]) ?? 0) + 1)
+  return out
 }
 
 function loadChunk(c: number): Promise<Record<string, Question>> {

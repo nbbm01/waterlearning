@@ -1,15 +1,16 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { greeting, suggest, weakSpots } from '../core/coach'
-import { skillKey, skillTarget, type Bank } from '../core/data'
+import { skillKey, skillTarget, trackRows, type Bank } from '../core/data'
 import { DEEP_UNLOCK, expected, tier } from '../core/elo'
 import { isEmptyFilter, pickNext, select } from '../core/filters'
 import { pomodoro, usePomodoro } from '../core/pomodoro'
-import { MASTERY, masteredCount } from '../core/progressive'
+import { levelFor, MASTERY, masteredCount } from '../core/progressive'
 import { useStore } from '../core/store'
 import { formatClock } from '../core/time'
 import { DIFF_LABEL, EMPTY_FILTER, STAGE, type Filter, type Row } from '../core/types'
 import { Runner } from './Runner'
 import type { View } from './TopBar'
+import { TrackPicker, TrackQuestion } from './TrackPicker'
 
 const BLOCK = 4
 
@@ -35,7 +36,7 @@ function FilterSummary({ bank, filter, count, onClear, onOpen }: {
 }) {
   const parts = [
     ...filter.subjects.map((i) => bank.meta.subjects[i].name),
-    ...filter.exams.map((i) => bank.meta.exams[i]),
+    ...(filter.exams.length > 3 ? [`${filter.exams.length} provas`] : filter.exams.map((i) => bank.meta.exams[i])),
     ...filter.topics.map((i) => bank.topics[i].name),
     ...(filter.subs ?? []).map((i) => bank.subs[i].name),
     filter.yearMin || filter.yearMax ? `${filter.yearMin || '…'}–${filter.yearMax || '…'}` : '',
@@ -122,13 +123,22 @@ function Coach({ bank, go }: { bank: Bank; go: (v: View) => void }) {
 export function Practice({ bank, onOpenFilters, go }: { bank: Bank; onOpenFilters: () => void; go: (v: View) => void }) {
   const store = useStore()
   const filter = store.s.filter
+  const track = store.s.settings.track
+  // a trilha (objetivo) recorta o banco antes de qualquer filtro
+  const rows = trackRows(bank, track)
   // o conjunto só muda quando o filtro muda; "inéditas" e "pendentes" são reavaliadas a cada escolha
   // aprofundamento se libera sozinho por matéria quando o Elo chega lá
   const unlocked = useCallback((r: Row) => store.elo(skillKey(bank, r)) >= DEEP_UNLOCK, [bank, store])
-  const pool = useMemo(() => select(bank.rows, { ...filter, unseen: false, pending: false }, store, unlocked),
+  const pool = useMemo(() => select(rows, { ...filter, unseen: false, pending: false }, store, unlocked),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [bank, filter, store, unlocked, Object.entries(store.s.elo).filter(([, v]) => v >= DEEP_UNLOCK).map(([k]) => k).join()])
-  const poolKey = JSON.stringify(filter)
+    [rows, filter, store, unlocked, Object.entries(store.s.elo).filter(([, v]) => v >= DEEP_UNLOCK).map(([k]) => k).join()])
+  const poolKey = JSON.stringify([track, filter])
+  // o degrau do Progressivo segue o que o recorte tem: OAB e Medicina começam na aplicação
+  const levels = useMemo(() => new Set(pool.map((r) => r.d)), [pool])
+  const level = levelFor(store.s.prog.level, levels)
+  useEffect(() => {
+    if (filter.diff === 'prog' && level !== store.s.prog.level) store.alignProg(level)
+  }, [filter.diff, level, store])
 
   const next = useCallback((recent: readonly string[]) => {
     let rows = pool
@@ -137,13 +147,13 @@ export function Practice({ bank, onOpenFilters, go }: { bank: Bank; onOpenFilter
     rows = practiceBlock(rows, recent, bank)
     const prog = filter.diff === 'prog'
     const chance = (r: Row) => expected(store.elo(skillKey(bank, r)), r.r)
-    return pickNext(rows, store, recent, prog ? store.s.prog.level : 0, Math.random, prog ? chance : undefined)
-  }, [bank, filter, pool, store])
+    return pickNext(rows, store, recent, prog ? level : 0, Math.random, prog ? chance : undefined)
+  }, [bank, filter, level, pool, store])
 
   const liveCount = useMemo(
-    () => (filter.unseen || filter.pending ? select(bank.rows, filter, store).length : pool.length),
+    () => (filter.unseen || filter.pending ? select(rows, filter, store).length : pool.length),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [bank, filter, pool, store, store.snapshot()],
+    [rows, filter, pool, store, store.snapshot()],
   )
   const [subject, setSubject] = useState<number | null>(null)
   const single = subject !== null ? bank.meta.subjects[subject] : null
@@ -151,12 +161,13 @@ export function Practice({ bank, onOpenFilters, go }: { bank: Bank; onOpenFilter
   return (
     <main className="practice">
       <div className="practice-bar">
+        <TrackPicker bank={bank} />
         <FilterSummary bank={bank} filter={filter} count={liveCount} onOpen={onOpenFilters}
           onClear={() => store.setFilter(EMPTY_FILTER)} />
         {filter.diff === 'prog' && (
           <span className="level" title={`Modo Progressivo: você sobe de degrau quando acerta ${MASTERY.need} das últimas ${MASTERY.window} deste degrau`}>
-            Progressivo · <b>{STAGE[store.s.prog.level]}</b>
-            {store.s.prog.level < 3 && (
+            Progressivo · <b>{STAGE[level]}</b>
+            {level < Math.max(...levels) && (
               <span className="pips" aria-label={`${masteredCount(store.s.prog)} de ${MASTERY.need} acertos para dominar`}>
                 {Array.from({ length: MASTERY.need }, (_, i) => <i key={i} className={masteredCount(store.s.prog) > i ? 'on' : ''} />)}
               </span>
@@ -165,7 +176,7 @@ export function Practice({ bank, onOpenFilters, go }: { bank: Bank; onOpenFilter
         )}
         <PomodoroChip subjectId={single?.id ?? null} subjectName={single?.name ?? ''} />
       </div>
-      {isEmptyFilter(filter) && <Coach bank={bank} go={go} />}
+      {store.s.settings.trackChosen ? isEmptyFilter(filter) && <Coach bank={bank} go={go} /> : <TrackQuestion bank={bank} />}
       <Runner
         bank={bank} mode="practice" poolKey={poolKey} next={next} onShow={(r) => setSubject(r ? r.s : null)}
         empty={

@@ -1,0 +1,34 @@
+{
+ "qui-estequiometria": {
+  "title": "Estequiometria",
+  "body": "**Ideia:** a equação balanceada é uma receita em **mol**. Tudo passa por mol: massa → mol → proporção da equação → mol → o que a pergunta pede (massa, volume, moléculas).\n\n\\[\\text{massa} \\xrightarrow{\\div M} \\text{mol} \\xrightarrow{\\times\\frac{\\text{coef. pedido}}{\\text{coef. dado}}} \\text{mol} \\xrightarrow{\\times M} \\text{massa}\\]\n\n**Armadilha comum:** aplicar os coeficientes direto nas massas. Coeficiente é proporção de **mol**, não de grama."
+ },
+ "qui-mol-massa-molar": {
+  "title": "Mol e massa molar",
+  "body": "**Massa molar** é a soma das massas dos átomos, cada uma vezes o seu índice:\n\n\\[M(\\mathrm{H_2O}) = 2\\cdot1 + 16 = 18\\text{ g/mol}\\]\n\n**Quantidade de matéria:** \\(n = \\dfrac{m}{M}\\). E **1 mol** tem \\(6{,}0\\cdot10^{23}\\) partículas (constante de Avogadro).\n\n\\[36\\text{ g de água} = \\frac{36}{18} = 2\\text{ mol} = 1{,}2\\cdot10^{24}\\text{ moléculas}\\]\n\n**Armadilhas comuns:** esquecer o índice (\\(\\mathrm{H_2O}\\) tem **dois** H), esquecer o índice de fora dos parênteses em \\(\\mathrm{Ca(OH)_2}\\), e contar moléculas quando a pergunta pede átomos."
+ },
+ "qui-calculo-estequiometrico": {
+  "title": "Cálculo estequiométrico",
+  "body": "**Roteiro:** (1) confira se a equação está balanceada; (2) transforme o dado em mol; (3) use a proporção dos coeficientes; (4) transforme o resultado no que a pergunta pede.\n\n\\[\\mathrm{CH_4 + 2\\,O_2 \\rightarrow CO_2 + 2\\,H_2O}\\]\n\n16 g de metano = 1 mol → forma 2 mol de água = \\(2\\cdot18 = 36\\) g.\n\n**Gás nas CNTP:** 1 mol ocupa 22,4 L.\n\n**Armadilha comum:** usar a massa molar errada na última etapa (a do reagente em vez da do produto)."
+ },
+ "qui-limitante-rendimento": {
+  "title": "Reagente limitante, pureza e rendimento",
+  "body": "**Limitante:** calcule quanto produto **cada** reagente formaria. O que forma menos é o limitante e é ele que decide o resultado; o outro sobra (excesso).\n\n**Pureza:** só a parte pura reage. 200 g de calcário com 80% de \\(\\mathrm{CaCO_3}\\) têm 160 g de \\(\\mathrm{CaCO_3}\\). Aplique a pureza **antes** da conta.\n\n**Rendimento:** calcule o teórico (100%) e multiplique pelo rendimento **no fim**: rendimento de 75% → \\(0{,}75\\cdot\\) teórico.\n\n**Armadilha comum:** calcular pelo reagente em excesso, ou aplicar a porcentagem duas vezes."
+ },
+ "qui-balanceamento": {
+  "title": "Balanceamento de equações",
+  "body": "**Ideia:** átomo não some nem aparece (Lavoisier). Cada elemento precisa ter o mesmo número de átomos dos dois lados.\n\n**Método das tentativas:** comece pelo elemento que aparece em **uma** substância de cada lado; deixe para o fim o que aparece sozinho (\\(\\mathrm{O_2}\\), \\(\\mathrm{H_2}\\), um metal). Use os **menores inteiros**.\n\n\\[\\mathrm{C_3H_8 + 5\\,O_2 \\rightarrow 3\\,CO_2 + 4\\,H_2O}\\]\n\nC: 3 = 3; H: 8 = 8; O: 10 = 6 + 4.\n\n**Armadilha comum:** mexer nos índices (\\(\\mathrm{H_2O}\\) virar \\(\\mathrm{H_2O_2}\\) muda a substância); só os coeficientes mudam."
+ },
+ "qui-concentracao": {
+  "title": "Concentração das soluções",
+  "body": "**Concentração comum:** massa de soluto por litro de solução, \\(C = \\dfrac{m}{V}\\) (g/L).\n\n**Concentração em mol/L:** \\(C = \\dfrac{n}{V}\\), com \\(n = \\dfrac{m}{M}\\).\n\n4 g de NaOH (M = 40) em 500 mL: \\(n = 0{,}1\\) mol, \\(V = 0{,}5\\) L, \\(C = 0{,}2\\) mol/L.\n\n**Armadilha comum:** esquecer de converter mL em L (divida por 1000), ou parar na concentração em g/L quando a pergunta pede mol/L."
+ },
+ "qui-diluicao": {
+  "title": "Diluição e mistura",
+  "body": "**Diluição:** acrescentar água não muda a quantidade de soluto, só o volume:\n\n\\[C_1V_1 = C_2V_2\\]\n\n100 mL de solução 2 mol/L + 300 mL de água → volume final 400 mL → \\(C_2 = \\dfrac{2\\cdot100}{400} = 0{,}5\\) mol/L.\n\n**Mistura de duas soluções do mesmo soluto:** \\(C = \\dfrac{C_1V_1 + C_2V_2}{V_1 + V_2}\\) (média **ponderada** pelos volumes).\n\n**Armadilha comum:** usar o volume de água adicionado no lugar do volume final."
+ },
+ "qui-volume-molar": {
+  "title": "Volume molar e gases",
+  "body": "**CNTP:** 1 mol de qualquer gás ocupa **22,4 L**. 88 g de \\(\\mathrm{CO_2}\\) = 2 mol = 44,8 L.\n\n**Fora das CNTP:** equação de Clapeyron, com a temperatura em **kelvin** (\\(T = \\theta + 273\\)):\n\n\\[PV = nRT,\\quad R = 0{,}082\\text{ atm·L/(mol·K)}\\]\n\n**Armadilha comum:** usar °C na equação, ou multiplicar a massa (e não a quantidade em mol) por 22,4."
+ }
+}

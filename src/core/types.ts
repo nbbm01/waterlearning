@@ -16,6 +16,7 @@ export interface Row {
   c: number // bloco de conteúdo
   r: number // Elo da questão
   u: number // subtópico (índice global, -1 = sem)
+  k: number // trilhas a que pertence (bit i = meta.tracks[i])
 }
 
 export interface Option {
@@ -68,6 +69,20 @@ export interface SimSpec {
   cutoff?: { percent: number; note: string; source: string }
 }
 
+/** bancas agrupadas para o filtro: ENEM, Vestibulares, Militares, Concursos... */
+export interface ExamGroup {
+  id: string
+  name: string
+  exams: number[]
+}
+
+/** objetivo do aluno: recorta o banco antes de qualquer filtro */
+export interface Track {
+  id: string
+  name: string
+  desc: string
+}
+
 export interface Meta {
   version: string
   subjects: Subject[]
@@ -76,7 +91,13 @@ export interface Meta {
   total: number
   theory: Record<string, TheoryCard>
   sims: Record<string, SimSpec>
+  groups: ExamGroup[]
+  tracks: Track[]
+  examInfo: Record<string, string>
 }
+
+/** trilha que não recorta nada */
+export const ALL_TRACK = 'tudo'
 
 export type Difficulty = 0 | 1 | 2 | 3 | 'prog'
 
